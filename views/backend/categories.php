@@ -36,7 +36,9 @@ if (!defined('IN_CMS')) { exit(); }
     <li id="page-1" class="node level-0">
       <div class="page" style="padding-left: 4px">
         <span class="w1">
-            <img align="middle" class="icon" src="<?php echo URI_PUBLIC;?>wolf/icons/file-folder-32.png" alt="page icon" /> <span class="title"><?php echo $root->title; ?></span>
+            <a class="edit-link" href="<?php echo get_url('plugin/catalog/category/edit/'.$root->id); ?>" title="<?php echo $root->id; ?>">
+                <img align="middle" class="icon" src="<?php echo URI_PUBLIC;?>wolf/icons/file-folder-32.png" alt="page icon" /> <span class="title"><?php echo $root->title; ?></span>
+            </a>
         </span>
       </div>
       <div class="view">
