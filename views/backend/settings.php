@@ -17,8 +17,8 @@ if (!defined('IN_CMS')) { exit(); }
 <form method="post" action="<?php echo get_url('plugin/catalog/settings'); ?>">
     <table>
         <tr>
-            <td><strong><?php echo __('Layout'); ?></strong></td>
-            <td>
+            <td class="label"><strong><?php echo __('Layout'); ?></strong></td>
+            <td class="field">
                 <select name="setting[layout_id]">
                     <option value="0"<?php if ($settings['layout_id'] == 0) echo ' selected="selected"'; ?>><?php echo __('inherit'); ?></option>
                     <?php foreach ($layouts as $layout): ?>
@@ -27,6 +27,21 @@ if (!defined('IN_CMS')) { exit(); }
                 </select>
             </td>
         </tr>
+        <tr>
+            <td class="label">
+                <strong><?php echo __('Decimal seperator'); ?></strong>
+            </td>
+            <td class="field">
+                <label for="decimal_point">
+                    <input type="radio" name="setting[decimal_seperator]" id="decimal_point" value="point" <?php echo ($settings['decimal_seperator'] == 'point') ? ' checked="checked"' : null; ?>/>
+                    <?php echo __('Point'); ?>
+                </label><br />
+                <label for="decimal_comma">
+                    <input type="radio" name="setting[decimal_seperator]" id="decimal_comma" value="comma" <?php echo ($settings['decimal_seperator'] == 'comma') ? ' checked="checked"' : null; ?>/>
+                    <?php echo __('Comma'); ?>
+                </label>
+            </td>
+        </tr>    
         <tr>
             <td colspan="2">
                 <br />

@@ -105,7 +105,7 @@ foreach ($categories as $category) {
                 <tr>
                     <td class="label"><label for="variant_price"><?php echo __('Price'); ?></label></td>
                     <td class="field">
-                        <input class="textbox" type="text" name="variant[price]" id="variant_price" value="<?php echo $variant->price; ?>" /> EUR
+                        <input class="textbox" type="text" name="variant[price]" id="variant_price" value="<?php echo $variant->price(); ?>" /> EUR
                     </td>
                 </tr>
                 <tr>

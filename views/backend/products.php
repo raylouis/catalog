@@ -92,7 +92,11 @@ function get_sorted($column, $order, $direction) {
             </td>
             <td class="price">
                 <?php if (!is_null($product->min_price)): ?>
+                <?php if (Plugin::getSetting('decimal_seperator', 'catalog') == 'comma'): ?>
                 € <?php echo number_format($product->min_price, 2, ',', '.'); ?>
+                <?php else: ?>
+                € <?php echo number_format($product->min_price, 2, '.', ','); ?>
+                <?php endif; ?>
                 <?php else: ?>
                 <span class="not-applicable">N/A</span>
                 <?php endif; ?>

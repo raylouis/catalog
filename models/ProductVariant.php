@@ -47,6 +47,8 @@ class ProductVariant extends ActiveRecord {
         $this->updated_on       = date('Y-m-d H:i:s');
         $this->updated_by_id    = AuthUser::getRecord()->id;
         
+        $this->price = (float) str_replace(',', '.', $this->price);
+        
         return true;
     }
     
@@ -97,4 +99,14 @@ class ProductVariant extends ActiveRecord {
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
+    
+    public function price() {
+        if (Plugin::getSetting('decimal_seperator', 'catalog') == 'comma') {
+            return number_format($this->price, 2, ',', '.');
+        }
+        else {
+            return number_format($this->price, 2, '.', ',');
+        }
+    }
+    
 }

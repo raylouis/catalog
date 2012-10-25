@@ -11,7 +11,8 @@ if (!defined('IN_CMS')) { exit(); }
  */
 
 Plugin::setAllSettings(array(
-    'layout_id' => Page::findById(1)->layout_id
+    'layout_id' => Page::findById(1)->layout_id,
+    'decimal_seperator' => 'point'
 ), 'catalog');
 
 $PDO = Record::getConnection();

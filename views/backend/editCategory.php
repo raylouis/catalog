@@ -50,7 +50,7 @@ if (!defined('IN_CMS')) { exit(); }
         <?php foreach ($category->attributes as $category_attribute): ?>
         <?php $attr_count++; ?>
         <li>
-            <select name="attributes[]">
+            <select name="attributes[][id]">
                 <option></option>
                 <?php foreach ($attributes as $attribute): ?>
                 <option value="<?php echo $attribute->id; ?>"<?php echo ($attribute->id == $category_attribute->id) ? ' selected="selected"' : ''; ?>><?php echo $attribute->name; ?></option>
@@ -64,7 +64,7 @@ if (!defined('IN_CMS')) { exit(); }
         <?php endforeach; ?>
         <?php $attr_count++; ?>
         <li>
-            <select name="attributes[]">
+            <select name="attributes[][id]">
                 <option></option>
                 <?php foreach ($attributes as $attribute): ?>
                 <option value="<?php echo $attribute->id; ?>"><?php echo $attribute->name; ?></option>
