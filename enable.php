@@ -24,7 +24,7 @@ $PDO->exec("CREATE TABLE `catalog_attribute` (
   `type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `unit` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_brand` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -38,7 +38,7 @@ $PDO->exec("CREATE TABLE `catalog_brand` (
   `updated_by_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_brand_image1` (`logo_image_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_category` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -55,7 +55,7 @@ $PDO->exec("CREATE TABLE `catalog_category` (
   PRIMARY KEY (`id`),
   KEY `fk_category_category1` (`parent_id`),
   KEY `fk_category_image1` (`image_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("INSERT INTO `catalog_category` (title, slug, parent_id, created_on, updated_on, created_by_id, updated_by_id) VALUES ('Root', '', NULL, NOW(), NOW(), 1, 1);");
 
@@ -65,7 +65,7 @@ $PDO->exec("CREATE TABLE `catalog_category_filter` (
   `attribute_id` int(1) unsigned NOT NULL,
   `position` int(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_product` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -82,7 +82,7 @@ $PDO->exec("CREATE TABLE `catalog_product` (
   PRIMARY KEY (`id`),
   KEY `fk_product_category` (`category_id`),
   KEY `fk_product_brand1` (`brand_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_product_attribute` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -92,21 +92,21 @@ $PDO->exec("CREATE TABLE `catalog_product_attribute` (
   PRIMARY KEY (`id`),
   KEY `fk_product_attribute_value_attribute1` (`attribute_id`),
   KEY `fk_product_attribute_value_product1` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_product_variable_attribute` (
   `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
   `product_id` int(1) unsigned NOT NULL,
   `attribute_id` int(1) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_product_variable_option` (
   `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
   `variable_id` int(1) unsigned NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_product_variant` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -121,7 +121,7 @@ $PDO->exec("CREATE TABLE `catalog_product_variant` (
   `created_by_id` int(10) unsigned NOT NULL,
   `updated_by_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
 $PDO->exec("CREATE TABLE `catalog_product_variant_attribute` (
   `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
@@ -129,4 +129,4 @@ $PDO->exec("CREATE TABLE `catalog_product_variant_attribute` (
   `attribute_id` int(1) NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
