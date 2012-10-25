@@ -212,7 +212,7 @@ class Category extends ActiveRecord {
     }
     
     protected function setUrl() {
-        if ($this->parent_id > 0) {
+        if ($this->parent_id > 1) {
             $this->url = trim($this->parent->url .'/'. $this->slug, '/');
         }
         else {
