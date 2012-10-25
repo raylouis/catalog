@@ -102,10 +102,10 @@ class ProductVariant extends ActiveRecord {
     
     public function price() {
         if (Plugin::getSetting('decimal_seperator', 'catalog') == 'comma') {
-            return number_format($this->price, 2, ',', '.');
+            return number_format($this->price, 2, ',', '');
         }
         else {
-            return number_format($this->price, 2, '.', ',');
+            return number_format($this->price, 2, '.', '');
         }
     }
     
