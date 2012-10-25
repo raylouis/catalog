@@ -25,7 +25,8 @@ class CatalogController extends PluginController {
         $models = array(
             'product' => 'products',
             'category' => 'categories',
-            'brand' => 'brands'
+            'brand' => 'brands',
+            'attribute' => 'attributes'
         );
         
         if (!isset($models[$model])) {
@@ -91,6 +92,21 @@ class CatalogController extends PluginController {
                 $obj->setFromData($data);
             }
         }
+        elseif ($model == 'attribute') {
+            $data['name'] = trim($data['name']);
+            if (empty($data['name'])) {
+                $errors[] = __('You have to specify a name!');
+            }
+            
+            if ($action == 'add') {
+                $obj = new Attribute();
+                $obj->setFromData($data);
+            }
+            else {
+                $obj = Attribute::findById($id);
+                $obj->setFromData($data);
+            }
+        }
         
         if (false !== $errors) {
             Flash::setNow('error', implode('<br/>', $errors));
@@ -112,6 +128,12 @@ class CatalogController extends PluginController {
                 $this->display('catalog/views/backend/editBrand', array(
                     'action' => $action,
                     'product' => $obj
+                ));
+            }
+            elseif ($model == 'attribute') {
+                $this->display('catalog/views/backend/editAttribute', array(
+                    'action' => $action,
+                    'attribute' => $obj
                 ));
             }
         }
@@ -149,6 +171,70 @@ class CatalogController extends PluginController {
         }
         else {
             redirect(get_url('plugin/catalog/' . $model . '/edit/' . $obj->id));
+        }
+    }
+    
+    public function attribute($action, $id = NULL) {
+        if ($action == 'add') {
+            if (get_request_method() == 'POST') {
+                return $this->_store('attribute', 'add', $id);
+            }
+            
+            $data = Flash::get('post_data');
+            $attribute = new Attribute($data);
+
+            $this->display('catalog/views/backend/editAttribute', array(
+                'action' => 'add',
+                'attribute' => $attribute
+            ));
+            
+        }
+        elseif ($action == 'delete') {
+            if (!is_numeric($id)) {
+                Flash::set('error', __('The attribute could not be found!'));
+                redirect(get_url('plugin/catalog/attributes'));
+            }
+            
+            if ($attribute = Attribute::findById($id)) {
+                if ($attribute->delete()) {
+                    Observer::notify('attribute_delete', $product);
+                    Flash::set('success', __("Attribute ':name' has been deleted!", array(':name' => $attribute->name)));
+                }
+                else {
+                    Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $attribute->name)));
+                }
+            }
+            else {
+                Flash::set('error', __('The attribute could not be found!'));
+            }
+
+            redirect(get_url('plugin/catalog/attributes'));
+        }
+        elseif ($action == 'edit') {
+            if (is_numeric($id)) {
+                if (get_request_method() == 'POST') {
+                    return $this->_store('attribute', 'edit', $id);
+                }
+                
+                if ($attribute = Attribute::findById($id)) {
+                    $this->display('catalog/views/backend/editAttribute', array(
+                        'action' => 'edit',
+                        'attribute' => $attribute
+                    ));
+                }
+                else {
+                    Flash::set('error', __('The attribute could not be found!'));
+                    redirect(get_url('plugin/catalog/attributes'));
+                }
+                
+            }
+            else {
+                Flash::set('error', __('The attribute could not be found!'));
+                redirect(get_url('plugin/catalog/attributes'));
+            }
+        }
+        else {
+            $this->attributes();
         }
     }
     
