@@ -383,10 +383,12 @@ class CatalogController extends PluginController {
             $data = Flash::get('post_data');
             $category = new Category($data);
             $category->parent_id = (int) $id;
+            $category->parent = Category::findById($category->parent_id);
 
             $this->display('catalog/views/backend/editCategory', array(
                 'action' => 'add',
-                'category' => $category
+                'category' => $category,
+                'attributes' => Attribute::findAll()
             ));
             
         }
@@ -420,7 +422,8 @@ class CatalogController extends PluginController {
                 if ($category = Category::findById($id)) {
                     $this->display('catalog/views/backend/editCategory', array(
                         'action' => 'edit',
-                        'category' => $category
+                        'category' => $category,
+                        'attributes' => Attribute::findAll()
                     ));
                 }
                 else {

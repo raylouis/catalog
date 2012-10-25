@@ -27,14 +27,14 @@ class Category extends ActiveRecord {
             'foreign_key' => 'category_id',
             'order' => 'catalog_product.slug ASC'
         ),
-        'category_filters' => array(
-            'class_name' => 'CategoryFilter',
+        'category_attributes' => array(
+            'class_name' => 'CategoryAttribute',
             'foreign_key' => 'category_id'
         ),
-        'filters' => array(
+        'attributes' => array(
             'class_name' => 'Attribute',
             'foreign_key' => 'category_id',
-            'through' => 'category_filters'
+            'through' => 'category_attributes'
         ),
         'subcategories' => array(
             'class_name' => 'Category',
@@ -140,7 +140,8 @@ class Category extends ActiveRecord {
     public static function findById($id) {
         return self::find(array(
             'where' => array('id = ?', $id),
-            'limit' => 1
+            'limit' => 1,
+            'include' => array('attributes')
         ));
     }
     
@@ -247,14 +248,25 @@ class Category extends ActiveRecord {
         return $array;
     }
     
+    public function unlimitedAttributes() {
+        $category_ids = $this->parentIds();
+        
+        return Attribute::find(array(
+            'select' => 'attribute.*',
+            'from' => 'catalog_attribute AS attribute',
+            'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = attribute.id',
+            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ')'
+        ));
+    }
+    
     public function unlimitedFilters() {
         $category_ids = $this->parentIds();
         
         return Attribute::find(array(
             'select' => 'filter.*',
             'from' => 'catalog_attribute AS filter',
-            'joins' => 'INNER JOIN catalog_category_filter AS category_filter ON category_filter.attribute_id = filter.id',
-            'where' => 'category_filter.category_id IN (' . implode(',', $category_ids) . ')',
+            'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = filter.id',
+            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ') AND category_attribute.filter = 1',
             'include' => array('filter_options')
         ));
     }

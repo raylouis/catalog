@@ -34,8 +34,8 @@ class Attribute extends ActiveRecord {
             'foreign_key' => 'attribute_id',
             'group' => 'value ASC'
         ),
-        'category_filters' => array(
-            'class_name' => 'CategoryFilter',
+        'category_attributes' => array(
+            'class_name' => 'CategoryAttribute',
             'foreign_key' => 'attribute_id'
         )
     );

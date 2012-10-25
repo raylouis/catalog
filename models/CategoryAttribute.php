@@ -6,14 +6,14 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author Nic Wortel <nd.wortel@gmail.com>
  * 
- * @file        /models/CategoryFilter.php
- * @date        15/10/2012
+ * @file        /models/CategoryAttribute.php
+ * @date        25/10/2012
  */
 
 use_helper('ActiveRecord');
 
-class CategoryFilter extends ActiveRecord {
-    const TABLE_NAME = 'catalog_category_filter';
+class CategoryAttribute extends ActiveRecord {
+    const TABLE_NAME = 'catalog_category_attribute';
     
     static $belongs_to = array(
         'category' => array(

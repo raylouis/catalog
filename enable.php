@@ -59,10 +59,11 @@ $PDO->exec("CREATE TABLE `catalog_category` (
 
 $PDO->exec("INSERT INTO `catalog_category` (title, slug, parent_id, created_on, updated_on, created_by_id, updated_by_id) VALUES ('Root', '', NULL, NOW(), NOW(), 1, 1);");
 
-$PDO->exec("CREATE TABLE `catalog_category_filter` (
+$PDO->exec("CREATE TABLE `catalog_category_attribute` (
   `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
   `category_id` int(1) unsigned NOT NULL,
   `attribute_id` int(1) unsigned NOT NULL,
+  `filter` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `position` int(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
