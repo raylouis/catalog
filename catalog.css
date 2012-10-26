@@ -92,3 +92,7 @@ body#body_plugin_catalog div#content td.label {
 body#body_plugin_catalog div#content td .not-applicable {
     color: #bbb;
 }
+
+body#body_plugin_catalog div#content input.number {
+    text-align: right;
+}
