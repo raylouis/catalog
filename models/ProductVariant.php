@@ -19,6 +19,10 @@ class ProductVariant extends ActiveRecord {
         'product' => array(
             'class_name' => 'Product',
             'foreign_key' => 'product_id'
+        ),
+        'vat' => array(
+            'class_name' => 'Vat',
+            'foreign_key' => 'vat_id'
         )
     );
     
@@ -27,6 +31,7 @@ class ProductVariant extends ActiveRecord {
     public $description = '';
     public $weight;
     public $price;
+    public $vat_id;
     public $stock;
     
     public $product_id;
@@ -95,17 +100,19 @@ class ProductVariant extends ActiveRecord {
     
     public function getColumns() {
         return array(
-            'id', 'sku', 'description', 'weight', 'price', 'stock', 'product_id',
+            'id', 'sku', 'description', 'weight', 'price', 'vat_id', 'stock', 'product_id',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
     
     public function price() {
+        $price_incl_tax = $this->price * ($this->vat->percentage / 100 + 1);
+        
         if (Plugin::getSetting('decimal_seperator', 'catalog') == 'comma') {
-            return number_format($this->price, 2, ',', '');
+            return number_format($price_incl_tax, 2, ',', '');
         }
         else {
-            return number_format($this->price, 2, '.', '');
+            return number_format($price_incl_tax, 2, '.', '');
         }
     }
     

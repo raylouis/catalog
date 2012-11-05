@@ -78,19 +78,21 @@ class Product extends ActiveRecord {
         if ($this->type == 'simple') {
             $data = $_POST['variant'];
             
-            if (isset($data['id'])) {
-                $variant = ProductVariant::findById($data['id']);
-                $variant->setFromData($data);
-            }
-            else {
-                $variant = new ProductVariant();
-                $variant->setFromData($data);
-            }
-            $variant->description = $this->name();
-            $variant->product_id = $this->id;
-            
-            if (!$variant->save()) {
-                return false;
+            if ($variant->sku != '' && $variant->price > 0) {
+                if (isset($data['id'])) {
+                    $variant = ProductVariant::findById($data['id']);
+                    $variant->setFromData($data);
+                }
+                else {
+                    $variant = new ProductVariant();
+                    $variant->setFromData($data);
+                }
+                $variant->description = $this->name();
+                $variant->product_id = $this->id;
+
+                if (!$variant->save()) {
+                    return false;
+                }
             }
         }
         
@@ -155,7 +157,7 @@ class Product extends ActiveRecord {
                 'category',
                 'product_attributes' => array('attribute'),
                 'product_variable_attributes' => array('attribute', 'options'),
-                'variants',
+                'variants' => array('vat'),
                 'variable_attributes'
             )
         ));
@@ -220,7 +222,7 @@ class Product extends ActiveRecord {
     
     public function getColumns() {
         return array(
-            'id', 'name', 'slug', 'description', 'category_id', 'brand_id',
+            'id', 'name', 'slug', 'description', 'category_id', 'brand_id', 'type',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }

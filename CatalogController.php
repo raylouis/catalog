@@ -572,7 +572,8 @@ class CatalogController extends PluginController {
                 'action' => 'add',
                 'product' => $product,
                 'brands' => Brand::findAll(),
-                'categories' => Category::findAll()
+                'categories' => Category::findAll(),
+                'vats' => Vat::findAll()
             ));
             
         }
@@ -609,7 +610,8 @@ class CatalogController extends PluginController {
                         'product' => $product,
                         'brands' => Brand::findAll(),
                         'categories' => Category::findAll(),
-                        'variant' => new ProductVariant()
+                        'variant' => new ProductVariant(),
+                        'vats' => Vat::findAll()
                     ));
                 }
                 else {
@@ -640,7 +642,7 @@ class CatalogController extends PluginController {
         $allowed_columns = array(
             'id' => 'product.id',
             'name' => 'product.name',
-            'brand' => 'brand.name',
+            'brand' => 'CASE WHEN brand.id IS NULL THEN 1 ELSE 0 END, brand.name',
             'category' => 'category.title',
             'variants' => 'variant_count',
             'price' => 'min_price',

@@ -109,6 +109,16 @@ foreach ($categories as $category) {
                     </td>
                 </tr>
                 <tr>
+                    <td class="label"><label><?php echo __('VAT'); ?></label></td>
+                    <td class="field">
+                        <select name="variant[vat_id]">
+                            <?php foreach ($vats as $vat): ?>
+                            <option value="<?php echo $vat->id; ?>"<?php if ($vat->id == $variant->vat_id): ?> selected="selected"<?php endif; ?>><?php echo $vat->name; ?> (<?php echo $vat->percentage; ?>%)</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
                     <td class="label"><label for="variant_stock"><?php echo __('Stock'); ?></label></td>
                     <td class="field">
                         <input class="textbox number" type="text" name="variant[stock]" id="variant_stock" value="<?php echo $variant->stock; ?>" />
