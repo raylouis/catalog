@@ -77,6 +77,13 @@ class Brand extends ActiveRecord {
         ));
     }
     
+    public static function findBySlug($slug) {
+        return self::find(array(
+            'where' => array('slug = ?', $slug),
+            'limit' => 1
+        ));
+    }
+    
     public function getColumns() {
         return array(
             'id', 'name', 'slug', 'description', 'website',
@@ -93,6 +100,7 @@ class Brand extends ActiveRecord {
     }
     
     public function setUrl() {
-        $this->url = trim('merken/' . $this->slug, '/');
+        $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
+        $this->url = trim($brands_slug . '/' . $this->slug, '/');
     }
 }

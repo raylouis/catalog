@@ -33,6 +33,13 @@ Plugin::addController('catalog', __('Catalog'), 'catalog_view', true);
 AutoLoader::addFolder(CATALOG.'/models');
 AutoLoader::addFolder(CATALOG.'/pages');
 
+$brands_slug = Plugin::getSetting('brands_slug', 'catalog');
+
+Dispatcher::addRoute(array(
+    '/' . $brands_slug . URL_SUFFIX => '/plugin/catalog/frontendBrandList',
+    '/' . $brands_slug . '/:any' . URL_SUFFIX => '/plugin/catalog/frontendBrand/$1'
+));
+
 if ($categories = Category::findByParentId(1)) {
     foreach ($categories as $category) {
         Dispatcher::addRoute(array(

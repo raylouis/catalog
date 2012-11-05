@@ -550,6 +550,28 @@ class CatalogController extends PluginController {
         $page->_executeLayout();
     }
     
+    public function frontendBrand($slug) {
+        if ($brand = Brand::findBySlug($slug)) {
+            $page = new BrandPage($brand);
+        }
+        else {
+            page_not_found();
+        }
+        
+        $page->_executeLayout();
+    }
+    
+    public function frontendBrandList() {
+        if ($brands = Brand::findAll()) {
+            $page = new BrandListPage($brands);
+        }
+        else {
+            page_not_found();
+        }
+        
+        $page->_executeLayout();
+    }
+    
     public function index() {
         $this->products();
     }
@@ -705,7 +727,11 @@ class CatalogController extends PluginController {
     
     public function settings() {
         if (isset($_POST['save']) && $_POST['save'] == __('Save Settings')) {
-            Plugin::setAllSettings($_POST['setting'], self::PLUGIN_NAME);
+            
+            $settings = $_POST['setting'];
+            $settings['brands_slug'] = Node::toSlug($settings['brands_title']);
+            
+            Plugin::setAllSettings($settings, self::PLUGIN_NAME);
             Flash::setNow('success', __('Settings have been saved!'));
         }
         
