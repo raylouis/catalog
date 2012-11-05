@@ -335,7 +335,7 @@ class CatalogController extends PluginController {
         $allowed_columns = array(
             'id' => 'id',
             'name' => 'name',
-            'website' => 'website'
+            'website' => 'CASE WHEN website IS NULL THEN 1 ELSE 0 END, website'
         );
         
         if (!isset($allowed_columns[$order_by])) {
