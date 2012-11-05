@@ -40,6 +40,9 @@ function get_sorted($column, $order, $direction) {
             <th class="fill <?php echo get_sorted('name', $order_by, $order_direction); ?>">
                 <a href="<?php echo get_url('plugin/catalog/brands/name', get_direction('name', $order_by, $order_direction)); ?>"><?php echo __('Name'); ?></a>
             </th>
+            <th class="fill <?php echo get_sorted('website', $order_by, $order_direction); ?>">
+                <a href="<?php echo get_url('plugin/catalog/brands/website', get_direction('website', $order_by, $order_direction)); ?>"><?php echo __('Website'); ?></a>
+            </th>
             <th class="icon"><?php echo __('View'); ?></th>
             <th class="icon"><?php echo __('Delete'); ?></th>
         </tr>
@@ -52,6 +55,9 @@ function get_sorted($column, $order, $direction) {
             </td>
             <td class="fill">
                 <a href="<?php echo get_url('plugin/catalog/brand/edit', $brand->id); ?>"><?php echo $brand->name; ?></a>
+            </td>
+            <td class="fill">
+                <a href="<?php echo $brand->website; ?>" target="_blank"><?php echo $brand->website; ?></a>
             </td>
             <td class="icon">
                 <a href="<?php echo $brand->url(); ?>" target="_blank"><img src="<?php echo URI_PUBLIC;?>wolf/admin/images/magnify.png" alt="<?php echo __('View brand'); ?>" title="<?php echo __('View brand'); ?>" /></a>

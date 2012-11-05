@@ -32,6 +32,7 @@ $PDO->exec("CREATE TABLE `catalog_brand` (
   `name` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci,
+  `website` varchar(255) COLLATE utf8_unicode_ci,
   `logo_image_id` int(10) unsigned DEFAULT NULL,
   `created_on` datetime NOT NULL,
   `updated_on` datetime NOT NULL,

@@ -25,6 +25,10 @@ if (!defined('IN_CMS')) { exit(); }
                     <textarea class="textarea" name="brand[description]" id="brand_description"><?php echo $brand->description; ?></textarea>
                 </td>
             </tr>
+            <tr>
+                <td class="label"><label for="brand_website"><?php echo __('Website URL'); ?></label></td>
+                <td class="field"><input class="textbox" type="text" name="brand[website]" id="brand_website" value="<?php echo $brand->website; ?>" /></td>
+            </tr>
         </tbody>
     </table>
     

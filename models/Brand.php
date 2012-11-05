@@ -26,6 +26,7 @@ class Brand extends ActiveRecord {
     public $name = '';
     public $slug = '';
     public $description = '';
+    public $website = '';
     
     public $created_on;
     public $updated_on;
@@ -78,7 +79,7 @@ class Brand extends ActiveRecord {
     
     public function getColumns() {
         return array(
-            'id', 'name', 'slug', 'description',
+            'id', 'name', 'slug', 'description', 'website',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }

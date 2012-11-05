@@ -334,7 +334,8 @@ class CatalogController extends PluginController {
     public function brands($order_by = NULL, $order_direction = 'asc', $page = 1) {
         $allowed_columns = array(
             'id' => 'id',
-            'name' => 'name'
+            'name' => 'name',
+            'website' => 'website'
         );
         
         if (!isset($allowed_columns[$order_by])) {
