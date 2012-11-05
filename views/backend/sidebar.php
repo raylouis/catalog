@@ -38,7 +38,7 @@ if (!defined('IN_CMS')) { exit(); }
 <?php if (AuthUser::hasPermission('catalog_attribute_view')): ?>
 <p class="button">
     <a href="<?php echo get_url("plugin/catalog/attributes"); ?>">
-        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>brand.png" align="middle" alt="<?php echo __('Attributes'); ?>" />
+        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>attributes.png" align="middle" alt="<?php echo __('Attributes'); ?>" />
         <?php echo __('Attributes'); ?>
     </a>
 </p>
