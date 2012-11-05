@@ -84,10 +84,10 @@ function get_sorted($column, $order, $direction) {
                 <?php echo $product->category->title; ?>
             </td>
             <td class="number">
-                <?php if (count($product->variant_count) > 0 && $product->type == 'variants'): ?>
-                <?php echo $product->variant_count; ?> variants
+                <?php if ($product->type == 'variants'): ?>
+                <?php echo $product->variant_count; ?>
                 <?php else: ?>
-                <?php echo __('None'); ?>
+                <span class="not-applicable"><?php echo __('None'); ?></span>
                 <?php endif; ?>
             </td>
             <td class="price">
