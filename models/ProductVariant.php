@@ -105,8 +105,13 @@ class ProductVariant extends ActiveRecord {
         );
     }
     
-    public function price() {
-        $price_incl_tax = $this->price * ($this->vat->percentage / 100 + 1);
+    public function price($include_vat = false, $format = false) {
+        if ($include_vat) {
+            $price_incl_tax = $this->price * ($this->vat->percentage / 100 + 1);
+        }
+        else {
+            $price_incl_tax = $this->price;
+        }
         
         if (Plugin::getSetting('decimal_seperator', 'catalog') == 'comma') {
             return number_format($price_incl_tax, 2, ',', '');
