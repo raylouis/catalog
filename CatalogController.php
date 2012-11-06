@@ -339,7 +339,7 @@ class CatalogController extends PluginController {
         );
         
         if (!isset($allowed_columns[$order_by])) {
-            $order_by = 'id';
+            $order_by = 'name';
         }
         
         $order_sql = $allowed_columns[$order_by];
@@ -348,10 +348,22 @@ class CatalogController extends PluginController {
             $order_direction = 'asc';
         }
         
-        $brands = Brand::find(array(
-            'select' => 'catalog_brand.*',
-            'order' => $order_sql . ' ' . strtoupper($order_direction)
-        ));
+        if (isset($_POST['search'])) {
+            $search_string = $_POST['search'];
+            $search_string = '%' . $search_string . '%';
+            
+            $brands = Brand::find(array(
+                'select' => 'catalog_brand.*',
+                'where' => array('name LIKE ?', $search_string),
+                'order' => $order_sql . ' ' . strtoupper($order_direction)
+            ));
+        }
+        else {
+            $brands = Brand::find(array(
+                'select' => 'catalog_brand.*',
+                'order' => $order_sql . ' ' . strtoupper($order_direction)
+            ));
+        }
         
         $this->display('catalog/views/backend/brands', array(
             'brands' => $brands,

@@ -29,7 +29,13 @@ function get_sorted($column, $order, $direction) {
 ?>
 <h1><?php echo __('Brands'); ?></h1>
 
+<form name="search" method="post" style="float: right;">
+    <input type="text" name="search" autocomplete="off" placeholder="<?php echo (isset($_POST['search']) && $_POST['search'] != '') ? $_POST['search'] : 'Zoeken...'; ?>" />
+</form>
+
 <p><a href="<?php echo get_url('plugin/catalog/brand/add'); ?>"><?php echo __('Add brand'); ?></a></p>
+
+
 
 <table class="brand list">
     <thead>
