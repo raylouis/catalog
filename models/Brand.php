@@ -80,7 +80,8 @@ class Brand extends ActiveRecord {
     public static function findBySlug($slug) {
         return self::find(array(
             'where' => array('slug = ?', $slug),
-            'limit' => 1
+            'limit' => 1,
+            'include' => array('products' => array('brand', 'category'))
         ));
     }
     
