@@ -29,6 +29,10 @@ function get_sorted($column, $order, $direction) {
 ?>
 <h1><?php echo __('Products'); ?></h1>
 
+<form name="search" method="post" style="float: right;">
+    <input type="text" name="search" autocomplete="off" placeholder="<?php echo (isset($_POST['search']) && $_POST['search'] != '') ? $_POST['search'] : 'Zoeken...'; ?>" />
+</form>
+
 <p>
     <a href="<?php echo get_url('plugin/catalog/product/add'); ?>"><?php echo __('Add product'); ?></a> |
     <a href="<?php echo get_url('plugin/catalog/export/product'); ?>"><?php echo __('Export'); ?></a>

@@ -503,14 +503,26 @@ class CatalogController extends PluginController {
             
             if ($model == 'product') {
                 $data[] = array(
-                    __('ID'),
-                    __('Name'),
+                    __('SKU'),
+                    __('Price'),
                     __('Brand'),
+                    __('Name'),
                     __('Category'),
                     __('URL')
                 );
                 
-                $products = Product::findAll();
+                $product_variants = ProductVariant::find(array(
+                    'include' => array('product' => array('category', 'brand'))
+                ));
+                
+                $products = Product::find(array(
+                    'select' => '*',
+                    'from' => 'catalog_product AS prod',
+                    'joins' => 'LEFT JOIN catalog_product_variant AS prod_var ON prod_var.product_id = prod.id',
+                    'include' => array('category', 'brand')
+                    
+                ));
+                
                 foreach ($products as $product) {
                     if (is_object($product->brand)) {
                         $brand_name = $product->brand->name;
@@ -520,9 +532,10 @@ class CatalogController extends PluginController {
                     }
                     
                     $data[] = array(
-                        $product->id,
-                        $product->name,
+                        $product->sku,
+                        $product->price,
                         $brand_name,
+                        $product->name,
                         $product->category->title,
                         $product->url()
                     );
@@ -694,26 +707,61 @@ class CatalogController extends PluginController {
             $order_direction = 'asc';
         }
         
-        $products = Product::find(array(
-            'select' => '
-                product.*, COUNT(variant.id) AS variant_count,
-                SUM(variant.stock) AS total_stock,
-                MIN(variant.stock) AS min_stock,
-                MIN(variant.price) AS min_price',
-            'from' => 'catalog_product AS product',
-            'joins' => '
-                INNER JOIN catalog_category AS category ON category.id = product.category_id
-                LEFT JOIN catalog_brand AS brand ON brand.id = product.brand_id
-                LEFT JOIN catalog_product_variant AS variant ON variant.product_id = product.id
-                ',
-            'group' => 'product.id',
-            'order' => $order_sql . ' ' . strtoupper($order_direction),
-            'include' => array(
-                'brand',
-                'category',
-                'variants'
-            )
-        ));
+        if (isset($_POST['search'])) {
+            $q = $_POST['search'];
+            $q = '%' . $q . '%';
+            
+            $products = Product::find(array(
+                'select' => '
+                    product.*, COUNT(variant.id) AS variant_count,
+                    SUM(variant.stock) AS total_stock,
+                    MIN(variant.stock) AS min_stock,
+                    MIN(variant.price) AS min_price',
+                'from' => 'catalog_product AS product',
+                'joins' => '
+                    INNER JOIN catalog_category AS category ON category.id = product.category_id
+                    LEFT JOIN catalog_brand AS brand ON brand.id = product.brand_id
+                    LEFT JOIN catalog_product_variant AS variant ON variant.product_id = product.id
+                    ',
+                'where' => array('product.name LIKE ?
+                        OR product.description LIKE ?
+                        OR category.title LIKE ?
+                        OR brand.name LIKE ?
+                        OR variant.sku LIKE ?
+                        OR variant.description LIKE ?', $q, $q, $q, $q, $q, $q),
+                'group' => 'product.id',
+                'order' => $order_sql . ' ' . strtoupper($order_direction),
+                'include' => array(
+                    'brand',
+                    'category',
+                    'variants'
+                )
+            ));
+        }
+        else {
+            
+            $products = Product::find(array(
+                'select' => '
+                    product.*, COUNT(variant.id) AS variant_count,
+                    SUM(variant.stock) AS total_stock,
+                    MIN(variant.stock) AS min_stock,
+                    MIN(variant.price) AS min_price',
+                'from' => 'catalog_product AS product',
+                'joins' => '
+                    INNER JOIN catalog_category AS category ON category.id = product.category_id
+                    LEFT JOIN catalog_brand AS brand ON brand.id = product.brand_id
+                    LEFT JOIN catalog_product_variant AS variant ON variant.product_id = product.id
+                    ',
+                'group' => 'product.id',
+                'order' => $order_sql . ' ' . strtoupper($order_direction),
+                'include' => array(
+                    'brand',
+                    'category',
+                    'variants'
+                )
+            ));
+            
+        }
         
         $this->display('catalog/views/backend/products', array(
             'products' => $products,
