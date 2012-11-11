@@ -18,7 +18,7 @@ class CatalogController extends PluginController {
     
     public function __construct() {
         $this->setLayout('backend');
-        $this->assignToLayout('sidebar', new View('../../plugins/catalog/views/backend/sidebar'));
+        $this->assignToLayout('sidebar', new View('../../plugins/catalog/views/sidebar'));
     }
     
     private function _store($model, $action, $id = FALSE) {
@@ -112,26 +112,26 @@ class CatalogController extends PluginController {
             Flash::setNow('error', implode('<br/>', $errors));
             
             if ($model == 'product') {
-                $this->display('catalog/views/backend/editProduct', array(
+                $this->display('catalog/views/product/edit', array(
                     'action' => $action,
                     'product' => $obj,
                     'categories' => Category::findAll()
                 ));
             }
             elseif ($model == 'category') {
-                $this->display('catalog/views/backend/editCategory', array(
+                $this->display('catalog/views/category/edit', array(
                     'action' => $action,
                     'category' => $obj
                 ));
             }
             elseif ($model == 'brand') {
-                $this->display('catalog/views/backend/editBrand', array(
+                $this->display('catalog/views/brand/edit', array(
                     'action' => $action,
                     'product' => $obj
                 ));
             }
             elseif ($model == 'attribute') {
-                $this->display('catalog/views/backend/editAttribute', array(
+                $this->display('catalog/views/attribute/edit', array(
                     'action' => $action,
                     'attribute' => $obj
                 ));
@@ -150,9 +150,6 @@ class CatalogController extends PluginController {
         }
         else {
             Flash::set('error', __(ucfirst($model) . ' has not been saved!'));
-            
-            print_r($obj);
-            die;
             
             $url = 'plugin/catalog/' . $model . '/';
             $url .= ( $action == 'edit') ? 'edit/' . $id : 'add/';
@@ -181,9 +178,10 @@ class CatalogController extends PluginController {
             }
             
             $data = Flash::get('post_data');
-            $attribute = new Attribute($data);
+            $attribute = new Attribute();
+            if (!is_null($data)) $attribute->setFromData($data);
 
-            $this->display('catalog/views/backend/editAttribute', array(
+            $this->display('catalog/views/attribute/edit', array(
                 'action' => 'add',
                 'attribute' => $attribute
             ));
@@ -217,7 +215,7 @@ class CatalogController extends PluginController {
                 }
                 
                 if ($attribute = Attribute::findById($id)) {
-                    $this->display('catalog/views/backend/editAttribute', array(
+                    $this->display('catalog/views/attribute/edit', array(
                         'action' => 'edit',
                         'attribute' => $attribute
                     ));
@@ -260,7 +258,7 @@ class CatalogController extends PluginController {
             'order' => $order_sql . ' ' . strtoupper($order_direction)
         ));
         
-        $this->display('catalog/views/backend/attributes', array(
+        $this->display('catalog/views/attribute/index', array(
             'attributes' => $attributes,
             'order_by' => $order_by,
             'order_direction' => $order_direction
@@ -274,9 +272,10 @@ class CatalogController extends PluginController {
             }
             
             $data = Flash::get('post_data');
-            $brand = new Brand($data);
+            $brand = new Brand();
+            if (!is_null($data)) $brand->setFromData($data);
 
-            $this->display('catalog/views/backend/editBrand', array(
+            $this->display('catalog/views/brand/edit', array(
                 'action' => 'add',
                 'brand' => $brand
             ));
@@ -310,7 +309,7 @@ class CatalogController extends PluginController {
                 }
                 
                 if ($brand = Brand::findById($id)) {
-                    $this->display('catalog/views/backend/editBrand', array(
+                    $this->display('catalog/views/brand/edit', array(
                         'action' => 'edit',
                         'brand' => $brand
                     ));
@@ -365,7 +364,7 @@ class CatalogController extends PluginController {
             ));
         }
         
-        $this->display('catalog/views/backend/brands', array(
+        $this->display('catalog/views/brand/index', array(
             'brands' => $brands,
             'order_by' => $order_by,
             'order_direction' => $order_direction
@@ -379,7 +378,7 @@ class CatalogController extends PluginController {
             'limit' => 1
         ));
         
-        $this->display('catalog/views/backend/categories', array(
+        $this->display('catalog/views/category/index', array(
             'root' => $root,
             'content_children' => $this->categoryChildren(1, 0, true)
         ));
@@ -396,11 +395,13 @@ class CatalogController extends PluginController {
             }
             
             $data = Flash::get('post_data');
-            $category = new Category($data);
+            $category = new Category();
+            if (!is_null($data)) $category->setFromData($data);
+            
             $category->parent_id = (int) $id;
             $category->parent = Category::findById($category->parent_id);
 
-            $this->display('catalog/views/backend/editCategory', array(
+            $this->display('catalog/views/category/edit', array(
                 'action' => 'add',
                 'category' => $category,
                 'attributes' => Attribute::findAll()
@@ -435,7 +436,7 @@ class CatalogController extends PluginController {
                 }
                 
                 if ($category = Category::findById($id)) {
-                    $this->display('catalog/views/backend/editCategory', array(
+                    $this->display('catalog/views/category/edit', array(
                         'action' => 'edit',
                         'category' => $category,
                         'attributes' => Attribute::findAll()
@@ -472,7 +473,7 @@ class CatalogController extends PluginController {
             }
         }
 
-        $content = new View('../../plugins/catalog/views/backend/category_children', array(
+        $content = new View('../../plugins/catalog/views/category/children', array(
             'children' => $children,
             'level' => $level + 1,
             'settings' => Plugin::getAllSettings(self::PLUGIN_NAME)
@@ -489,12 +490,12 @@ class CatalogController extends PluginController {
     public function documentation() {
         $locale = strtolower(i18n::getLocale());
         $local_doc = $locale . '-documentation';
-        $path = PLUGINS_ROOT . '/catalog/views/backend/documentation/';
+        $path = PLUGINS_ROOT . '/catalog/views/documentation/';
 
         if (!file_exists( $path . $local_doc . '.php' ))
             $local_doc = 'en-documentation';
 
-        $this->display('catalog/views/backend/documentation/' . $local_doc );
+        $this->display('catalog/views/documentation/' . $local_doc );
     }
     
     public function export($model = null, $format = null) {
@@ -511,12 +512,8 @@ class CatalogController extends PluginController {
                     __('URL')
                 );
                 
-                $product_variants = ProductVariant::find(array(
-                    'include' => array('product' => array('category', 'brand'))
-                ));
-                
                 $products = Product::find(array(
-                    'select' => '*',
+                    'select' => '*, prod_var.description AS name',
                     'from' => 'catalog_product AS prod',
                     'joins' => 'LEFT JOIN catalog_product_variant AS prod_var ON prod_var.product_id = prod.id',
                     'include' => array('category', 'brand')
@@ -533,7 +530,7 @@ class CatalogController extends PluginController {
                     
                     $data[] = array(
                         $product->sku,
-                        $product->price,
+                        number_format($product->price, 2, ',', ''),
                         $brand_name,
                         $product->name,
                         $product->category->title,
@@ -543,13 +540,13 @@ class CatalogController extends PluginController {
             }
             
             if ($format == 'csv') {
-                echo new View('../../plugins/catalog/views/backend/export_csv', array(
+                echo new View('../../plugins/catalog/views/export/csv', array(
                     'model' => $model,
                     'data' => $data
                 ));
             }
             else {
-                $this->display('catalog/views/backend/export', array(
+                $this->display('catalog/views/export/index', array(
                     'model' => $model
                 ));
             }
@@ -614,9 +611,10 @@ class CatalogController extends PluginController {
             }
             
             $data = Flash::get('post_data');
-            $product = new Product($data);
+            $product = new Product();
+            if (!is_null($data)) $product->setFromData($data);
 
-            $this->display('catalog/views/backend/editProduct', array(
+            $this->display('catalog/views/product/edit', array(
                 'action' => 'add',
                 'product' => $product,
                 'brands' => Brand::findAll(),
@@ -653,7 +651,7 @@ class CatalogController extends PluginController {
                 }
                 
                 if ($product = Product::findById($id)) {
-                    $this->display('catalog/views/backend/editProduct', array(
+                    $this->display('catalog/views/product/edit', array(
                         'action' => 'edit',
                         'product' => $product,
                         'brands' => Brand::findAll(),
@@ -693,8 +691,8 @@ class CatalogController extends PluginController {
             'brand' => 'CASE WHEN brand.id IS NULL THEN 1 ELSE 0 END, brand.name',
             'category' => 'category.title',
             'variants' => 'variant_count',
-            'price' => 'min_price',
-            'stock' => 'total_stock'
+            'price' => 'CASE WHEN variant.id IS NULL THEN 1 ELSE 0 END, min_price',
+            'stock' => 'CASE WHEN variant.id IS NULL THEN 1 ELSE 0 END, total_stock'
         );
         
         if (!isset($allowed_columns[$order_by])) {
@@ -763,7 +761,7 @@ class CatalogController extends PluginController {
             
         }
         
-        $this->display('catalog/views/backend/products', array(
+        $this->display('catalog/views/product/index', array(
             'products' => $products,
             'order_by' => $order_by,
             'order_direction' => $order_direction
@@ -795,7 +793,7 @@ class CatalogController extends PluginController {
             Flash::setNow('success', __('Settings have been saved!'));
         }
         
-        $this->display('catalog/views/backend/settings', array(
+        $this->display('catalog/views/settings', array(
             'settings' => Plugin::getAllSettings(self::PLUGIN_NAME),
             'layouts'  => Layout::findAll(array())
         ));
