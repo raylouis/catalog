@@ -6,7 +6,7 @@ if (!defined('IN_CMS')) { exit(); }
 * 
 * Plugin for displaying products that can be bought at different sellers.
 * 
-* @author Nic Wortel <nd.wortel@gmail.com>
+* @author Nic Wortel <nic.wortel@nth-root.nl>
 * 
 * @file        /views/backend/categories.php
 * @date        12/10/2011
