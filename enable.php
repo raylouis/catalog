@@ -4,14 +4,14 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /enable.php
  * @date        28/09/2012
  */
 
 Plugin::setAllSettings(array(
-    'layout_id' => Page::findById(1)->layout_id,
+    'layout_id' => 0,
     'decimal_seperator' => 'point',
     'brands_title' => 'Brands',
     'brands_slug' => 'brands'
@@ -19,119 +19,114 @@ Plugin::setAllSettings(array(
 
 $PDO = Record::getConnection();
 
-$PDO->exec("CREATE TABLE `catalog_attribute` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
-  `slug` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci,
-  `type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `unit` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+$PDO->exec("CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_brand` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(255) NOT NULL ,
+  `slug` VARCHAR(255) NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `website` VARCHAR(255) NULL DEFAULT NULL ,
+  `created_on` DATETIME NOT NULL ,
+  `updated_on` DATETIME NOT NULL ,
+  `created_by_id` INT UNSIGNED NOT NULL ,
+  `updated_by_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
+  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) )
+ENGINE = InnoDB");
 
-$PDO->exec("CREATE TABLE `catalog_brand` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
-  `slug` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci,
-  `website` varchar(255) COLLATE utf8_unicode_ci,
-  `logo_image_id` int(10) unsigned DEFAULT NULL,
-  `created_on` datetime NOT NULL,
-  `updated_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_by_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_brand_image1` (`logo_image_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+$PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_category` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `title` VARCHAR(255) NOT NULL ,
+  `slug` VARCHAR(255) NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `parent_id` INT UNSIGNED NULL DEFAULT NULL ,
+  `position` INT UNSIGNED NULL DEFAULT NULL ,
+  `created_on` DATETIME NOT NULL ,
+  `updated_on` DATETIME NOT NULL ,
+  `created_by_id` INT UNSIGNED NOT NULL ,
+  `updated_by_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_category_parent` (`parent_id` ASC) ,
+  UNIQUE INDEX `title_UNIQUE` (`title` ASC) ,
+  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) ,
+  CONSTRAINT `fk_category_parent`
+    FOREIGN KEY (`parent_id` )
+    REFERENCES `" . TABLE_PREFIX . "catalog_category` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB");
 
-$PDO->exec("CREATE TABLE `catalog_category` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
-  `slug` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci,
-  `parent_id` int(10) unsigned DEFAULT NULL,
-  `position` int(11) DEFAULT NULL,
-  `created_on` datetime NOT NULL,
-  `updated_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_by_id` int(11) NOT NULL,
-  `image_id` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_category_category1` (`parent_id`),
-  KEY `fk_category_image1` (`image_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_category` (`id`,`title`,`slug`,`description`,`parent_id`,`position`,`created_on`,`updated_on`,`created_by_id`,`updated_by_id`) VALUES (1,'Products','products',NULL,NULL,NULL,NOW(),NOW(),1,1);");
 
-$PDO->exec("INSERT INTO `catalog_category` (title, slug, parent_id, created_on, updated_on, created_by_id, updated_by_id) VALUES ('Root', '', NULL, NOW(), NOW(), 1, 1);");
+$PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(255) NOT NULL ,
+  `slug` VARCHAR(255) NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `type` VARCHAR(25) NOT NULL DEFAULT 'simple' ,
+  `category_id` INT UNSIGNED NOT NULL DEFAULT 1 ,
+  `brand_id` INT UNSIGNED NULL DEFAULT NULL ,
+  `created_on` DATETIME NOT NULL ,
+  `updated_on` DATETIME NOT NULL ,
+  `created_by_id` INT UNSIGNED NOT NULL ,
+  `updated_by_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_product_category` (`category_id` ASC) ,
+  INDEX `fk_product_brand` (`brand_id` ASC) ,
+  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) ,
+  CONSTRAINT `fk_product_category`
+    FOREIGN KEY (`category_id` )
+    REFERENCES `" . TABLE_PREFIX . "catalog_category` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_product_brand`
+    FOREIGN KEY (`brand_id` )
+    REFERENCES `" . TABLE_PREFIX . "catalog_brand` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB");
 
-$PDO->exec("CREATE TABLE `catalog_category_attribute` (
-  `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
-  `category_id` int(1) unsigned NOT NULL,
-  `attribute_id` int(1) unsigned NOT NULL,
-  `filter` tinyint(1) unsigned NOT NULL DEFAULT 0,
-  `position` int(1) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+$PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product_variant` (
+  `id` INT NOT NULL ,
+  `sku` VARCHAR(50) NULL DEFAULT NULL ,
+  `name` VARCHAR(255) NULL DEFAULT NULL ,
+  `weight` FLOAT UNSIGNED NULL DEFAULT NULL ,
+  `price` DOUBLE UNSIGNED NULL DEFAULT NULL ,
+  `vat_id` INT UNSIGNED NULL DEFAULT NULL ,
+  `stock` INT UNSIGNED NULL DEFAULT NULL ,
+  `product_id` INT UNSIGNED NOT NULL ,
+  `created_on` DATETIME NOT NULL ,
+  `updated_on` DATETIME NOT NULL ,
+  `created_by_id` INT UNSIGNED NOT NULL ,
+  `updated_by_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_product_variant_product` (`product_id` ASC) ,
+  UNIQUE INDEX `sku_UNIQUE` (`sku` ASC) ,
+  CONSTRAINT `fk_product_variant_product`
+    FOREIGN KEY (`product_id` )
+    REFERENCES `" . TABLE_PREFIX . "catalog_product` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB");
 
-$PDO->exec("CREATE TABLE `catalog_product` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `slug` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci,
-  `type` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'simple',
-  `category_id` int(10) unsigned NOT NULL DEFAULT '1',
-  `brand_id` int(10) unsigned DEFAULT NULL,
-  `created_on` datetime NOT NULL,
-  `updated_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_by_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_product_category` (`category_id`),
-  KEY `fk_product_brand1` (`brand_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+$PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute_group` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `title` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB");
 
-$PDO->exec("CREATE TABLE `catalog_product_attribute` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `attribute_id` int(10) unsigned NOT NULL,
-  `product_id` int(10) unsigned NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_product_attribute_value_attribute1` (`attribute_id`),
-  KEY `fk_product_attribute_value_product1` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-
-$PDO->exec("CREATE TABLE `catalog_product_variable_attribute` (
-  `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
-  `product_id` int(1) unsigned NOT NULL,
-  `attribute_id` int(1) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-
-$PDO->exec("CREATE TABLE `catalog_product_variable_option` (
-  `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
-  `variable_id` int(1) unsigned NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-
-$PDO->exec("CREATE TABLE `catalog_product_variant` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sku` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `weight` float unsigned DEFAULT NULL,
-  `price` double unsigned DEFAULT NULL,
-  `stock` int(10) unsigned DEFAULT NULL,
-  `product_id` int(1) unsigned NOT NULL,
-  `created_on` datetime NOT NULL,
-  `updated_on` datetime NOT NULL,
-  `created_by_id` int(10) unsigned NOT NULL,
-  `updated_by_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-
-$PDO->exec("CREATE TABLE `catalog_product_variant_attribute` (
-  `id` int(1) unsigned NOT NULL AUTO_INCREMENT,
-  `variant_id` int(1) NOT NULL,
-  `attribute_id` int(1) NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+$PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(255) NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `type` VARCHAR(64) NOT NULL ,
+  `unit` VARCHAR(20) NULL DEFAULT NULL ,
+  `attribute_group_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_attribute_attribute_group` (`attribute_group_id` ASC) ,
+  CONSTRAINT `fk_attribute_attribute_group`
+    FOREIGN KEY (`attribute_group_id` )
+    REFERENCES `" . TABLE_PREFIX . "catalog_attribute_group` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB");
