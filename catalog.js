@@ -12,4 +12,55 @@ window.onload = (function() {
         });
     }
     catch(e) {}
+    
+    try {
+        $('#attribute_attribute_type_id').change(function() {
+            
+            var type_id = $('#attribute_attribute_type_id option:selected').val();
+            var url = 'http://localhost/zandbak/admin/plugin/catalog/ajax/attribute_type_units/' + type_id;
+            
+            var request = $.ajax({
+                url: url,
+                cache: false,
+                success: function (data) {
+                    $('#attribute_default_unit_td').html(data);
+                    if (data == '') {
+                        $('#attribute_default_unit_tr').hide();
+                    }
+                    else {
+                        $('#attribute_default_unit_tr').show();
+                    }
+                }
+            });
+            
+            request.fail(function(jqXHR, textStatus) {
+                alert("Request failed: " + textStatus );
+            });
+            
+            alert('end');
+        });
+    }
+    catch(e) { alert(e) }
+    
+    try {
+        $('#product_category_id').change(function() {
+            var category_id = $('#product_category_id option:selected').val();
+            var url = 'http://localhost/zandbak/admin/plugin/catalog/ajax/product_attribute_selector/' + category_id;
+            
+            var request = $.ajax({
+                url: url,
+                cache: false,
+                success: function (data) {
+                    $('#product_simple_attributes_container').html(data);
+                }
+            });
+            
+            request.fail(function(jqXHR, textStatus) {
+                alert("Request failed: " + textStatus );
+            });
+            
+            alert('end');
+        });
+    }
+    catch(e) { alert(e) }
 });

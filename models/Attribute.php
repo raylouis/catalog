@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /models/Attribute.php
  * @date        30/09/2012
@@ -15,70 +15,69 @@ use_helper('ActiveRecord');
 class Attribute extends ActiveRecord {
     const TABLE_NAME = 'catalog_attribute';
     
+    static $belongs_to = array(
+        'type' => array(
+            'class_name' => 'AttributeType',
+            'foreign_key' => 'attribute_type_id'
+        ),
+        'default_unit' => array(
+            'class_name' => 'AttributeUnit',
+            'foreign_key' => 'default_unit_id'
+        )
+    );
     static $has_many = array(
-        'product_attributes' => array(
-            'class_name' => 'ProductAttribute',
-            'foreign_key' => 'attribute_id'
-        ),
-        'product_variable_attributes' => array(
-            'class_name' => 'ProductVariableAttribute',
-            'foreign_key' => 'attribute_id'
-        ),
-        'variant_attributes' => array(
-            'class_name' => 'ProductVariantAttribute',
-            'foreign_key' => 'attribute_id'
-        ),
-        'filter_options' => array(
-            'select' => '*, COUNT(id) AS part_count',
-            'class_name' => 'ProductVariantAttribute',
-            'foreign_key' => 'attribute_id',
-            'group' => 'value ASC'
-        ),
         'category_attributes' => array(
             'class_name' => 'CategoryAttribute',
             'foreign_key' => 'attribute_id'
+        ),
+        'categories' => array(
+            'class_name' => 'Category',
+            'foreign_key' => 'attribute_id',
+            'through' => 'category_attributes'
         )
     );
     
     public $id;
     public $name = '';
     public $description = '';
-    public $type = '';
-    public $unit;
+    public $attribute_type_id;
+    public $default_unit_id;
     
     public static function findAll() {
         return self::find(array(
-            'order' => 'id ASC'
+            'order' => 'id ASC',
+            'include' => array('type' => array('units'), 'default_unit')
         ));
     }
     
     public static function findById($id) {
         return self::find(array(
             'where' => array('id = ?', $id),
-            'limit' => 1
+            'limit' => 1,
+            'include' => array('type' => array('units'))
         ));
     }
     
-    public function findOptionsByCategory($category_id) {
-        $category_ids = Category::subcategoryIdsOf($category_id);
-        
-        $placeholders = array();
-        
-        
-        return ProductVariantAttribute::find(array(
-            'select' => 'variant_attr.*, COUNT(DISTINCT prod.id) AS prod_count',
-            'from' => ProductVariantAttribute::TABLE_NAME . ' AS variant_attr',
-            'joins' => 
-                'INNER JOIN ' . ProductVariant::TABLE_NAME . ' AS variant ON variant.id = variant_attr.variant_id
-                INNER JOIN  ' . Product::TABLE_NAME . ' AS prod ON prod.id = variant.product_id',
-            'where' => array('variant_attr.attribute_id = ? AND prod.category_id IN (' . implode(',', $category_ids) . ')', $this->id),
-            'group' => 'variant_attr.value ASC'
-        ));
-    }
+//    public function findOptionsByCategory($category_id) {
+//        $category_ids = Category::subcategoryIdsOf($category_id);
+//        
+//        $placeholders = array();
+//        
+//        
+//        return ProductVariantAttribute::find(array(
+//            'select' => 'variant_attr.*, COUNT(DISTINCT prod.id) AS prod_count',
+//            'from' => ProductVariantAttribute::TABLE_NAME . ' AS variant_attr',
+//            'joins' => 
+//                'INNER JOIN ' . ProductVariant::TABLE_NAME . ' AS variant ON variant.id = variant_attr.variant_id
+//                INNER JOIN  ' . Product::TABLE_NAME . ' AS prod ON prod.id = variant.product_id',
+//            'where' => array('variant_attr.attribute_id = ? AND prod.category_id IN (' . implode(',', $category_ids) . ')', $this->id),
+//            'group' => 'variant_attr.value ASC'
+//        ));
+//    }
     
     public function getColumns() {
         return array(
-            'id', 'name', 'description', 'type', 'unit'
+            'id', 'name', 'description', 'attribute_type_id', 'default_unit_id'
         );
     }
 }

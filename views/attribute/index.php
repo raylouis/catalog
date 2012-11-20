@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /views/backend/attributes.php
  * @date        17/09/2012
@@ -44,7 +44,7 @@ function get_sorted($column, $order, $direction) {
                 <a href="<?php echo get_url('plugin/catalog/attributes/type', get_direction('type', $order_by, $order_direction)); ?>"><?php echo __('Type'); ?></a>
             </th>
             <th class="fill <?php echo get_sorted('unit', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/attributes/unit', get_direction('unit', $order_by, $order_direction)); ?>"><?php echo __('Unit'); ?></a>
+                <a href="<?php echo get_url('plugin/catalog/attributes/unit', get_direction('unit', $order_by, $order_direction)); ?>"><?php echo __('Default unit'); ?></a>
             </th>
             <th class="icon"><?php echo __('Delete'); ?></th>
         </tr>
@@ -59,10 +59,12 @@ function get_sorted($column, $order, $direction) {
                 <a href="<?php echo get_url('plugin/catalog/attribute/edit', $attribute->id); ?>"><?php echo $attribute->name; ?></a>
             </td>
             <td class="fill">
-                <?php echo $attribute->type; ?>
+                <?php echo strtolower($attribute->type->name); ?>
             </td>
             <td class="fill">
-                <?php echo $attribute->unit; ?>
+                <?php if (isset($attribute->default_unit)): ?>
+                <?php echo strtolower($attribute->default_unit->name); ?> (<?php echo $attribute->default_unit->abbreviation; ?>)
+                <?php endif; ?>
             </td>
             <td class="icon">
                 <?php if (AuthUser::hasPermission('catalog_attribute_delete')): ?>
