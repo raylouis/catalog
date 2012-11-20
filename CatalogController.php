@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /CatalogController.php
  * @date        13/09/2012
@@ -79,8 +79,12 @@ class CatalogController extends PluginController {
         }
         elseif ($model == 'brand') {
             $data['name'] = trim($data['name']);
+            $data['website'] = trim($data['website']);
             if (empty($data['name'])) {
                 $errors[] = __('You have to specify a name!');
+            }
+            if (!empty($data['website']) && !Validate::url($data['website'])) {
+                $errors[] = __('Website is not a valid URL!');
             }
             
             if ($action == 'add') {
@@ -94,13 +98,19 @@ class CatalogController extends PluginController {
         }
         elseif ($model == 'attribute') {
             $data['name'] = trim($data['name']);
+            $data['attribute_type_id'] = (int) $data['attribute_type_id'];
             if (empty($data['name'])) {
                 $errors[] = __('You have to specify a name!');
+            }
+            if ($data['attribute_type_id'] <= 0) {
+                $errors[] = __('You have to choose an attribute type!');
             }
             
             if ($action == 'add') {
                 $obj = new Attribute();
                 $obj->setFromData($data);
+                $obj->type = new AttributeType();
+                $obj->type->units = array();
             }
             else {
                 $obj = Attribute::findById($id);
@@ -127,13 +137,14 @@ class CatalogController extends PluginController {
             elseif ($model == 'brand') {
                 $this->display('catalog/views/brand/edit', array(
                     'action' => $action,
-                    'product' => $obj
+                    'brand' => $obj
                 ));
             }
             elseif ($model == 'attribute') {
                 $this->display('catalog/views/attribute/edit', array(
                     'action' => $action,
-                    'attribute' => $obj
+                    'attribute' => $obj,
+                    'attribute_types' => AttributeType::findAll()
                 ));
             }
         }
@@ -171,6 +182,35 @@ class CatalogController extends PluginController {
         }
     }
     
+    public function ajax($action, $id) {
+        if ($action == 'attribute_type_units') {
+            if ($attribute_type = AttributeType::find(array(
+                'where' => array('id = ?', $id),
+                'limit' => 1,
+                'include' => array('units')
+            ))) {
+            
+                echo new View('../../plugins/catalog/views/ajax/attribute_type_units', array(
+                    'attribute_type' => $attribute_type
+                ));
+                
+            }
+        }
+        elseif ($action == 'product_attribute_selector') {
+            if ($category = Category::find(array(
+                'where' => array('id = ?', $id),
+                'limit' => 1,
+                'include' => array('attributes')
+            ))) {
+            
+                echo new View('../../plugins/catalog/views/ajax/product_attribute_selector', array(
+                    'category' => $category
+                ));
+                
+            }
+        }
+    }
+    
     public function attribute($action, $id = NULL) {
         if ($action == 'add') {
             if (get_request_method() == 'POST') {
@@ -180,10 +220,13 @@ class CatalogController extends PluginController {
             $data = Flash::get('post_data');
             $attribute = new Attribute();
             if (!is_null($data)) $attribute->setFromData($data);
-
+            $attribute->type = new AttributeType();
+            $attribute->type->units = array();
+            
             $this->display('catalog/views/attribute/edit', array(
                 'action' => 'add',
-                'attribute' => $attribute
+                'attribute' => $attribute,
+                'attribute_types' => AttributeType::findAll()
             ));
             
         }
@@ -217,7 +260,8 @@ class CatalogController extends PluginController {
                 if ($attribute = Attribute::findById($id)) {
                     $this->display('catalog/views/attribute/edit', array(
                         'action' => 'edit',
-                        'attribute' => $attribute
+                        'attribute' => $attribute,
+                        'attribute_types' => AttributeType::findAll()
                     ));
                 }
                 else {
@@ -239,9 +283,7 @@ class CatalogController extends PluginController {
     public function attributes($order_by = NULL, $order_direction = 'asc', $page = 1) {
         $allowed_columns = array(
             'id' => 'id',
-            'name' => 'name',
-            'type' => 'type',
-            'unit' => 'unit'
+            'name' => 'name'
         );
         
         if (!isset($allowed_columns[$order_by])) {
@@ -255,7 +297,8 @@ class CatalogController extends PluginController {
         }
         
         $attributes = Attribute::find(array(
-            'order' => $order_sql . ' ' . strtoupper($order_direction)
+            'order' => $order_sql . ' ' . strtoupper($order_direction),
+            'include' => array('type', 'default_unit')
         ));
         
         $this->display('catalog/views/attribute/index', array(
@@ -396,6 +439,7 @@ class CatalogController extends PluginController {
             
             $data = Flash::get('post_data');
             $category = new Category();
+            $category->attributes = array();
             if (!is_null($data)) $category->setFromData($data);
             
             $category->parent_id = (int) $id;
@@ -513,7 +557,7 @@ class CatalogController extends PluginController {
                 );
                 
                 $products = Product::find(array(
-                    'select' => '*, prod_var.description AS name',
+                    'select' => '*, prod_var.name AS name',
                     'from' => 'catalog_product AS prod',
                     'joins' => 'LEFT JOIN catalog_product_variant AS prod_var ON prod_var.product_id = prod.id',
                     'include' => array('category', 'brand')
@@ -726,7 +770,7 @@ class CatalogController extends PluginController {
                         OR category.title LIKE ?
                         OR brand.name LIKE ?
                         OR variant.sku LIKE ?
-                        OR variant.description LIKE ?', $q, $q, $q, $q, $q, $q),
+                        OR variant.name LIKE ?', $q, $q, $q, $q, $q, $q),
                 'group' => 'product.id',
                 'order' => $order_sql . ' ' . strtoupper($order_direction),
                 'include' => array(
