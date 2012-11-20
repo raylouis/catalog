@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /models/CategoryAttribute.php
  * @date        25/10/2012
@@ -34,6 +34,13 @@ class CategoryAttribute extends ActiveRecord {
     public static function findByCategoryId($id) {
         return self::find(array(
             'where' => array('category_id = ?', $id)
+        ));
+    }
+    
+    public static function findByCategoryIdAndAttributeId($category_id, $attribute_id) {
+        return self::find(array(
+            'where' => array('category_id = ? AND attribute_id = ?', $category_id, $attribute_id),
+            'limit' => 1
         ));
     }
 }

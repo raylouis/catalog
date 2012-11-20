@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /views/backend/editCategory.php
  * @date        17/09/2012
@@ -46,36 +46,23 @@ if (!defined('IN_CMS')) { exit(); }
     <h3>Attributes</h3>
     
     <ul>
-        <?php $attr_count = 0; ?>
+        <?php $i = 1; ?>
         <?php foreach ($category->attributes as $category_attribute): ?>
-        <?php $attr_count++; ?>
         <li>
-            <select name="attributes[][id]">
-                <option></option>
+            <input type="hidden" name="attributes[<?php echo $i; ?>][old_id]" value="<?php echo $category_attribute->id; ?>" />
+            <select name="attributes[<?php echo $i; ?>][id]">
                 <?php foreach ($attributes as $attribute): ?>
                 <option value="<?php echo $attribute->id; ?>"<?php echo ($attribute->id == $category_attribute->id) ? ' selected="selected"' : ''; ?>><?php echo $attribute->name; ?></option>
                 <?php endforeach; ?>
             </select>
 
-            <?php if ($attr_count > 1): ?>
             <img width="16" height="16" src="<?php echo URL_PUBLIC; ?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" />
-            <?php endif; ?>
         </li>
+        <?php $i++; ?>
         <?php endforeach; ?>
-        <?php $attr_count++; ?>
-        <li>
-            <select name="attributes[][id]">
-                <option></option>
-                <?php foreach ($attributes as $attribute): ?>
-                <option value="<?php echo $attribute->id; ?>"><?php echo $attribute->name; ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <?php if ($attr_count > 1): ?>
-            <img width="16" height="16" src="<?php echo URL_PUBLIC; ?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" />
-            <?php endif; ?>
-        </li>
     </ul>
+    
+    <p>Add a new attribute <img width="16" height="16" alt="Verwijderen" src="http://localhost/zandbak/wolf/icons/add-16.png"></p>
     
     <p class="buttons">
         <input class="button" name="commit" type="submit" accesskey="s" value="<?php echo __('Save and Close'); ?>" />

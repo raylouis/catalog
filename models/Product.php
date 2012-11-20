@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /models/Product.php
  * @date        12/09/2012
@@ -29,24 +29,6 @@ class Product extends ActiveRecord {
         'variants' => array(
             'class_name' => 'ProductVariant',
             'foreign_key' => 'product_id'
-        ),
-        'product_attributes' => array(
-            'class_name' => 'ProductAttribute',
-            'foreign_key' => 'product_id'
-        ),
-        'attributes' => array(
-            'class_name' => 'Attribute',
-            'foreign_key' => 'product_id',
-            'through' => 'product_attributes'
-        ),
-        'product_variable_attributes' => array(
-            'class_name' => 'ProductVariableAttribute',
-            'foreign_key' => 'product_id'
-        ),
-        'variable_attributes' => array(
-            'class_name' => 'Attribute',
-            'foreign_key' => 'product_id',
-            'through' => 'product_variable_attributes'
         )
     );
     
@@ -75,10 +57,10 @@ class Product extends ActiveRecord {
     }
     
     public function afterSave() {
-        if ($this->type == 'simple') {
+        if ($this->type == 'simple' && isset($_POST['variant'])) {
             $data = $_POST['variant'];
             
-            if ($variant->sku != '' && $variant->price > 0) {
+            if ($data['sku'] != '' && $data['price'] > 0) {
                 if (isset($data['id'])) {
                     $variant = ProductVariant::findById($data['id']);
                     $variant->setFromData($data);
@@ -87,7 +69,7 @@ class Product extends ActiveRecord {
                     $variant = new ProductVariant();
                     $variant->setFromData($data);
                 }
-                $variant->description = $this->name();
+                $variant->name = $this->name();
                 $variant->product_id = $this->id;
 
                 if (!$variant->save()) {
@@ -197,9 +179,8 @@ class Product extends ActiveRecord {
             'where' => array('id = ?', $id),
             'limit' => 1,
             'include' => array(
-                'variants',
-                'variable_attributes',
-                'options'
+                'category',
+                'variants'
             )
         ));
     }

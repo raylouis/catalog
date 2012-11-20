@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /views/backend/products.php
  * @date        13/09/2012
@@ -41,9 +41,6 @@ function get_sorted($column, $order, $direction) {
 <table class="product list">
     <thead>
         <tr>
-            <th class="number<?php echo get_sorted('id', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/id', get_direction('id', $order_by, $order_direction)); ?>"><?php echo __('ID'); ?></a>
-            </th>
             <th class="fill<?php echo get_sorted('name', $order_by, $order_direction); ?>">
                 <a href="<?php echo get_url('plugin/catalog/products/name', get_direction('name', $order_by, $order_direction)); ?>"><?php echo __('Name'); ?></a>
             </th>
@@ -69,9 +66,6 @@ function get_sorted($column, $order, $direction) {
     <tbody>
         <?php foreach($products as $product): ?>
         <tr>
-            <td class="number">
-                <?php echo $product->id; ?>
-            </td>
             <td class="fill">
                 <a href="<?php echo get_url('plugin/catalog/product/edit', $product->id); ?>">
                     <?php echo $product->name; ?>
@@ -88,11 +82,7 @@ function get_sorted($column, $order, $direction) {
                 <?php echo $product->category->title; ?>
             </td>
             <td class="number">
-                <?php if ($product->type == 'variants'): ?>
                 <?php echo $product->variant_count; ?>
-                <?php else: ?>
-                <span class="not-applicable"><?php echo __('None'); ?></span>
-                <?php endif; ?>
             </td>
             <td class="price">
                 <?php if (!is_null($product->min_price)): ?>

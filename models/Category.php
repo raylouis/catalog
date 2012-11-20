@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /models/Category.php
  * @date        13/09/2012
@@ -64,6 +64,36 @@ class Category extends ActiveRecord {
         }
         
         $this->setUrl();
+    }
+    
+    public function afterSave() {
+//        if (isset($_POST['attribute_ids'])) {
+//            $old_attributes = CategoryAttribute::findByCategoryId($this->id);
+//            
+//            foreach ($old_attributes as $cat_attr) {
+//                $old_ids[] = $cat_attr->attribute_id;
+//            }
+//            
+//            $new_ids = $_POST['attribute_ids'];
+//            
+//            $delete_ids = array_diff($old_ids, $new_ids);
+//            $insert_ids = array_diff($new_ids, $old_ids);
+//            
+//            echo '<pre>';
+//            
+//            foreach ($delete_ids as $delete_id) {
+//                if ($category_attribute = CategoryAttribute::findByCategoryIdAndAttributeId($this->id, $delete_id)) {
+//                    $category_attribute->delete();
+//                    //print_r($category_attribute);
+//                }
+//            }
+//            
+//            print_r($delete_ids);
+//            print_r($insert_ids);
+//            echo '</pre>';
+//            die;
+//        }
+        return true;
     }
     
     public function beforeDelete() {
@@ -255,20 +285,22 @@ class Category extends ActiveRecord {
             'select' => 'attribute.*',
             'from' => 'catalog_attribute AS attribute',
             'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = attribute.id',
-            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ')'
+            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ')',
+            'include' => array('type' => array('units'))
         ));
     }
     
     public function unlimitedFilters() {
-        $category_ids = $this->parentIds();
-        
-        return Attribute::find(array(
-            'select' => 'filter.*',
-            'from' => 'catalog_attribute AS filter',
-            'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = filter.id',
-            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ') AND category_attribute.filter = 1',
-            'include' => array('filter_options')
-        ));
+//        $category_ids = $this->parentIds();
+//        
+//        return Attribute::find(array(
+//            'select' => 'filter.*',
+//            'from' => 'catalog_attribute AS filter',
+//            'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = filter.id',
+//            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ') AND category_attribute.filter = 1',
+//            'include' => array('filter_options')
+//        ));
+        return array();
     }
     
     public function unlimitedBrands() {

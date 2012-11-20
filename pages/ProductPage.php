@@ -9,7 +9,6 @@ class ProductPage extends CatalogPage {
         $this->keywords = str_replace(' ', ', ', $product->name());
         $this->description = $product->description;
         $this->layout_id = Plugin::getSetting('layout_id', 'catalog');
-        $this->layout_id = 2;
         
         if ($product->category_id > 0) {
             $product->category = Category::findById($product->category_id);

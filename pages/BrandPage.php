@@ -9,7 +9,6 @@ class BrandPage extends CatalogPage {
         $this->keywords = $brand->name;
         $this->description = $brand->description;
         $this->layout_id = Plugin::getSetting('layout_id', 'catalog');
-        $this->layout_id = 2;
         
         $this->parent = new BrandListPage(Brand::findAll());
         

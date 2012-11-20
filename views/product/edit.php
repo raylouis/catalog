@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /views/backend/products.php
  * @date        13/09/2012
@@ -41,7 +41,7 @@ foreach ($brands as $brand) {
             <tr>
                 <td class="label"><label><?php echo __('Category'); ?></label></td>
                 <td class="field">
-                    <select class="selectbox" name="product[category_id]">
+                    <select class="selectbox" name="product[category_id]" id="product_category_id">
 <?php
 foreach ($categories as $category) {
 ?>
@@ -130,15 +130,34 @@ foreach ($categories as $category) {
         <h3>Simple product attributes</h3>
         
         <table>
-            <tbody>
-                <?php foreach (Attribute::findAll() as $attribute): ?>
+            <tbody id="product_simple_attributes_container">
+                <?php if (isset($product->category)): ?>
+                <?php $i = 1; ?>
+                <?php foreach ($product->category->unlimitedAttributes() as $attribute): ?>
                 <tr>
-                    <td class="label"><?php echo $attribute->name; ?></td>
+                    <td class="label"><label for="attribute_<?php echo $i; ?>_value"><?php echo $attribute->name; ?></label></td>
                     <td class="field">
-                        <input type="text" /> <?php echo $attribute->unit; ?>
+                        <?php if (in_array($attribute->type->data_type, array('INT', 'FLOAT'))): ?>
+                            <input class="textbox number" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" /> 
+
+                            <?php if (count($attribute->type->units) > 0): ?>
+                            <select name="attributes[<?php echo $i; ?>][unit]">
+                                <?php foreach ($attribute->type->units as $unit): ?>
+                                <option value="<?php echo $unit->id; ?>"<?php echo ($unit->id == $attribute->default_unit_id) ? ' selected="selected"' : ''; ?>><?php echo $unit->abbreviation; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php endif; ?>
+                        <?php elseif($attribute->type->data_type == 'BOOLEAN'): ?>
+                            <input type="checkbox" id="attribute_<?php echo $i; ?>_value" />
+                        <?php elseif($attribute->type->data_type == 'VARCHAR'): ?>
+                            <input class="textbox" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" /> 
+
+                        <?php endif; ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
                 <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -167,7 +186,7 @@ foreach ($categories as $category) {
             <li>
                 <select>
                     <option></option>
-                    <?php foreach (Attribute::findAll() as $attribute): ?>
+                    <?php foreach ($product->category->attributes as $attribute): ?>
                     <option><?php echo $attribute->name; ?></option>
                     <?php endforeach; ?>
                 </select>

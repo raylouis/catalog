@@ -8,7 +8,6 @@ class CategoryPage extends CatalogPage {
         $this->slug = $category->slug;
         $this->keywords = $category->title;
         $this->layout_id = Plugin::getSetting('layout_id', 'catalog');
-        $this->layout_id = 2;
         
         if ($category->parent_id > 1) {
             $category->parent = Category::findById($category->parent_id);

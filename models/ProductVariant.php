@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /models/ProductPart.php
  * @date        17/09/2012
@@ -28,7 +28,7 @@ class ProductVariant extends ActiveRecord {
     
     public $id;
     public $sku;
-    public $description = '';
+    public $name = '';
     public $weight;
     public $price;
     public $vat_id;
@@ -100,7 +100,7 @@ class ProductVariant extends ActiveRecord {
     
     public function getColumns() {
         return array(
-            'id', 'sku', 'description', 'weight', 'price', 'vat_id', 'stock', 'product_id',
+            'id', 'sku', 'name', 'weight', 'price', 'vat_id', 'stock', 'product_id',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
