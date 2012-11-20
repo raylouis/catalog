@@ -4,7 +4,7 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nd.wortel@gmail.com>
+ * @author Nic Wortel <nic.wortel@nth-root.nl>
  * 
  * @file        /index.php
  * @date        11/09/2012
@@ -36,8 +36,8 @@ AutoLoader::addFolder(CATALOG.'/pages');
 $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
 
 Dispatcher::addRoute(array(
-    '/' . $brands_slug . URL_SUFFIX => '/plugin/catalog/frontendBrandList',
-    '/' . $brands_slug . '/:any' . URL_SUFFIX => '/plugin/catalog/frontendBrand/$1'
+    '/' . $brands_slug => '/plugin/catalog/frontendBrandList',
+    '/' . $brands_slug . '/:any' => '/plugin/catalog/frontendBrand/$1'
 ));
 
 if ($categories = Category::findByParentId(1)) {
