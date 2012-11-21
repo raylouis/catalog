@@ -1,7 +1,7 @@
 <?php
 if (!defined('IN_CMS')) { exit(); }
 
-/*
+/**
  * Catalog
  * 
  * The catalog plugin adds a catalog or webshop to Wolf CMS.
