@@ -2,15 +2,17 @@
 if (!defined('IN_CMS')) { exit(); }
 
 /**
-* Catalog
-* 
-* Plugin for displaying products that can be bought at different sellers.
-* 
-* @author Nic Wortel <nic.wortel@nth-root.nl>
-* 
-* @file        /views/backend/categories.php
-* @date        12/10/2011
-*/
+ * Catalog
+ * 
+ * The catalog plugin adds a catalog or webshop to Wolf CMS.
+ * 
+ * @package     Plugins
+ * @subpackage  catalog
+ * 
+ * @author      Nic Wortel <nic.wortel@nth-root.nl>
+ * @copyright   Nic Wortel, 2012
+ * @version     0.0.1
+ */
 
 ?>
 

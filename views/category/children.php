@@ -1,20 +1,19 @@
 <?php
-/*
- * Wolf CMS - Content Management Simplified. <http://www.wolfcms.org>
- * Copyright (C) 2009-2010 Martijn van der Kleijn <martijn.niji@gmail.com>
- * Copyright (C) 2008 Philippe Archambault <philippe.archambault@gmail.com>
- *
- * This file is part of Wolf CMS. Wolf CMS is licensed under the GNU GPLv3 license.
- * Please see license.txt for the full license text.
- */
+if (!defined('IN_CMS')) { exit(); }
 
 /**
- * @package Views
- *
- * @author Philippe Archambault <philippe.archambault@gmail.com>
- * @copyright Philippe Archambault, 2008
- * @license http://www.gnu.org/licenses/gpl.html GPLv3 license
+ * Catalog
+ * 
+ * The catalog plugin adds a catalog or webshop to Wolf CMS.
+ * 
+ * @package     Plugins
+ * @subpackage  catalog
+ * 
+ * @author      Nic Wortel <nic.wortel@nth-root.nl>
+ * @copyright   Nic Wortel, 2012
+ * @version     0.0.1
  */
+
 ?>
 <ul<?php if ($level == 1) echo ' id="site-map" class="sortable tree-root"'; else echo ' class="sortable child"'; ?>>
 <?php foreach($children as $child): ?> 

@@ -4,11 +4,16 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nic.wortel@nth-root.nl>
+ * The catalog plugin adds a catalog or webshop to Wolf CMS.
  * 
- * @file        /views/backend/products.php
- * @date        13/09/2012
+ * @package     Plugins
+ * @subpackage  catalog
+ * 
+ * @author      Nic Wortel <nic.wortel@nth-root.nl>
+ * @copyright   Nic Wortel, 2012
+ * @version     0.0.1
  */
+
 ?>
 
 <h1><?php echo __(ucfirst($action).' product'); ?></h1>

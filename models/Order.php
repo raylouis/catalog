@@ -4,12 +4,15 @@ if (!defined('IN_CMS')) { exit(); }
 /**
  * Catalog
  * 
- * @author Nic Wortel <nic.wortel@nth-root.nl>
+ * The catalog plugin adds a catalog or webshop to Wolf CMS.
  * 
- * @file        /models/Brand.php
- * @date        17/09/2012
+ * @package     Plugins
+ * @subpackage  catalog
+ * 
+ * @author      Nic Wortel <nic.wortel@nth-root.nl>
+ * @copyright   Nic Wortel, 2012
+ * @version     0.0.1
  */
-
 use_helper('ActiveRecord');
 
 class Order extends ActiveRecord {
