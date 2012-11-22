@@ -34,7 +34,7 @@ function get_sorted($column, $order, $direction) {
 <h1><?php echo __('Products'); ?></h1>
 
 <form name="search" method="post" style="float: right;">
-    <input type="text" name="search" autocomplete="off" placeholder="<?php echo (isset($_POST['search']) && $_POST['search'] != '') ? $_POST['search'] : 'Zoeken...'; ?>" />
+    <input type="text" name="search" autocomplete="off" placeholder="<?php echo (isset($_POST['search']) && $_POST['search'] != '') ? $_POST['search'] : __('Search'); ?>" />
 </form>
 
 <p>
@@ -96,7 +96,7 @@ function get_sorted($column, $order, $direction) {
                 € <?php echo number_format($product->min_price, 2, '.', ','); ?>
                 <?php endif; ?>
                 <?php else: ?>
-                <span class="not-applicable">N/A</span>
+                <span class="not-applicable"><?php echo __('N/A'); ?></span>
                 <?php endif; ?>
             </td>
             <td class="number">
@@ -104,7 +104,7 @@ function get_sorted($column, $order, $direction) {
                 <?php if (!is_null($product->stock)): ?>
                 <?php echo $product->stock; ?>
                 <?php else: ?>
-                <span class="not-applicable">N/A</span>
+                <span class="not-applicable"><?php echo __('N/A'); ?></span>
                 <?php endif; ?>
             </td>
             <td class="icon">

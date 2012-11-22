@@ -37,7 +37,7 @@ if (!defined('IN_CMS')) { exit(); }
     <?php if (isset($category->parent)): ?>
     <?php $category->parent->attributes = $category->parent->unlimitedAttributes(); ?>
     <?php if ($category->parent->attributes > 0): ?>
-    <h3>Inherited attributes</h3>
+    <h3><?php echo __('Inherited attributes'); ?></h3>
     
     <ul>
         <?php foreach ($category->parent->attributes as $inherited_attribute): ?>
@@ -48,7 +48,7 @@ if (!defined('IN_CMS')) { exit(); }
     <?php endif; ?>
     <?php endif; ?>
     
-    <h3>Attributes</h3>
+    <h3><?php echo __('Attributes'); ?></h3>
     
     <ul>
         <?php $i = 1; ?>
