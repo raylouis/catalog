@@ -19,6 +19,7 @@ return array(
     'Add brand' => 'Merk toevoegen',
     'Add category' => 'Categorie toevoegen',
     'Add product' => 'Product toevoegen',
+    'Are you sure you wish to delete :name?' => 'Weet u zeker dat u :name wilt verwijderen?',
     'Attributes' => 'Attributen',
     'Brand' => 'Merk',
     'Brands' => 'Merken',
