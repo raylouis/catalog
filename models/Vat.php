@@ -26,12 +26,9 @@ class Vat extends ActiveRecord {
         )
     );
     
-    
     public $id;
     public $name = '';
-    public $description = '';
-    public $type = '';
-    public $unit;
+    public $percentage;
     
     public static function findAll() {
         return self::find(array(

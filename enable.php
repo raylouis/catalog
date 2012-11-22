@@ -89,6 +89,14 @@ $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB");
 
+$PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_vat` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(255) NOT NULL ,
+  `percentage` FLOAT UNSIGNED NOT NULL DEFAULT 0 ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
+ENGINE = InnoDB");
+
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product_variant` (
   `id` INT NOT NULL ,
   `sku` VARCHAR(50) NULL DEFAULT NULL ,
@@ -105,9 +113,15 @@ $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product_var
   PRIMARY KEY (`id`) ,
   INDEX `fk_product_variant_product` (`product_id` ASC) ,
   UNIQUE INDEX `sku_UNIQUE` (`sku` ASC) ,
+  INDEX `fk_product_variant_vat` (`vat_id` ASC) ,
   CONSTRAINT `fk_product_variant_product`
     FOREIGN KEY (`product_id` )
     REFERENCES `" . TABLE_PREFIX . "catalog_product` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  CONSTRAINT `fk_product_variant_vat`
+    FOREIGN KEY (`vat_id` )
+    REFERENCES `" . TABLE_PREFIX . "catalog_vat` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB");
