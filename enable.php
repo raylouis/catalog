@@ -123,7 +123,7 @@ $PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit_system` (`id
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute_type` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,
-  `data_type` ENUM('BOOLEAN','INT','FLOAT','VARCHAR','DATE','DATETIME') NOT NULL DEFAULT INT ,
+  `data_type` ENUM('BOOLEAN','INT','FLOAT','VARCHAR','DATE','DATETIME') NOT NULL DEFAULT 'INT' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
 ENGINE = InnoDB");
