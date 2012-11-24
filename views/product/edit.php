@@ -136,33 +136,11 @@ foreach ($categories as $category) {
         
         <table>
             <tbody id="product_simple_attributes_container">
-                <?php if (isset($product->category)): ?>
-                <?php $i = 1; ?>
-                <?php foreach ($product->category->unlimitedAttributes() as $attribute): ?>
-                <tr>
-                    <td class="label"><label for="attribute_<?php echo $i; ?>_value"><?php echo $attribute->name; ?></label></td>
-                    <td class="field">
-                        <?php if (in_array($attribute->type->data_type, array('INT', 'FLOAT'))): ?>
-                            <input class="textbox number" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" /> 
-
-                            <?php if (count($attribute->type->units) > 0): ?>
-                            <select name="attributes[<?php echo $i; ?>][unit]">
-                                <?php foreach ($attribute->type->units as $unit): ?>
-                                <option value="<?php echo $unit->id; ?>"<?php echo ($unit->id == $attribute->default_unit_id) ? ' selected="selected"' : ''; ?>><?php echo $unit->abbreviation; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <?php endif; ?>
-                        <?php elseif($attribute->type->data_type == 'BOOLEAN'): ?>
-                            <input type="checkbox" id="attribute_<?php echo $i; ?>_value" />
-                        <?php elseif($attribute->type->data_type == 'VARCHAR'): ?>
-                            <input class="textbox" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" /> 
-
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <?php $i++; ?>
-                <?php endforeach; ?>
-                <?php endif; ?>
+                <?php
+                echo new View('../../plugins/catalog/views/ajax/product_attribute_selector', array(
+                    'category' => $product->category
+                ));
+                ?>
             </tbody>
         </table>
     </div>

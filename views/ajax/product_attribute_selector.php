@@ -21,13 +21,21 @@ if (!defined('IN_CMS')) { exit(); }
 <tr>
     <td class="label"><label for="attribute_<?php echo $i; ?>_value"><?php echo $attribute->name; ?></label></td>
     <td class="field">
-        <input class="textbox" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" /> 
+        <?php if (in_array($attribute->type->data_type, array('INT', 'FLOAT'))): ?>
+            <input class="textbox number" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" /> 
 
-        <select name="attributes[<?php echo $i; ?>][unit]">
-            <?php foreach ($attribute->type->units as $unit): ?>
-            <option value="<?php echo $unit->id; ?>"<?php echo ($unit->id == $attribute->default_unit_id) ? ' selected="selected"' : ''; ?>><?php echo $unit->abbreviation; ?></option>
-            <?php endforeach; ?>
-        </select>
+            <?php if (count($attribute->type->units) > 0): ?>
+            <select name="attributes[<?php echo $i; ?>][unit]">
+                <?php foreach ($attribute->type->units as $unit): ?>
+                <option value="<?php echo $unit->id; ?>"<?php echo ($unit->id == $attribute->default_unit_id) ? ' selected="selected"' : ''; ?>><?php echo $unit->abbreviation; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <?php endif; ?>
+        <?php elseif($attribute->type->data_type == 'BOOLEAN'): ?>
+            <input type="checkbox" id="attribute_<?php echo $i; ?>_value" />
+        <?php elseif($attribute->type->data_type == 'VARCHAR'): ?>
+            <input class="textbox" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" /> 
+        <?php endif; ?>
     </td>
 </tr>
 <?php $i++; ?>
