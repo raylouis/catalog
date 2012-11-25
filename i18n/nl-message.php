@@ -50,6 +50,7 @@ return array(
     'Settings' => 'Instellingen',
     'SKU' => 'SKU',
     'Stock' => 'Voorraad',
+    'Subcategories' => 'Subcategorieën',
     'The catalog plugin adds a catalog or webshop to Wolf CMS.' => 'De catalog plugin voegt een catalogus of webshop toe aan Wolf CMS.',
     'Title' => 'Titel',
     'Type' => 'Type',
