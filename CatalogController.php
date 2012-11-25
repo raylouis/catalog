@@ -99,6 +99,40 @@ class CatalogController extends PluginController {
                 $obj = Brand::findById($id);
                 $obj->setFromData($data);
             }
+            
+            if (isset($_FILES['logo'])) {
+                $uploaded_file = new UploadedFile($_FILES['logo']);
+
+                if ($uploaded_file->error > 0) {
+                    if ($uploaded_file->error == 4) {
+
+                    }
+                    else {
+                        $errors[] = $uploaded_file->errorMessage();
+                    }
+                }
+                else {
+                    if (isset($obj->logo)) {
+                        $image = $obj->logo;
+                    }
+                    else {
+                        $image = new Image();
+                    }
+                    $image->title = $obj->name;
+                    $image->save();
+                    
+                    $image->deleteFiles();
+            
+                    $image->createSlug();
+
+                    $extension = pathinfo($uploaded_file->name, PATHINFO_EXTENSION);
+                    $to = CMS_ROOT . DS . 'public' . DS . 'images' . DS . $image->slug . '.' . strtolower($extension);
+
+                    $uploaded_file->moveTo($to);
+                    
+                    $obj->logo_id = $image->id;
+                }
+            }
         }
         elseif ($model == 'attribute') {
             $data['name'] = trim($data['name']);

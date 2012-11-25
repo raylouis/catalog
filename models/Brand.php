@@ -25,6 +25,12 @@ class Brand extends ActiveRecord {
             'foreign_key' => 'brand_id'
         )
     );
+    static $belongs_to = array(
+        'logo' => array(
+            'class_name' => 'Image',
+            'foreign_key' => 'logo_id'
+        )
+    );
     
     public $id;
     public $name = '';
@@ -70,14 +76,16 @@ class Brand extends ActiveRecord {
     
     public static function findAll() {
         return self::find(array(
-            'order' => 'name ASC'
+            'order' => 'name ASC',
+            'include' => array('logo')
         ));
     }
     
     public static function findById($id) {
         return self::find(array(
             'where' => array('id = ?', $id),
-            'limit' => 1
+            'limit' => 1,
+            'include' => array('logo')
         ));
     }
     
@@ -85,13 +93,13 @@ class Brand extends ActiveRecord {
         return self::find(array(
             'where' => array('slug = ?', $slug),
             'limit' => 1,
-            'include' => array('products' => array('brand', 'category'))
+            'include' => array('products' => array('brand', 'category'), 'logo')
         ));
     }
     
     public function getColumns() {
         return array(
-            'id', 'name', 'slug', 'description', 'website',
+            'id', 'name', 'slug', 'description', 'website', 'logo_id',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }

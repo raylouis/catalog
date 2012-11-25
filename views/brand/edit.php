@@ -17,7 +17,7 @@ if (!defined('IN_CMS')) { exit(); }
 ?>
 <h1><?php echo __(ucfirst($action).' brand'); ?></h1>
 
-<form method="post" action="<?php if ($action == 'add') echo get_url('plugin/catalog/brand/add'); else echo get_url('plugin/catalog/brand/edit/' . $brand->id); ?>">
+<form method="post" action="<?php if ($action == 'add') echo get_url('plugin/catalog/brand/add'); else echo get_url('plugin/catalog/brand/edit/' . $brand->id); ?>" enctype="multipart/form-data">
     <table border="0" cellspacing="0" cellpadding="0">
         <tbody>
             <tr>
@@ -33,6 +33,17 @@ if (!defined('IN_CMS')) { exit(); }
             <tr>
                 <td class="label"><label for="brand_website"><?php echo __('Website URL'); ?></label></td>
                 <td class="field"><input class="textbox" type="text" name="brand[website]" id="brand_website" value="<?php echo $brand->website; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="brand_logo"><?php echo __('Logo'); ?></label></td>
+                <td class="field">
+                    <input type="file" name="logo" id="brand_logo" />
+                    
+                    <?php if (isset($brand->logo)): ?>
+                        <br /><br />
+                        <?php echo $brand->logo->html(120,120,'thumbnail'); ?>
+                    <?php endif; ?>
+                </td>
             </tr>
         </tbody>
     </table>
