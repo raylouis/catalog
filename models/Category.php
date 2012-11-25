@@ -295,16 +295,15 @@ class Category extends ActiveRecord {
     }
     
     public function unlimitedFilters() {
-//        $category_ids = $this->parentIds();
-//        
-//        return Attribute::find(array(
-//            'select' => 'filter.*',
-//            'from' => 'catalog_attribute AS filter',
-//            'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = filter.id',
-//            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ') AND category_attribute.filter = 1',
-//            'include' => array('filter_options')
-//        ));
-        return array();
+        $category_ids = $this->parentIds();
+        
+        return Attribute::find(array(
+            'select' => 'filter.*',
+            'from' => 'catalog_attribute AS filter',
+            'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = filter.id',
+            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ') AND category_attribute.is_filter = 1',
+            'include' => array('filter_options')
+        ));
     }
     
     public function unlimitedBrands() {
