@@ -29,6 +29,7 @@ $PDO->exec("CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_brand` (
   `slug` VARCHAR(255) NOT NULL ,
   `description` TEXT NULL DEFAULT NULL ,
   `website` VARCHAR(255) NULL DEFAULT NULL ,
+  `logo_id` INT UNSIGNED NULL DEFAULT NULL ,
   `created_on` DATETIME NOT NULL ,
   `updated_on` DATETIME NOT NULL ,
   `created_by_id` INT UNSIGNED NOT NULL ,
