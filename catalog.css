@@ -109,3 +109,8 @@ body#body_plugin_catalog div#content td .not-applicable {
 body#body_plugin_catalog div#content input.number {
     text-align: right;
 }
+
+body#body_plugin_catalog div#content textarea {
+    width: 100% !important;
+    min-height: 200px;
+}
