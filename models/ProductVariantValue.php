@@ -16,22 +16,27 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class ProductVariantAttribute extends ActiveRecord {
-    const TABLE_NAME = 'catalog_product_variant_attribute';
+class ProductVariantValue extends ActiveRecord {
+    const TABLE_NAME = 'catalog_product_variant_value';
     
     static $belongs_to = array(
+        'product_variant' => array(
+            'class_name' => 'ProductVariant',
+            'foreign_key' => 'product_variant_id'
+        ),
         'attribute' => array(
             'class_name' => 'Attribute',
             'foreign_key' => 'attribute_id'
         ),
-        'product_variant' => array(
-            'class_name' => 'ProductVariant',
-            'foreign_key' => 'variant_id'
+        'unit' => array(
+            'class_name' => 'AttributeUnit',
+            'foreign_key' => 'attribute_unit_id'
         )
     );
     
     public $id;
-    public $variant_id;
+    public $product_variant_id;
     public $attribute_id;
-    public $value;
+    public $attribute_unit_id;
+    public $flat_value = '';
 }
