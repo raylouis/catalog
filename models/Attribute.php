@@ -62,6 +62,13 @@ class Attribute extends ActiveRecord {
         ));
     }
     
+    public function findValuesByProductVariantId($product_variant_id) {
+        return ProductVariantValue::find(array(
+            'where' => array('attribute_id = ? AND product_variant_id = ?', $this->id, $product_variant_id),
+            'include' => array('unit')
+        ));
+    }
+    
 //    public function findOptionsByCategory($category_id) {
 //        $category_ids = Category::subcategoryIdsOf($category_id);
 //        

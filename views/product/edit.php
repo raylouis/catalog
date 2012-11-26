@@ -138,7 +138,8 @@ foreach ($categories as $category) {
             <tbody id="product_simple_attributes_container">
                 <?php
                 echo new View('../../plugins/catalog/views/ajax/product_attribute_selector', array(
-                    'category' => $product->category
+                    'category' => $product->category,
+                    'product_variant' => $variant
                 ));
                 ?>
             </tbody>
