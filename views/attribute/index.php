@@ -33,7 +33,10 @@ function get_sorted($column, $order, $direction) {
 ?>
 <h1><?php echo __('Attributes'); ?></h1>
 
-<p><a href="<?php echo get_url('plugin/catalog/attribute/add'); ?>"><?php echo __('Add attribute'); ?></a></p>
+<p>
+    <a href="<?php echo get_url('plugin/catalog/attribute/add'); ?>"><?php echo __('Add attribute'); ?></a> |
+    <a href="<?php echo get_url('plugin/catalog/units'); ?>"><?php echo __('Manage units'); ?></a>
+</p>
 
 <table class="attribute list">
     <thead>

@@ -76,4 +76,15 @@ window.onload = (function() {
         });
     }
     catch(e) { alert(e) }
+    
+    try {
+        $('#unit_abbreviation').change(function() {
+            var abbreviation = $('#unit_abbreviation').val();
+            
+            var comparision = '1 ' + abbreviation + ' =';
+            
+            $('#unit_multiply_abbreviation').html(comparision);
+        });
+    }
+    catch(e) { alert(e) }
 });

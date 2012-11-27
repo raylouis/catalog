@@ -30,7 +30,9 @@ class CatalogController extends PluginController {
             'product' => 'products',
             'category' => 'categories',
             'brand' => 'brands',
-            'attribute' => 'attributes'
+            'attribute' => 'attributes',
+            'vat' => 'vat_rates',
+            'unit' => 'units'
         );
         
         if (!isset($models[$model])) {
@@ -155,6 +157,42 @@ class CatalogController extends PluginController {
                 $obj->setFromData($data);
             }
         }
+        elseif ($model == 'vat') {
+            $data['name'] = trim($data['name']);
+            $data['percentage'] = (float) $data['percentage'];
+            if (empty($data['name'])) {
+                $errors[] = __('You have to specify a name!');
+            }
+            
+            if ($action == 'add') {
+                $obj = new Vat();
+                $obj->setFromData($data);
+            }
+            else {
+                $obj = Vat::findById($id);
+                $obj->setFromData($data);
+            }
+        }
+        elseif ($model == 'unit') {
+            $data['name'] = trim($data['name']);
+            $data['abbreviation'] = trim($data['abbreviation']);
+            $data['attribute_type_id'] = (int) $data['attribute_type_id'];
+            if (empty($data['name'])) {
+                $errors[] = __('You have to specify a name!');
+            }
+            if ($data['attribute_type_id'] <= 0) {
+                $errors[] = __('You have to choose an attribute type!');
+            }
+            
+            if ($action == 'add') {
+                $obj = new AttributeUnit();
+                $obj->setFromData($data);
+            }
+            else {
+                $obj = AttributeUnit::findById($id);
+                $obj->setFromData($data);
+            }
+        }
         
         if (false !== $errors) {
             Flash::setNow('error', implode('<br/>', $errors));
@@ -183,6 +221,19 @@ class CatalogController extends PluginController {
                     'action' => $action,
                     'attribute' => $obj,
                     'attribute_types' => AttributeType::findAll()
+                ));
+            }
+            elseif ($model == 'vat') {
+                $this->display('catalog/views/vat/edit', array(
+                    'action' => $action,
+                    'vat' => $obj
+                ));
+            }
+            elseif ($model == 'unit') {
+                $this->display('catalog/views/unit/edit', array(
+                    'action' => $action,
+                    'unit' => $obj,
+                    'types' => AttributeType::findAll()
                 ));
             }
         }
@@ -865,19 +916,177 @@ class CatalogController extends PluginController {
         }
     }
     
-    public function settings() {
-        if (isset($_POST['save']) && $_POST['save'] == __('Save Settings')) {
-            
-            $settings = $_POST['setting'];
-            $settings['brands_slug'] = Node::toSlug($settings['brands_title']);
-            
-            Plugin::setAllSettings($settings, self::PLUGIN_NAME);
-            Flash::setNow('success', __('Settings have been saved!'));
+    public function settings($d = '') {
+        if ($d == 'general') {
+            if (isset($_POST['save']) && $_POST['save'] == __('Save Settings')) {
+                $settings = $_POST['setting'];
+                $settings['brands_slug'] = Node::toSlug($settings['brands_title']);
+
+                Plugin::setAllSettings($settings, self::PLUGIN_NAME);
+                Flash::setNow('success', __('Settings have been saved!'));
+            }
+
+            $this->display('catalog/views/settings/general', array(
+                'settings' => Plugin::getAllSettings(self::PLUGIN_NAME),
+                'layouts'  => Layout::findAll(array())
+            ));
         }
+        else {
+            $this->display('catalog/views/settings/index');
+        }
+    }
+    
+    public function unit($action, $id = NULL) {
+        if ($action == 'add') {
+            if (get_request_method() == 'POST') {
+                return $this->_store('unit', 'add', $id);
+            }
+            
+            $data = Flash::get('post_data');
+            $unit = new AttributeUnit();
+            if (!is_null($data)) $unit->setFromData($data);
+
+            $this->display('catalog/views/unit/edit', array(
+                'action' => 'add',
+                'unit' => $unit,
+                'types' => AttributeType::findAll()
+            ));
+            
+        }
+        elseif ($action == 'delete') {
+            if (!is_numeric($id)) {
+                Flash::set('error', __('The unit could not be found!'));
+                redirect(get_url('plugin/catalog/units'));
+            }
+            
+            if ($unit = AttributeUnit::findById($id)) {
+                if ($unit->delete()) {
+                    Observer::notify('unit_delete', $product);
+                    Flash::set('success', __("Unit ':name' has been deleted!", array(':name' => $unit->name)));
+                }
+                else {
+                    Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $unit->name)));
+                }
+            }
+            else {
+                Flash::set('error', __('The unit could not be found!'));
+            }
+
+            redirect(get_url('plugin/catalog/units'));
+        }
+        elseif ($action == 'edit') {
+            if (is_numeric($id)) {
+                if (get_request_method() == 'POST') {
+                    return $this->_store('unit', 'edit', $id);
+                }
+                
+                if ($unit = AttributeUnit::findById($id)) {
+                    $this->display('catalog/views/unit/edit', array(
+                        'action' => 'edit',
+                        'unit' => $unit,
+                        'types' => AttributeType::findAll()
+                    ));
+                }
+                else {
+                    Flash::set('error', __('The unit could not be found!'));
+                    redirect(get_url('plugin/catalog/units'));
+                }
+                
+            }
+            else {
+                Flash::set('error', __('The unit could not be found!'));
+                redirect(get_url('plugin/catalog/units'));
+            }
+        }
+        else {
+            $this->units();
+        }
+    }
+    
+    public function units() {
+        $units = AttributeUnit::find(array(
+            'order' => 'attribute_type_id ASC, multiplier ASC',
+            'include' => array('type', 'parent')
+        ));
         
-        $this->display('catalog/views/settings', array(
-            'settings' => Plugin::getAllSettings(self::PLUGIN_NAME),
-            'layouts'  => Layout::findAll(array())
+        $this->display('catalog/views/unit/index', array(
+            'units' => $units
+        ));
+    }
+    
+    public function vat($action, $id = NULL) {
+        if ($action == 'add') {
+            if (get_request_method() == 'POST') {
+                return $this->_store('vat', 'add', $id);
+            }
+            
+            $data = Flash::get('post_data');
+            $vat = new Vat();
+            if (!is_null($data)) $vat->setFromData($data);
+
+            $this->display('catalog/views/vat/edit', array(
+                'action' => 'add',
+                'vat' => $vat
+            ));
+            
+        }
+        elseif ($action == 'delete') {
+            if (!is_numeric($id)) {
+                Flash::set('error', __('The VAT rate could not be found!'));
+                redirect(get_url('plugin/catalog/vat_rates'));
+            }
+            
+            if ($vat = Vat::findById($id)) {
+                if ($vat->delete()) {
+                    Observer::notify('vat_delete', $vat);
+                    Flash::set('success', __("VAT rate ':name' has been deleted!", array(':name' => $vat->name)));
+                }
+                else {
+                    Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $vat->name)));
+                }
+            }
+            else {
+                Flash::set('error', __('The VAT rate could not be found!'));
+            }
+
+            redirect(get_url('plugin/catalog/vat_rates'));
+        }
+        elseif ($action == 'edit') {
+            if (is_numeric($id)) {
+                if (get_request_method() == 'POST') {
+                    return $this->_store('vat', 'edit', $id);
+                }
+                
+                if ($vat = Vat::findById($id)) {
+                    $this->display('catalog/views/vat/edit', array(
+                        'action' => 'edit',
+                        'vat' => $vat
+                    ));
+                }
+                else {
+                    Flash::set('error', __('The VAT rate could not be found!'));
+                    redirect(get_url('plugin/catalog/vat_rates'));
+                }
+                
+            }
+            else {
+                Flash::set('error', __('The VAT rate could not be found!'));
+                redirect(get_url('plugin/catalog/vat_rates'));
+            }
+        }
+        else {
+            $this->vat_rates();
+        }
+    }
+    
+    public function vat_rates() {
+        
+        $vat_rates = Vat::find(array(
+            'order' => 'percentage DESC'
+        ));
+        
+        $this->display('catalog/views/vat/index', array(
+            'vat_rates' => $vat_rates
         ));
     }
 }
