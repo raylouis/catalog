@@ -25,25 +25,32 @@ if (isset($product_variant)) {
         $attribute->value = $attribute->values[0];
     }
 }
+
+$selected_unit_id = $attribute->default_unit_id;
+if (isset($attribute->value)) {
+    $selected_unit_id = $attribute->value->attribute_unit_id;
+}
+
 ?>
 <tr>
     <td class="label"><label for="attribute_<?php echo $i; ?>_value"><?php echo $attribute->name; ?></label></td>
     <td class="field">
+        <input name="variants[0][attributes][<?php echo $attribute->id; ?>][id]" type="hidden" value="<?php echo (isset($attribute->value)) ? $attribute->value->id : ''; ?>" />
         
         <?php if (in_array($attribute->type->data_type, array('INT', 'FLOAT'))): ?>
-            <input class="textbox" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" value="<?php echo (isset($attribute->value)) ? $attribute->value->flat_value : ''; ?>" /> 
+            <input class="textbox" name="variants[0][attributes][<?php echo $attribute->id; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" value="<?php echo (isset($attribute->value)) ? $attribute->value->flat_value : ''; ?>" /> 
 
             <?php if (count($attribute->type->units) > 0): ?>
-            <select name="attributes[<?php echo $i; ?>][unit]">
+            <select name="variants[0][attributes][<?php echo $attribute->id; ?>][unit]">
                 <?php foreach ($attribute->type->units as $unit): ?>
-                <option value="<?php echo $unit->id; ?>"<?php echo ($unit->id == $attribute->default_unit_id) ? ' selected="selected"' : ''; ?>><?php echo $unit->abbreviation; ?></option>
+                <option value="<?php echo $unit->id; ?>"<?php echo ($unit->id == $selected_unit_id) ? ' selected="selected"' : ''; ?>><?php echo $unit->abbreviation; ?></option>
                 <?php endforeach; ?>
             </select>
             <?php endif; ?>
         <?php elseif($attribute->type->data_type == 'BOOLEAN'): ?>
             <input type="checkbox" id="attribute_<?php echo $i; ?>_value" />
         <?php elseif($attribute->type->data_type == 'VARCHAR'): ?>
-            <input class="textbox" name="attributes[<?php echo $i; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" value="<?php echo (isset($attribute->value)) ? $attribute->value->flat_value : ''; ?>" /> 
+            <input class="textbox" name="variants[0][attributes][<?php echo $attribute->id; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" value="<?php echo (isset($attribute->value)) ? $attribute->value->flat_value : ''; ?>" /> 
         <?php endif; ?>
     </td>
 </tr>

@@ -91,32 +91,32 @@ foreach ($categories as $category) {
         }
         ?>
         <?php if ($variant->id > 0): ?>
-        <input type="hidden" name="variant[id]" value="<?php echo $variant->id; ?>" />
+        <input type="hidden" name="variants[0][id]" value="<?php echo $variant->id; ?>" />
         <?php endif; ?>
         <table>
             <tbody>
                 <tr>
                     <td class="label"><label for="variant_sku"><?php echo __('SKU'); ?></label></td>
                     <td class="field">
-                        <input class="textbox" type="text" name="variant[sku]" id="variant_sku" value="<?php echo $variant->sku; ?>" />
+                        <input class="textbox" type="text" name="variants[0][sku]" id="variant_sku" value="<?php echo $variant->sku; ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td class="label"><label for="variant_weight"><?php echo __('Weight'); ?></label></td>
                     <td class="field">
-                        <input class="textbox number" type="text" name="variant[weight]" id="variant_weight" value="<?php echo $variant->weight; ?>" /> kg
+                        <input class="textbox number" type="text" name="variants[0][weight]" id="variant_weight" value="<?php echo $variant->weight; ?>" /> kg
                     </td>
                 </tr>
                 <tr>
                     <td class="label"><label for="variant_price"><?php echo __('Price'); ?></label></td>
                     <td class="field">
-                        <input class="textbox number" type="text" name="variant[price]" id="variant_price" value="<?php echo $variant->price(); ?>" /> EUR
+                        <input class="textbox number" type="text" name="variants[0][price]" id="variant_price" value="<?php echo $variant->price(); ?>" /> EUR
                     </td>
                 </tr>
                 <tr>
                     <td class="label"><label><?php echo __('VAT'); ?></label></td>
                     <td class="field">
-                        <select name="variant[vat_id]">
+                        <select name="variants[0][vat_id]">
                             <?php foreach ($vats as $vat): ?>
                             <option value="<?php echo $vat->id; ?>"<?php if ($vat->id == $variant->vat_id): ?> selected="selected"<?php endif; ?>><?php echo $vat->name; ?> (<?php echo $vat->percentage; ?>%)</option>
                             <?php endforeach; ?>
@@ -126,7 +126,7 @@ foreach ($categories as $category) {
                 <tr>
                     <td class="label"><label for="variant_stock"><?php echo __('Stock'); ?></label></td>
                     <td class="field">
-                        <input class="textbox number" type="text" name="variant[stock]" id="variant_stock" value="<?php echo $variant->stock; ?>" />
+                        <input class="textbox number" type="text" name="variants[0][stock]" id="variant_stock" value="<?php echo $variant->stock; ?>" />
                     </td>
                 </tr>
             </tbody>

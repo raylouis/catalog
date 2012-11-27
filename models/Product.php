@@ -61,24 +61,25 @@ class Product extends ActiveRecord {
     }
     
     public function afterSave() {
-        if ($this->type == 'simple' && isset($_POST['variant'])) {
-            $data = $_POST['variant'];
+        if ($this->type == 'simple' && isset($_POST['variants'])) {
             
-            if ($data['sku'] != '' && $data['price'] > 0) {
-                if (isset($data['id'])) {
-                    $variant = ProductVariant::findById($data['id']);
-                    $variant->setFromData($data);
-                }
-                else {
-                    $variant = new ProductVariant();
-                    $variant->setFromData($data);
-                }
-                $variant->name = $this->name();
-                $variant->product_id = $this->id;
+            foreach ($_POST['variants'] as $data) {
+                if ($data['sku'] != '' && $data['price'] > 0) {
+                    if (isset($data['id'])) {
+                        $variant = ProductVariant::findById($data['id']);
+                        $variant->setFromData($data);
+                    }
+                    else {
+                        $variant = new ProductVariant();
+                        $variant->setFromData($data);
+                    }
+                    $variant->name = $this->name();
+                    $variant->product_id = $this->id;
 
-                if (!$variant->save()) {
-                    return false;
-                }
+                    if (!$variant->save()) {
+                        return false;
+                    }
+                }   
             }
         }
         
