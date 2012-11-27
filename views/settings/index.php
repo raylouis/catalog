@@ -21,3 +21,5 @@ if (!defined('IN_CMS')) { exit(); }
 <p><a href="<?php echo get_url('plugin/catalog/settings/general'); ?>"><?php echo __('General settings'); ?></a></p>
 
 <p><a href="<?php echo get_url('plugin/catalog/vat_rates'); ?>"><?php echo __('VAT rates'); ?></a></p>
+
+<p><a href="<?php echo get_url('plugin/catalog/units'); ?>"><?php echo __('Units'); ?></a></p>
