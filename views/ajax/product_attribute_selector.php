@@ -48,7 +48,7 @@ if (isset($attribute->value)) {
             </select>
             <?php endif; ?>
         <?php elseif($attribute->type->data_type == 'BOOLEAN'): ?>
-            <input type="checkbox" id="attribute_<?php echo $i; ?>_value" />
+            <input type="checkbox" name="variants[0][attributes][<?php echo $attribute->id; ?>][value]" value="1" id="attribute_<?php echo $i; ?>_value" <?php echo (isset($attribute->value->flat_value) && $attribute->value->flat_value == 1) ? ' checked="checked"' : ''; ?> />
         <?php elseif($attribute->type->data_type == 'VARCHAR'): ?>
             <input class="textbox" name="variants[0][attributes][<?php echo $attribute->id; ?>][value]" type="text" id="attribute_<?php echo $i; ?>_value" value="<?php echo (isset($attribute->value)) ? $attribute->value->flat_value : ''; ?>" /> 
         <?php endif; ?>
