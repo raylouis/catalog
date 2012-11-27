@@ -16,9 +16,9 @@ if (!defined('IN_CMS')) { exit(); }
 
 ?>
 
-<h1><?php echo __('Settings'); ?></h1>
+<h1><?php echo __('General settings'); ?></h1>
 
-<form method="post" action="<?php echo get_url('plugin/catalog/settings'); ?>">
+<form method="post" action="<?php echo get_url('plugin/catalog/settings/general'); ?>">
     <table>
         <tr>
             <td class="label"><strong><?php echo __('Layout'); ?></strong></td>

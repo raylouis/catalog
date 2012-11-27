@@ -30,7 +30,8 @@ class CatalogController extends PluginController {
             'product' => 'products',
             'category' => 'categories',
             'brand' => 'brands',
-            'attribute' => 'attributes'
+            'attribute' => 'attributes',
+            'vat' => 'vat_rates'
         );
         
         if (!isset($models[$model])) {
@@ -152,6 +153,22 @@ class CatalogController extends PluginController {
             }
             else {
                 $obj = Attribute::findById($id);
+                $obj->setFromData($data);
+            }
+        }
+        elseif ($model == 'vat') {
+            $data['name'] = trim($data['name']);
+            $data['percentage'] = (float) $data['percentage'];
+            if (empty($data['name'])) {
+                $errors[] = __('You have to specify a name!');
+            }
+            
+            if ($action == 'add') {
+                $obj = new Vat();
+                $obj->setFromData($data);
+            }
+            else {
+                $obj = Vat::findById($id);
                 $obj->setFromData($data);
             }
         }
@@ -865,19 +882,99 @@ class CatalogController extends PluginController {
         }
     }
     
-    public function settings() {
-        if (isset($_POST['save']) && $_POST['save'] == __('Save Settings')) {
-            
-            $settings = $_POST['setting'];
-            $settings['brands_slug'] = Node::toSlug($settings['brands_title']);
-            
-            Plugin::setAllSettings($settings, self::PLUGIN_NAME);
-            Flash::setNow('success', __('Settings have been saved!'));
+    public function settings($d = '') {
+        if ($d == 'general') {
+            if (isset($_POST['save']) && $_POST['save'] == __('Save Settings')) {
+                $settings = $_POST['setting'];
+                $settings['brands_slug'] = Node::toSlug($settings['brands_title']);
+
+                Plugin::setAllSettings($settings, self::PLUGIN_NAME);
+                Flash::setNow('success', __('Settings have been saved!'));
+            }
+
+            $this->display('catalog/views/settings/general', array(
+                'settings' => Plugin::getAllSettings(self::PLUGIN_NAME),
+                'layouts'  => Layout::findAll(array())
+            ));
         }
+        else {
+            $this->display('catalog/views/settings/index');
+        }
+    }
+    
+    public function vat($action, $id = NULL) {
+        if ($action == 'add') {
+            if (get_request_method() == 'POST') {
+                return $this->_store('vat', 'add', $id);
+            }
+            
+            $data = Flash::get('post_data');
+            $vat = new Vat();
+            if (!is_null($data)) $vat->setFromData($data);
+
+            $this->display('catalog/views/vat/edit', array(
+                'action' => 'add',
+                'vat' => $vat
+            ));
+            
+        }
+        elseif ($action == 'delete') {
+            if (!is_numeric($id)) {
+                Flash::set('error', __('The VAT rate could not be found!'));
+                redirect(get_url('plugin/catalog/vat_rates'));
+            }
+            
+            if ($vat = Vat::findById($id)) {
+                if ($vat->delete()) {
+                    Observer::notify('vat_delete', $vat);
+                    Flash::set('success', __("VAT rate ':name' has been deleted!", array(':name' => $vat->name)));
+                }
+                else {
+                    Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $vat->name)));
+                }
+            }
+            else {
+                Flash::set('error', __('The VAT rate could not be found!'));
+            }
+
+            redirect(get_url('plugin/catalog/vat_rates'));
+        }
+        elseif ($action == 'edit') {
+            if (is_numeric($id)) {
+                if (get_request_method() == 'POST') {
+                    return $this->_store('vat', 'edit', $id);
+                }
+                
+                if ($vat = Vat::findById($id)) {
+                    $this->display('catalog/views/vat/edit', array(
+                        'action' => 'edit',
+                        'vat' => $vat
+                    ));
+                }
+                else {
+                    Flash::set('error', __('The VAT rate could not be found!'));
+                    redirect(get_url('plugin/catalog/vat_rates'));
+                }
+                
+            }
+            else {
+                Flash::set('error', __('The VAT rate could not be found!'));
+                redirect(get_url('plugin/catalog/vat_rates'));
+            }
+        }
+        else {
+            $this->vat_rates();
+        }
+    }
+    
+    public function vat_rates() {
         
-        $this->display('catalog/views/settings', array(
-            'settings' => Plugin::getAllSettings(self::PLUGIN_NAME),
-            'layouts'  => Layout::findAll(array())
+        $vat_rates = Vat::find(array(
+            'order' => 'percentage DESC'
+        ));
+        
+        $this->display('catalog/views/vat/index', array(
+            'vat_rates' => $vat_rates
         ));
     }
 }
