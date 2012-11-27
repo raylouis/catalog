@@ -19,10 +19,4 @@ use_helper('ActiveRecord');
 class ValueFloat extends Value {
     const TABLE_NAME = 'catalog_value_float';
     
-    static $belongs_to = array(
-        'value' => array(
-            'class_name' => 'ProductVariantValue',
-            'foreign_key' => 'product_variant_value_id'
-        )
-    );
 }
