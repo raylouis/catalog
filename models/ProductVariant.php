@@ -45,6 +45,27 @@ class ProductVariant extends ActiveRecord {
     public $created_by_id;
     public $updated_by_id;
     
+    public function afterSave() {
+        foreach ($this->attributes as $attribute_id => $data) {
+            if (isset($data['id']) && $value = ProductVariantValue::findById($data['id'])) {
+                $value->setFromData($data);
+            }
+            else {
+                $value = new ProductVariantValue();
+                $value->setFromData($data);
+            }
+            $value->attribute_id = $attribute_id;
+            $value->product_variant_id = $this->id;
+            
+            if (!empty($value->value)) {
+                $value->save();
+            }
+            
+        }
+        
+        return true;
+    }
+    
     public function beforeInsert() {
         $this->created_on       = date('Y-m-d H:i:s');
         $this->created_by_id    = AuthUser::getRecord()->id;

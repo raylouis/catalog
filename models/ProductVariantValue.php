@@ -39,4 +39,44 @@ class ProductVariantValue extends ActiveRecord {
     public $attribute_id;
     public $attribute_unit_id;
     public $flat_value = '';
+    
+    public function __construct() {
+        if (!isset($this->attribute)) {
+            $this->attribute = Attribute::findById($this->attribute_id);
+        }
+    }
+    
+    public function beforeSave() {
+        $this->attribute_unit_id = (isset($this->unit)) ? $this->unit : null;
+        $this->flat_value = (isset($this->value)) ? $this->value : null;
+        
+        return true;
+    }
+    
+    public function afterSave() {
+        $casted_value_class = 'Value' . ucfirst(strtolower($this->attribute->type->data_type));
+        
+        if ($value = $casted_value_class::findByProductVariantValueId($this->id)) {
+            
+        }
+        else {
+            $value = new $casted_value_class();
+        }
+        
+        $value->value = $this->flat_value;
+        $value->product_variant_value_id = $this->id;
+        
+        if (!$value->save()) {
+            print_r($value);
+            die;
+        }
+        
+        return true;
+    }
+    
+    public function getColumns() {
+        return array(
+            'id', 'product_variant_id', 'attribute_id', 'attribute_unit_id', 'flat_value'
+        );
+    }
 }
