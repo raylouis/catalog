@@ -38,6 +38,29 @@ class AttributeUnit extends ActiveRecord {
     public $attribute_unit_system_id;
     public $attribute_type_id;
     
+    public static function convert($value, $from_id, $to_id) {
+        $from = self::findById($from_id);
+        $to   = self::findById($to_id);
+        
+        if ($from->attribute_type_id != $to->attribute_type_id) {
+            return false;
+        }
+        if ($from->id == $to->id) {
+            return $value;
+        }
+        
+        if ($from->parent_id == null) {
+            $from->multiplier = 1;
+        }
+        if ($to->parent_id == null) {
+            $to->multiplier = 1;
+        }
+        
+        $multiplier = $from->multiplier / $to->multiplier;
+        
+        return $value * $multiplier;
+    }
+    
     public static function findAll() {
         return self::find(array(
             'order' => 'id ASC'
