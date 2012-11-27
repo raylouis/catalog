@@ -183,20 +183,20 @@ $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute_u
     ON UPDATE NO ACTION)
 ENGINE = InnoDB");
 
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (1, 'Millimeter', 'mm', NULL, NULL, 1, 1);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (2, 'Centimeter', 'cm', NULL, NULL, 1, 1);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (3, 'Decimeter', 'dm', NULL, NULL, 1, 1);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (4, 'Meter', 'm', NULL, NULL, 1, 1);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (5, 'Decameter', 'dam', NULL, NULL, 1, 1);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (6, 'Hectometer', 'hm', NULL, NULL, 1, 1);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (7, 'Kilometer', 'km', NULL, NULL, 1, 1);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (8, 'Milligram', 'mg', NULL, NULL, 1, 2);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (9, 'Centigram', 'cg', NULL, NULL, 1, 2);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (10, 'Decigram', 'dg', NULL, NULL, 1, 2);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (11, 'Gram', 'g', NULL, NULL, 1, 2);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (12, 'Decagram', 'dag', NULL, NULL, 1, 2);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (13, 'Hectagram', 'hg', NULL, NULL, 1, 2);");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (14, 'Kilogram', 'kg', NULL, NULL, 1, 2);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (1, 'Millimeter', 'mm', 0.001, 4, 1, 1);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (2, 'Centimeter', 'cm', 0.01, 4, 1, 1);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (3, 'Decimeter', 'dm', 0.1, 4, 1, 1);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (4, 'Meter', 'm', 1, NULL, 1, 1);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (5, 'Decameter', 'dam', 10, 4, 1, 1);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (6, 'Hectometer', 'hm', 100, 4, 1, 1);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (7, 'Kilometer', 'km', 1000, 4, 1, 1);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (8, 'Milligram', 'mg', 0.001, 11, 1, 2);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (9, 'Centigram', 'cg', 0.01, 11, 1, 2);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (10, 'Decigram', 'dg', 0.1, 11, 1, 2);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (11, 'Gram', 'g', 1, NULL, 1, 2);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (12, 'Decagram', 'dag', 10, 11, 1, 2);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (13, 'Hectagram', 'hg', 100, 11, 1, 2);");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit` (`id`, `name`, `abbreviation`, `multiplier`, `parent_id`, `attribute_unit_system_id`, `attribute_type_id`) VALUES (14, 'Kilogram', 'kg', 1000, 11, 1, 2);");
 
 
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute` (
