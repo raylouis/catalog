@@ -23,6 +23,10 @@ class AttributeUnit extends ActiveRecord {
         'type' => array(
             'class_name' => 'AttributeType',
             'foreign_key' => 'attribute_type_id'
+        ),
+        'parent' => array(
+            'class_name' => 'AttributeUnit',
+            'foreign_key' => 'parent_id'
         )
     );
     
@@ -51,5 +55,22 @@ class AttributeUnit extends ActiveRecord {
         return array(
             'id', 'name', 'abbreviation', 'multiplier', 'parent_id', 'attribute_unit_system_id', 'attribute_type_id'
         );
+    }
+    
+    public function compareParent() {
+        $this->setParent();
+        
+        if (isset($this->parent)) {
+            return '1 ' . $this->abbreviation . ' = ' . $this->multiplier . ' ' . $this->parent->abbreviation;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    public function setParent() {
+        if (!isset($this->parent)) {
+            $this->parent = AttributeUnit::findById($this->parent_id);
+        }
     }
 }

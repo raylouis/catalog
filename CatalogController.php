@@ -31,7 +31,8 @@ class CatalogController extends PluginController {
             'category' => 'categories',
             'brand' => 'brands',
             'attribute' => 'attributes',
-            'vat' => 'vat_rates'
+            'vat' => 'vat_rates',
+            'unit' => 'units'
         );
         
         if (!isset($models[$model])) {
@@ -172,6 +173,26 @@ class CatalogController extends PluginController {
                 $obj->setFromData($data);
             }
         }
+        elseif ($model == 'unit') {
+            $data['name'] = trim($data['name']);
+            $data['abbreviation'] = trim($data['abbreviation']);
+            $data['attribute_type_id'] = (int) $data['attribute_type_id'];
+            if (empty($data['name'])) {
+                $errors[] = __('You have to specify a name!');
+            }
+            if ($data['attribute_type_id'] <= 0) {
+                $errors[] = __('You have to choose an attribute type!');
+            }
+            
+            if ($action == 'add') {
+                $obj = new AttributeUnit();
+                $obj->setFromData($data);
+            }
+            else {
+                $obj = AttributeUnit::findById($id);
+                $obj->setFromData($data);
+            }
+        }
         
         if (false !== $errors) {
             Flash::setNow('error', implode('<br/>', $errors));
@@ -200,6 +221,19 @@ class CatalogController extends PluginController {
                     'action' => $action,
                     'attribute' => $obj,
                     'attribute_types' => AttributeType::findAll()
+                ));
+            }
+            elseif ($model == 'vat') {
+                $this->display('catalog/views/vat/edit', array(
+                    'action' => $action,
+                    'vat' => $obj
+                ));
+            }
+            elseif ($model == 'unit') {
+                $this->display('catalog/views/unit/edit', array(
+                    'action' => $action,
+                    'unit' => $obj,
+                    'types' => AttributeType::findAll()
                 ));
             }
         }
@@ -900,6 +934,84 @@ class CatalogController extends PluginController {
         else {
             $this->display('catalog/views/settings/index');
         }
+    }
+    
+    public function unit($action, $id = NULL) {
+        if ($action == 'add') {
+            if (get_request_method() == 'POST') {
+                return $this->_store('unit', 'add', $id);
+            }
+            
+            $data = Flash::get('post_data');
+            $unit = new AttributeUnit();
+            if (!is_null($data)) $unit->setFromData($data);
+
+            $this->display('catalog/views/unit/edit', array(
+                'action' => 'add',
+                'unit' => $unit,
+                'types' => AttributeType::findAll()
+            ));
+            
+        }
+        elseif ($action == 'delete') {
+            if (!is_numeric($id)) {
+                Flash::set('error', __('The unit could not be found!'));
+                redirect(get_url('plugin/catalog/units'));
+            }
+            
+            if ($unit = AttributeUnit::findById($id)) {
+                if ($unit->delete()) {
+                    Observer::notify('unit_delete', $product);
+                    Flash::set('success', __("Unit ':name' has been deleted!", array(':name' => $unit->name)));
+                }
+                else {
+                    Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $unit->name)));
+                }
+            }
+            else {
+                Flash::set('error', __('The unit could not be found!'));
+            }
+
+            redirect(get_url('plugin/catalog/units'));
+        }
+        elseif ($action == 'edit') {
+            if (is_numeric($id)) {
+                if (get_request_method() == 'POST') {
+                    return $this->_store('unit', 'edit', $id);
+                }
+                
+                if ($unit = AttributeUnit::findById($id)) {
+                    $this->display('catalog/views/unit/edit', array(
+                        'action' => 'edit',
+                        'unit' => $unit,
+                        'types' => AttributeType::findAll()
+                    ));
+                }
+                else {
+                    Flash::set('error', __('The unit could not be found!'));
+                    redirect(get_url('plugin/catalog/units'));
+                }
+                
+            }
+            else {
+                Flash::set('error', __('The unit could not be found!'));
+                redirect(get_url('plugin/catalog/units'));
+            }
+        }
+        else {
+            $this->units();
+        }
+    }
+    
+    public function units() {
+        $units = AttributeUnit::find(array(
+            'order' => 'attribute_type_id ASC, multiplier ASC',
+            'include' => array('type', 'parent')
+        ));
+        
+        $this->display('catalog/views/unit/index', array(
+            'units' => $units
+        ));
     }
     
     public function vat($action, $id = NULL) {
