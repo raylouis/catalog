@@ -46,6 +46,7 @@ return array(
     'General product info' => 'Algemene productinformatie',
     'General settings' => 'Algemene instellingen',
     'Inherited attributes' => 'Overgenomen attributen',
+    'Manage units' => 'Eenheden beheren',
     'N/A' => 'n.v.t.',
     'Name' => 'Naam',
     'None' => 'Geen',
