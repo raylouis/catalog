@@ -38,6 +38,10 @@ if (!defined('IN_CMS')) { exit(); }
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td class="label"><label for="unit_multiplier" id="unit_multiply_abbreviation">1 <?php echo $unit->abbreviation; ?> =</label></td>
+                <td class="field"><input class="textbox number" type="text" name="unit[multiplier]" id="unit_multiplier" value="<?php echo $unit->multiplier; ?>"> m</td>
+            </tr>
         </tbody>
     </table>
     
