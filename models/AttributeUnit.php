@@ -39,8 +39,8 @@ class AttributeUnit extends ActiveRecord {
     public $attribute_type_id;
     
     public static function convert($value, $from_id, $to_id) {
-        $from = self::findById($from_id);
-        $to   = self::findById($to_id);
+        if (!$from = self::findById($from_id)) return false;
+        if (!$to   = self::findById($to_id)) return false;
         
         if ($from->attribute_type_id != $to->attribute_type_id) {
             return false;

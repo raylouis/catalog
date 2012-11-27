@@ -38,7 +38,7 @@ class Value extends ActiveRecord {
     public function convert() {
         $this->setProductVariantValue();
         
-        if (!is_null($this->product_variant_value)) {
+        if (!is_null($this->product_variant_value->attribute->default_unit_id)) {
             $original_unit_id = $this->product_variant_value->attribute_unit_id;
             $storage_unit_id = $this->product_variant_value->attribute->default_unit_id;
 
