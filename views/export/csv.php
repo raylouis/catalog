@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.0.1
+ * @version     0.1.0
  */
 
 header("Content-Type: text/comma-seperated-values");
