@@ -114,15 +114,9 @@ $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product_var
   PRIMARY KEY (`id`) ,
   INDEX `fk_product_variant_product` (`product_id` ASC) ,
   UNIQUE INDEX `sku_UNIQUE` (`sku` ASC) ,
-  INDEX `fk_product_variant_vat` (`vat_id` ASC) ,
   CONSTRAINT `fk_product_variant_product`
     FOREIGN KEY (`product_id` )
     REFERENCES `" . TABLE_PREFIX . "catalog_product` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-  CONSTRAINT `fk_product_variant_vat`
-    FOREIGN KEY (`vat_id` )
-    REFERENCES `" . TABLE_PREFIX . "catalog_vat` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB");
@@ -138,7 +132,7 @@ $PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_unit_system` (`id
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute_type` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,
-  `data_type` ENUM('BOOLEAN','INTEGER','FLOAT','VARCHAR','DATE','DATETIME') NOT NULL DEFAULT 'INT' ,
+  `data_type` ENUM('BOOLEAN','INTEGER','FLOAT','VARCHAR','DATE','DATETIME') NOT NULL DEFAULT 'INTEGER' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
 ENGINE = InnoDB");
