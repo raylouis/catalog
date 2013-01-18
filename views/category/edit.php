@@ -50,24 +50,33 @@ if (!defined('IN_CMS')) { exit(); }
     
     <h3><?php echo __('Attributes'); ?></h3>
     
-    <ul>
+    <ul id="category_attributes">
         <?php $i = 1; ?>
         <?php foreach ($category->attributes as $category_attribute): ?>
-        <li>
-            <input type="hidden" name="attributes[<?php echo $i; ?>][old_id]" value="<?php echo $category_attribute->id; ?>" />
-            <select name="attributes[<?php echo $i; ?>][id]">
-                <?php foreach ($attributes as $attribute): ?>
-                <option value="<?php echo $attribute->id; ?>"<?php echo ($attribute->id == $category_attribute->id) ? ' selected="selected"' : ''; ?>><?php echo $attribute->name; ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <img width="16" height="16" src="<?php echo URL_PUBLIC; ?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" />
-        </li>
+<?php echo new View('../../plugins/catalog/views/category/attribute', array(
+    'attributes' => $attributes,
+    'category_attribute' => $category_attribute,
+    'i' => $i
+)); ?>
         <?php $i++; ?>
         <?php endforeach; ?>
     </ul>
     
-    <p>Add a new attribute <img width="16" height="16" alt="Verwijderen" src="http://localhost/zandbak/wolf/icons/add-16.png"></p>
+    <p><a href="#" class="add-attribute">Add a new attribute <img width="16" height="16" alt="Verwijderen" src="http://localhost/zandbak/wolf/icons/add-16.png"></a></p>
+    
+<script language="javascript">
+$('.add-attribute').click(function() {
+    var append = '<?php echo new View('../../plugins/catalog/views/category/attribute', array(
+        'attributes' => $attributes,
+        'category_attribute' => $category_attribute,
+        'i' => $i
+    )); ?>';
+    
+    $('#category_attributes').append(append);
+    
+    return false;
+});
+</script>
     
     <p class="buttons">
         <input class="button" name="commit" type="submit" accesskey="s" value="<?php echo __('Save and Close'); ?>" />

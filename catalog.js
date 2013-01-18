@@ -87,4 +87,12 @@ window.onload = (function() {
         });
     }
     catch(e) { alert(e) }
+    
+    try {
+        $('.remove-attribute').live('click', function() {
+            $(this).parent().remove();
+            return false;
+        });
+    }
+    catch(e) { alert(e) }
 });
