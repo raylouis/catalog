@@ -46,6 +46,14 @@ class ProductVariant extends ActiveRecord {
     public $updated_by_id;
     
     public function afterSave() {
+        $old_values = ProductVariantValue::findByProductVariantId($this->id);
+        $old_ids = array();
+        
+        // put ids of values that should be deleted in an array
+        foreach ($old_values as $old_value) {
+            $old_ids[$old_value->id] = true;
+        }
+        
         foreach ($this->attributes as $attribute_id => $data) {
             if (isset($data['id']) && $value = ProductVariantValue::findById($data['id'])) {
                 $value->setFromData($data);
@@ -59,8 +67,19 @@ class ProductVariant extends ActiveRecord {
             
             if (!empty($value->value)) {
                 $value->save();
+                // remove ids of values that are not empty from the array
+                if (isset($old_ids[$value->id])) {
+                    unset($old_ids[$value->id]);
+                }
             }
             
+        }
+        
+        // delete all other values
+        foreach ($old_ids as $old_id => $foobar) {
+            if ($value = ProductVariantValue::findById($old_id)) {
+                $value->delete();
+            }
         }
         
         return true;

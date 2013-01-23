@@ -40,10 +40,16 @@ class ProductVariantValue extends ActiveRecord {
     public $attribute_unit_id;
     public $flat_value = '';
     
-    public function __construct() {
-        if (!isset($this->attribute)) {
-            $this->attribute = Attribute::findById($this->attribute_id);
+    public function beforeDelete() {
+        $casted_value_class = 'Value' . ucfirst(strtolower(Attribute::findById($this->attribute_id)->type->data_type));
+        
+        if ($value = $casted_value_class::findByProductVariantValueId($this->id)) {
+            if ($value->delete()) {
+                return true;
+            }
         }
+        
+        return false;
     }
     
     public function beforeSave() {
@@ -54,12 +60,9 @@ class ProductVariantValue extends ActiveRecord {
     }
     
     public function afterSave() {
-        $casted_value_class = 'Value' . ucfirst(strtolower($this->attribute->type->data_type));
+        $casted_value_class = 'Value' . ucfirst(strtolower(Attribute::findById($this->attribute_id)->type->data_type));
         
-        if ($value = $casted_value_class::findByProductVariantValueId($this->id)) {
-            
-        }
-        else {
+        if ($value != $casted_value_class::findByProductVariantValueId($this->id)) {
             $value = new $casted_value_class();
         }
         
@@ -78,5 +81,11 @@ class ProductVariantValue extends ActiveRecord {
         return array(
             'id', 'product_variant_id', 'attribute_id', 'attribute_unit_id', 'flat_value'
         );
+    }
+    
+    public static function findByProductVariantId($id) {
+        return self::find(array(
+            'where' => array('product_variant_id = ?', $id) 
+        ));
     }
 }
