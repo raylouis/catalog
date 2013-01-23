@@ -32,13 +32,9 @@ if (!defined('IN_CMS')) { exit(); }
                 <td class="field">
                     <select class="selectbox" name="product[brand_id]">
                         <option value=""><?php echo __('None'); ?></option>
-<?php
-foreach ($brands as $brand) {
-?>
+                        <?php foreach ($brands as $brand): ?>
                         <option value="<?php echo $brand->id; ?>"<?php if ($brand->id == $product->brand_id) { ?> selected="selected"<?php } ?>><?php echo $brand->name; ?></option>
-<?php
-}
-?>
+                        <?php endforeach; ?>
                     </select>
                 </td>
             </tr>
@@ -47,13 +43,9 @@ foreach ($brands as $brand) {
                 <td class="label"><label><?php echo __('Category'); ?></label></td>
                 <td class="field">
                     <select class="selectbox" name="product[category_id]" id="product_category_id">
-<?php
-foreach ($categories as $category) {
-?>
+                        <?php foreach ($categories as $category): ?>
                         <option value="<?php echo $category->id; ?>"<?php if ($category->id == $product->category_id) { ?> selected="selected"<?php } ?>><?php echo $category->title; ?></option>
-<?php
-}
-?>
+                        <?php endforeach; ?>
                     </select>
                 </td>
             </tr>
@@ -148,40 +140,6 @@ foreach ($categories as $category) {
     
     <div class="block" id="variants">
         <h3><?php echo __('Product variants'); ?></h3>
-    
-        <ul>
-            <?php $attr_count = 0; ?>
-            <?php foreach ($product->variable_attributes as $var_attribute): ?>
-            <?php $attr_count++; ?>
-            <li>
-                <select>
-                    <option></option>
-                    <?php foreach (Attribute::findAll() as $attribute): ?>
-                    <option<?php echo ($attribute->id == $var_attribute->id) ? ' selected="selected"' : ''; ?>><?php echo $attribute->name; ?></option>
-                    <?php endforeach; ?>
-                </select>
-
-                <?php if ($attr_count > 1): ?>
-                <img width="16" height="16" src="<?php echo URL_PUBLIC; ?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" />
-                <?php endif; ?>
-            </li>
-            <?php endforeach; ?>
-            <?php $attr_count++; ?>
-            <li>
-                <select>
-                    <option></option>
-                    <?php foreach ($product->category->attributes as $attribute): ?>
-                    <option><?php echo $attribute->name; ?></option>
-                    <?php endforeach; ?>
-                </select>
-
-                <?php if ($attr_count > 1): ?>
-                <img width="16" height="16" src="<?php echo URL_PUBLIC; ?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" />
-                <?php endif; ?>
-            </li>
-        </ul>
-
-        <p><a id="test">Add another attribute.</a></p>
 
         
     </div>
