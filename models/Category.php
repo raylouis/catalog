@@ -70,33 +70,38 @@ class Category extends ActiveRecord {
         $this->setUrl();
     }
     
+    /**
+     * Dirty solution
+     * 
+     * @todo improve
+     */
     public function afterSave() {
-//        if (isset($_POST['attribute_ids'])) {
-//            $old_attributes = CategoryAttribute::findByCategoryId($this->id);
-//            
-//            foreach ($old_attributes as $cat_attr) {
-//                $old_ids[] = $cat_attr->attribute_id;
-//            }
-//            
-//            $new_ids = $_POST['attribute_ids'];
-//            
-//            $delete_ids = array_diff($old_ids, $new_ids);
-//            $insert_ids = array_diff($new_ids, $old_ids);
-//            
-//            echo '<pre>';
-//            
-//            foreach ($delete_ids as $delete_id) {
-//                if ($category_attribute = CategoryAttribute::findByCategoryIdAndAttributeId($this->id, $delete_id)) {
-//                    $category_attribute->delete();
-//                    //print_r($category_attribute);
-//                }
-//            }
-//            
-//            print_r($delete_ids);
-//            print_r($insert_ids);
-//            echo '</pre>';
-//            die;
-//        }
+        if (isset($_POST['attribute_ids'])) {
+            $old_attributes = CategoryAttribute::findByCategoryId($this->id);
+            $old_ids = array();
+            
+            foreach ($old_attributes as $cat_attr) {
+                $old_ids[] = $cat_attr->attribute_id;
+            }
+            
+            $new_ids = $_POST['attribute_ids'];
+            
+            $delete_ids = array_diff($old_ids, $new_ids);
+            $insert_ids = array_diff($new_ids, $old_ids);
+            
+            foreach ($delete_ids as $delete_id) {
+                if ($category_attribute = CategoryAttribute::findByCategoryIdAndAttributeId($this->id, $delete_id)) {
+                    //$category_attribute->delete();
+                }
+            }
+            
+            foreach ($insert_ids as $id) {
+                $category_attribute = new CategoryAttribute();
+                $category_attribute->category_id = $this->id;
+                $category_attribute->attribute_id = $id;
+                $category_attribute->save();
+            }
+        }
         return true;
     }
     

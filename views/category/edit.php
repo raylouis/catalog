@@ -65,15 +65,16 @@ if (!defined('IN_CMS')) { exit(); }
     <p><a href="#" class="add-attribute">Add a new attribute <img width="16" height="16" alt="Verwijderen" src="http://localhost/zandbak/wolf/icons/add-16.png"></a></p>
     
 <script language="javascript">
+var i = <?php echo $i; ?>;
+
 $('.add-attribute').click(function() {
     var append = '<?php echo new View('../../plugins/catalog/views/category/attribute', array(
         'attributes' => $attributes,
-        'category_attribute' => $category_attribute,
+        'category_attribute' => NULL,
         'i' => $i
     )); ?>';
     
     $('#category_attributes').append(append);
-    
     return false;
 });
 </script>
