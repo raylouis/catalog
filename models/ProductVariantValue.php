@@ -61,8 +61,8 @@ class ProductVariantValue extends ActiveRecord {
     
     public function afterSave() {
         $casted_value_class = 'Value' . ucfirst(strtolower(Attribute::findById($this->attribute_id)->type->data_type));
-        
-        if ($value != $casted_value_class::findByProductVariantValueId($this->id)) {
+
+        if (!$value = $casted_value_class::findByProductVariantValueId($this->id)) {
             $value = new $casted_value_class();
         }
         
