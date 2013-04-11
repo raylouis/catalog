@@ -64,7 +64,7 @@ window.onload = (function() {
                 url: url,
                 cache: false,
                 success: function (data) {
-                    $('#product_simple_attributes_container').html(data);
+                    $('.product_variant_attributes').html(data);
                 }
             });
             

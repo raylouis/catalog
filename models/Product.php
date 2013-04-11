@@ -61,7 +61,7 @@ class Product extends ActiveRecord {
     }
     
     public function afterSave() {
-        if ($this->type == 'simple' && isset($_POST['variants'])) {
+        if (isset($_POST['variants'])) {
             
             foreach ($_POST['variants'] as $data) {
                 if ($data['sku'] != '' && $data['price'] > 0) {
