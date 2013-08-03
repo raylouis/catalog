@@ -110,7 +110,18 @@ body#body_plugin_catalog div#content input.number {
     text-align: right;
 }
 
+body#body_plugin_catalog div#content table#variants input {
+    width: 120px;
+}
+body#body_plugin_catalog div#content table#variants input.number {
+    width: 60px;
+}
+
 body#body_plugin_catalog div#content textarea {
     width: 100% !important;
     min-height: 200px;
+}
+
+body#body_plugin_catalog div#content label[for] {
+    cursor: pointer;
 }
