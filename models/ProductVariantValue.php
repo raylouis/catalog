@@ -76,6 +76,27 @@ class ProductVariantValue extends ActiveRecord {
         
         return true;
     }
+
+    public static function deleteByProductVariantId($product_variant_id) {
+        $product_variant_id = (int) $product_variant_id;
+        
+        $values = self::findByProductVariantId($product_variant_id);
+        
+        if (is_array($values)) {
+            foreach ($values as $value) {
+                if (!$value->delete()) {
+                    return false;
+                }
+            }
+        }
+        elseif ($values instanceof ProductVariantValue) {
+            if (!$values->delete()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
     
     public function getColumns() {
         return array(

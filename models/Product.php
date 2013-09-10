@@ -61,26 +61,56 @@ class Product extends ActiveRecord {
     }
     
     public function afterSave() {
-        if (isset($_POST['variants'])) {
-            
-            foreach ($_POST['variants'] as $data) {
-                if ($data['sku'] != '' && $data['price'] > 0) {
-                    if (isset($data['id'])) {
-                        $variant = ProductVariant::findById($data['id']);
-                        $variant->setFromData($data);
-                    }
-                    else {
-                        $variant = new ProductVariant();
-                        $variant->setFromData($data);
-                    }
-                    $variant->name = $this->name();
-                    $variant->product_id = $this->id;
+        $old_variants = $this->variants;
+        
+        foreach ($old_variants as $old_variant) {
+            $not_in = true;
 
-                    if (!$variant->save()) {
-                        return false;
+            if (isset($_POST['variants'])) {
+                foreach ($_POST['variants'] as $key => $variant) {
+                    if ($old_variant->id == $variant['id']) {
+                        $not_in = false;
+
+                        if (isset($_POST['product']['attributes']) && isset($variant['attributes'])) {
+                            $variant['attributes'] = $variant['attributes'] + $_POST['product']['attributes'];
+                        }
+                        elseif (isset($_POST['product']['attributes'])) {
+                            $variant['attributes'] = $_POST['product']['attributes'];
+                        }
+
+                        $old_variant->setFromData($variant);
+                        $old_variant->name = $this->name();
+                        $old_variant->save();
+
+                        unset($_POST['variants'][$key]);
+
+                        break;
                     }
-                }   
+                }
             }
+
+            if ($not_in) {
+                if (!$old_variant->delete()) {
+                    print_r($old_variant);
+                    die;
+                }
+            }
+        }
+
+        foreach ($_POST['variants'] as $variant) {
+            if (isset($_POST['product']['attributes']) && isset($variant['attributes'])) {
+                $variant['attributes'] = $variant['attributes'] + $_POST['product']['attributes'];
+            }
+            elseif (isset($_POST['product']['attributes'])) {
+                $variant['attributes'] = $_POST['product']['attributes'];
+            }
+
+            $product_variant = new ProductVariant();
+            $product_variant->setFromData($variant);
+            $product_variant->name = $this->name();
+            $product_variant->product_id = $this->id;
+
+            $product_variant->save();
         }
         
         return true;
@@ -91,7 +121,7 @@ class Product extends ActiveRecord {
             return false;
         }
         
-        return true;
+        return false;
     }
     
     public function beforeInsert() {
@@ -142,8 +172,8 @@ class Product extends ActiveRecord {
             'include' => array(
                 'brand',
                 'category',
-                'product_attributes' => array('attribute'),
-                'product_variable_attributes' => array('attribute', 'options'),
+                //'product_attributes' => array('attribute'),
+                //'product_variable_attributes' => array('attribute', 'options'),
                 'variants' => array('vat'),
                 'variable_attributes'
             )
@@ -255,4 +285,78 @@ class Product extends ActiveRecord {
         
         return $stock;
     }
+
+    public function productAttributes($with_value_only = false) {
+        $category_ids = $this->category->parentIds();
+
+        if ($with_value_only) {
+            return Attribute::find(array(
+                'select' => 'DISTINCT attribute.*',
+                'from' => 'catalog_attribute AS attribute',
+                'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = attribute.id
+                            INNER JOIN catalog_product_variant_value AS product_variant_value ON product_variant_value.attribute_id = attribute.id
+                            INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id AND product_variant.product_id = ' . $this->id,
+                'where' => array('attribute.id NOT IN (
+                                SELECT attribute.id
+                                FROM catalog_attribute AS attribute
+                                INNER JOIN catalog_product_variant_value AS product_variant_value ON product_variant_value.attribute_id = attribute.id
+                                INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id
+                                INNER JOIN catalog_product AS product ON product.id = product_variant.product_id
+                                WHERE product_id = ?
+                                GROUP BY attribute.id
+                                HAVING COUNT(DISTINCT flat_value) > 1
+                            )
+                            AND category_attribute.category_id IN (' . implode(',', $category_ids) . ')', $this->id),
+                'group' => 'attribute.id',
+                'include' => array('type' => array('units'))
+            ));
+        }
+        else {
+            return Attribute::find(array(
+                'select' => 'attribute.*',
+                'from' => 'catalog_attribute AS attribute',
+                'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = attribute.id',
+                'where' => array('attribute.id NOT IN (
+                                SELECT attribute.id
+                                FROM catalog_attribute AS attribute
+                                INNER JOIN catalog_product_variant_value AS product_variant_value ON product_variant_value.attribute_id = attribute.id
+                                INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id
+                                INNER JOIN catalog_product AS product ON product.id = product_variant.product_id
+                                WHERE product_id = ?
+                                GROUP BY attribute.id
+                                HAVING COUNT(DISTINCT flat_value) > 1
+                            )
+                            AND category_attribute.category_id IN (' . implode(',', $category_ids) . ')', $this->id),
+                'include' => array('type' => array('units'))
+            ));
+        }
+    }
+
+    public function variantAttributes() {
+        return Attribute::find(array(
+            'select' => 'attribute.*',
+            'from' => 'catalog_attribute AS attribute',
+            'joins' => 'INNER JOIN catalog_product_variant_value AS product_variant_value ON product_variant_value.attribute_id = attribute.id
+                        INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id
+                        INNER JOIN catalog_product AS product ON product.id = product_variant.product_id',
+            'where' => array('product_id = ?', $this->id),
+            'group' => 'attribute.id',
+            'having' => 'COUNT(DISTINCT flat_value) > 1',
+            'include' => array('type' => array('units'))
+        ));
+    }
+
+    /*
+    public function unlimitedAttributes() {
+        $category_ids = $this->parentIds();
+        
+        return Attribute::find(array(
+            'select' => 'attribute.*',
+            'from' => 'catalog_attribute AS attribute',
+            'joins' => 'INNER JOIN catalog_category_attribute AS category_attribute ON category_attribute.attribute_id = attribute.id',
+            'where' => 'category_attribute.category_id IN (' . implode(',', $category_ids) . ')',
+            'include' => array('type' => array('units'))
+        ));
+    }
+    */
 }

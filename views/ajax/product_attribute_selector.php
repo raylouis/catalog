@@ -24,6 +24,9 @@ if (isset($product_variant)) {
     if (count($attribute->values) > 0) {
         $attribute->value = $attribute->values[0];
     }
+    else {
+        unset($attribute->value);
+    }
 }
 
 $selected_unit_id = $attribute->default_unit_id;
