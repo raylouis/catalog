@@ -137,16 +137,16 @@ $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute_t
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
 ENGINE = InnoDB");
 
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (1, 'Distance', 'FLOAT');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (2, 'Weight', 'FLOAT');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (3, 'Volume', 'FLOAT');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (4, 'Temperature', 'FLOAT');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (5, 'Surface', 'FLOAT');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (6, 'Text', 'VARCHAR');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (7, 'Color', 'VARCHAR');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (8, 'Yes/No', 'BOOLEAN');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (9, 'Duration', 'FLOAT');");
-$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (10, 'Number', 'FLOAT');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (1, '" . __('Distance') . "', 'FLOAT');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (2, '" . __('Weight') . "', 'FLOAT');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (3, '" . __('Volume') . "', 'FLOAT');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (4, '" . __('Temperature') . "', 'FLOAT');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (5, '" . __('Surface') . "', 'FLOAT');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (6, '" . __('Text') . "', 'VARCHAR');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (7, '" . __('Color') . "', 'VARCHAR');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (8, '" . __('Yes/No') . "', 'BOOLEAN');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (9, '" . __('Duration') . "', 'FLOAT');");
+$PDO->exec("INSERT INTO `" . TABLE_PREFIX . "catalog_attribute_type` (`id`, `name`, `data_type`) VALUES (10, '" . __('Number') . "', 'FLOAT');");
 
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_attribute_unit` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
