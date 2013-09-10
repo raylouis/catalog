@@ -18,7 +18,7 @@ if (!defined('IN_CMS')) { exit(); }
 <?php if (AuthUser::hasPermission('catalog_product_view')): ?>
 <p class="button">
     <a href="<?php echo get_url("plugin/catalog/products"); ?>">
-        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>product.png" align="middle" alt="<?php echo __('Products'); ?>" />
+        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>product-32.png" align="middle" alt="<?php echo __('Products'); ?>" />
         <?php echo __('Products'); ?>
     </a>
 </p>
@@ -26,7 +26,7 @@ if (!defined('IN_CMS')) { exit(); }
 <?php if (AuthUser::hasPermission('catalog_category_view')): ?>
 <p class="button">
     <a href="<?php echo get_url("plugin/catalog/categories"); ?>">
-        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>category.png" align="middle" alt="<?php echo __('Categories'); ?>" />
+        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>category-32.png" align="middle" alt="<?php echo __('Categories'); ?>" />
         <?php echo __('Categories'); ?>
     </a>
 </p>
@@ -34,7 +34,7 @@ if (!defined('IN_CMS')) { exit(); }
 <?php if (AuthUser::hasPermission('catalog_brand_view')): ?>
 <p class="button">
     <a href="<?php echo get_url("plugin/catalog/brands"); ?>">
-        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>brand.png" align="middle" alt="<?php echo __('Brands'); ?>" />
+        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>brand-32.png" align="middle" alt="<?php echo __('Brands'); ?>" />
         <?php echo __('Brands'); ?>
     </a>
 </p>
@@ -42,7 +42,7 @@ if (!defined('IN_CMS')) { exit(); }
 <?php if (AuthUser::hasPermission('catalog_attribute_view')): ?>
 <p class="button">
     <a href="<?php echo get_url("plugin/catalog/attributes"); ?>">
-        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>attributes.png" align="middle" alt="<?php echo __('Attributes'); ?>" />
+        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>attribute-32.png" align="middle" alt="<?php echo __('Attributes'); ?>" />
         <?php echo __('Attributes'); ?>
     </a>
 </p>
