@@ -76,7 +76,7 @@ function get_sorted($column, $order, $direction) {
             <td class="icon">
                 <?php if (AuthUser::hasPermission('catalog_attribute_delete')): ?>
                     <a href="<?php echo get_url('plugin/catalog/attribute/delete', $attribute->id); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete :name?', array(':name' => $attribute->name)); ?>');">
-                        <img width="16" height="16" src="<?php echo URI_PUBLIC;?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
+                        <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
                     </a>
                 <?php endif; ?>
             </td>
