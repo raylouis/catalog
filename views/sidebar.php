@@ -55,7 +55,7 @@ if (!defined('IN_CMS')) { exit(); }
 </p>
 <p class="button">
     <a href="<?php echo get_url("plugin/catalog/documentation"); ?>">
-        <img width="32" height="32" src="<?php echo URL_PUBLIC; ?>wolf/icons/page-32.png" align="middle" alt="<?php echo __('Documentation'); ?>" />
+        <img width="32" height="32" src="<?php echo CATALOG_IMAGES; ?>documentation-32.png" align="middle" alt="<?php echo __('Documentation'); ?>" />
         <?php echo __('Documentation'); ?>
     </a>
 </p>
