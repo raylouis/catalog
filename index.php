@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.0
+ * @version     0.1.5
  */
 
 if (!defined('CATALOG')) {
@@ -27,7 +27,7 @@ Plugin::setInfos(array(
     'description'           =>    __('The catalog plugin adds a catalog or webshop to Wolf CMS.'),
     'type'                  =>    'both',
     'author'                =>    'Nic Wortel',
-    'version'               =>    '0.1.0',
+    'version'               =>    '0.1.5',
     'website'               =>    'http://www.wolfcms.org/',
     'require_wolf_version'  =>    '0.7.4'
 ));
