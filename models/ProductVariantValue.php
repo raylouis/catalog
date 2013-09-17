@@ -61,8 +61,8 @@ class ProductVariantValue extends ActiveRecord {
     
     public function afterSave() {
         $casted_value_class = 'Value' . ucfirst(strtolower(Attribute::findById($this->attribute_id)->type->data_type));
-        
-        if ($value != $casted_value_class::findByProductVariantValueId($this->id)) {
+
+        if (!$value = $casted_value_class::findByProductVariantValueId($this->id)) {
             $value = new $casted_value_class();
         }
         
@@ -72,6 +72,27 @@ class ProductVariantValue extends ActiveRecord {
         if (!$value->save()) {
             print_r($value);
             die;
+        }
+        
+        return true;
+    }
+
+    public static function deleteByProductVariantId($product_variant_id) {
+        $product_variant_id = (int) $product_variant_id;
+        
+        $values = self::findByProductVariantId($product_variant_id);
+        
+        if (is_array($values)) {
+            foreach ($values as $value) {
+                if (!$value->delete()) {
+                    return false;
+                }
+            }
+        }
+        elseif ($values instanceof ProductVariantValue) {
+            if (!$values->delete()) {
+                return false;
+            }
         }
         
         return true;

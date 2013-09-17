@@ -47,39 +47,46 @@ class ProductVariant extends ActiveRecord {
     
     public function afterSave() {
         $old_values = ProductVariantValue::findByProductVariantId($this->id);
-        $old_ids = array();
-        
-        // put ids of values that should be deleted in an array
+
         foreach ($old_values as $old_value) {
-            $old_ids[$old_value->id] = true;
-        }
-        
-        foreach ($this->attributes as $attribute_id => $data) {
-            if (isset($data['id']) && $value = ProductVariantValue::findById($data['id'])) {
-                $value->setFromData($data);
-            }
-            else {
-                $value = new ProductVariantValue();
-                $value->setFromData($data);
-            }
-            $value->attribute_id = $attribute_id;
-            $value->product_variant_id = $this->id;
-            
-            if (!empty($value->value)) {
-                $value->save();
-                // remove ids of values that are not empty from the array
-                if (isset($old_ids[$value->id])) {
-                    unset($old_ids[$value->id]);
+            $not_in = true;
+            if (isset($this->attributes)) {
+                foreach ($this->attributes as $attribute_id => $data) {
+                    if ($old_value->attribute_id == $attribute_id && $data['value'] != '') {
+                        $not_in = false;
+
+                        $old_value->setFromData($data);
+                        $old_value->save();
+
+                        unset($this->attributes[$attribute_id]);
+
+                        break;
+                    }
                 }
             }
-            
+
+            if ($not_in) {
+                $old_value->delete();
+            }
+        }
+
+        foreach ($this->attributes as $attribute_id => $data) {
+            $value = new ProductVariantValue();
+            $value->setFromData($data);
+            $value->attribute_id = $attribute_id;
+            $value->product_variant_id = $this->id;
+
+            if (!empty($value->value)) {
+                $value->save();
+            }
         }
         
-        // delete all other values
-        foreach ($old_ids as $old_id => $foobar) {
-            if ($value = ProductVariantValue::findById($old_id)) {
-                $value->delete();
-            }
+        return true;
+    }
+
+    public function beforeDelete() {
+        if (!ProductVariantValue::deleteByProductVariantId($this->id)) {
+            return false;
         }
         
         return true;
@@ -137,8 +144,7 @@ class ProductVariant extends ActiveRecord {
     
     public static function findByProductId($id) {
         return self::find(array(
-            'where' => array('product_id = ?', $id),
-            'limit' => 1
+            'where' => array('product_id = ?', $id)
         ));
     }
     

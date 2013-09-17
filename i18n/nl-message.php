@@ -16,6 +16,7 @@ if (!defined('IN_CMS')) { exit(); }
 
 return array(
     'Abbreviation' => 'Afkorting',
+    'Add a new variant' => 'Een nieuwe variant toevoegen',
     'Add attribute' => 'Attribuut toevoegen',
     'Add brand' => 'Merk toevoegen',
     'Add category' => 'Categorie toevoegen',
