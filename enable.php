@@ -67,7 +67,6 @@ $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product` (
   `name` VARCHAR(255) NOT NULL ,
   `slug` VARCHAR(255) NOT NULL ,
   `description` TEXT NULL DEFAULT NULL ,
-  `type` VARCHAR(25) NOT NULL DEFAULT 'simple' ,
   `category_id` INT UNSIGNED NOT NULL DEFAULT 1 ,
   `brand_id` INT UNSIGNED NULL DEFAULT NULL ,
   `created_on` DATETIME NOT NULL ,

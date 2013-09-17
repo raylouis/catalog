@@ -40,7 +40,6 @@ class Product extends ActiveRecord {
     public $name = '';
     public $slug = '';
     public $description = '';
-    public $type;
     public $category_id;
     public $brand_id;
     
@@ -238,7 +237,7 @@ class Product extends ActiveRecord {
     
     public function getColumns() {
         return array(
-            'id', 'name', 'slug', 'description', 'category_id', 'brand_id', 'type',
+            'id', 'name', 'slug', 'description', 'category_id', 'brand_id',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
