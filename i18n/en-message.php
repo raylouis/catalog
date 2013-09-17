@@ -27,6 +27,7 @@ return array(
     'Attributes' => 'Attributes',
     'Brand' => 'Brand',
     'Brands' => 'Brands',
+    'Break down between variants' => 'Break down between variants',
     'Catalog' => 'Catalog',
     'Categories' => 'Categories',
     'Category' => 'Category',

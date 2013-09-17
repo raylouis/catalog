@@ -27,6 +27,7 @@ return array(
     'Attributes' => 'Attributen',
     'Brand' => 'Merk',
     'Brands' => 'Merken',
+    'Break down between variants' => 'Uitsplitsen tussen varianten',
     'Catalog' => 'Catalogus',
     'Categories' => 'Categorieën',
     'Category' => 'Categorie',

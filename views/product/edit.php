@@ -83,7 +83,7 @@ if (!defined('IN_CMS')) { exit(); }
 
 
                     <a href="#" class="move-to-variants">
-                        <img width="16" height="16" title="<?php echo __('Delete'); ?>" alt="<?php echo __('Delete'); ?>" src="<?php echo URI_PUBLIC;?>wolf/icons/open-16.png">
+                        <img width="16" height="16" title="<?php echo __('Break down between variants'); ?>" alt="<?php echo __('Break down between variants'); ?>" src="<?php echo CATALOG_IMAGES; ?>action-download-16.png">
                     </a>
                 </td>
                 <td class="field">
@@ -169,7 +169,7 @@ if (!defined('IN_CMS')) { exit(); }
                 <?php endforeach; ?>
                 <td class="icon">
                     <a href="#" class="remove-variant">
-                        <img width="16" height="16" title="<?php echo __('Delete'); ?>" alt="<?php echo __('Delete'); ?>" src="<?php echo URI_PUBLIC;?>wolf/icons/delete-16.png">
+                        <img width="16" height="16" title="<?php echo __('Delete'); ?>" alt="<?php echo __('Delete'); ?>" src="<?php echo CATALOG_IMAGES; ?>action-delete-16.png">
                     </a>
                 </td>
             </tr>
@@ -178,7 +178,7 @@ if (!defined('IN_CMS')) { exit(); }
         </tbody>
     </table>
 
-    <p><a class="add-variant" href="#"><?php echo __('Add a new variant'); ?> <img width="16" height="16" src="http://localhost/zandbak/wolf/icons/add-16.png" alt="Add"></a></p>
+    <p><a class="add-variant" href="#"><?php echo __('Add a new variant'); ?> <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-add-16.png" alt="Add"></a></p>
 
     
     
