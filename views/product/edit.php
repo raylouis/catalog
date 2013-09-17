@@ -126,7 +126,9 @@ if (!defined('IN_CMS')) { exit(); }
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($product->variants as $variant): ?>
+            <?php $variants = $product->variants; ?>
+            <?php if (count($variants) < 1) $variants[] = new ProductVariant(); ?>
+            <?php foreach ($variants as $variant): ?>
             <tr>
                 <?php if ($variant->id > 0): ?>
                 <input type="hidden" name="variants[<?php echo $variant_key; ?>][id]" value="<?php echo $variant->id; ?>" />

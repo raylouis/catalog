@@ -62,9 +62,12 @@ window.onload = (function() {
                 var row = $('table#variants tbody tr:last').clone();
 
                 if (typeof old_number == 'undefined') {
-                    old_number = row.find('input[type="hidden"]').attr('name');
-                    old_number = old_number.replace('variants[', '');
-                    old_number = old_number.replace('][id]', '');
+                    if (old_number = row.find('input[type="hidden"]').attr('name')) {
+                        old_number = old_number.replace('variants[', '');
+                        old_number = old_number.replace('][id]', '');
+                    } else {
+                        old_number = 0;
+                    }
                 }
 
                 old_number = parseInt(old_number);
