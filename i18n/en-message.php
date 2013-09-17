@@ -60,6 +60,8 @@ return array(
     'Percentage' => 'Percentage',
     'Point' => 'Point',
     'Price' => 'Price',
+    'Product' => 'Product',
+    'Product properties' => 'Product properties',
     'Products' => 'Products',
     'Search' => 'Search',
     'Save Settings' => 'Save Settings',
