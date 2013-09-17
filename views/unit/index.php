@@ -61,7 +61,7 @@ if (!defined('IN_CMS')) { exit(); }
             <td class="icon">
                 <?php if (AuthUser::hasPermission('catalog_unit_delete')): ?>
                     <a href="<?php echo get_url('plugin/catalog/unit/delete', $unit->id); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete unit :name?', array(':name' => $unit->name)); ?>');">
-                        <img width="16" height="16" src="<?php echo URI_PUBLIC;?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
+                        <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
                     </a>
                 <?php endif; ?>
             </td>
