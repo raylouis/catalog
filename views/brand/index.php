@@ -70,12 +70,12 @@ function get_sorted($column, $order, $direction) {
                 <a href="<?php echo $brand->website; ?>" target="_blank"><?php echo $brand->website; ?></a>
             </td>
             <td class="icon">
-                <a href="<?php echo $brand->url(); ?>" target="_blank"><img src="<?php echo URI_PUBLIC;?>wolf/admin/images/magnify.png" alt="<?php echo __('View brand'); ?>" title="<?php echo __('View brand'); ?>" /></a>
+                <a href="<?php echo $brand->url(); ?>" target="_blank"><img src="<?php echo CATALOG_IMAGES; ?>action-open-16.png" alt="<?php echo __('View brand'); ?>" title="<?php echo __('View brand'); ?>" /></a>
             </td>
             <td class="icon">
                 <?php if (AuthUser::hasPermission('catalog_brand_delete')): ?>
                     <a href="<?php echo get_url('plugin/catalog/brand/delete', $brand->id); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete :name?', array(':name' => $brand->name)); ?>');">
-                        <img width="16" height="16" src="<?php echo URI_PUBLIC;?>wolf/icons/delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
+                        <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
                     </a>
                 <?php endif; ?>
             </td>

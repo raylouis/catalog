@@ -48,11 +48,11 @@ if (!defined('IN_CMS')) { exit(); }
       </div>
       <div class="modify">
         <?php if (AuthUser::hasPermission('catalog_category_add')): ?>
-          <a href="<?php echo get_url('plugin/catalog/category/add', $root->id); ?>"><img src="<?php echo URI_PUBLIC;?>wolf/icons/add-16.png" align="middle" title="<?php echo __('Add child'); ?>" alt="<?php echo __('Add child'); ?>" /></a>&nbsp;
+          <a href="<?php echo get_url('plugin/catalog/category/add', $root->id); ?>"><img src="<?php echo CATALOG_IMAGES;?>action-add-16.png" align="middle" title="<?php echo __('Add child'); ?>" alt="<?php echo __('Add child'); ?>" /></a>&nbsp;
         <?php endif; ?>
         
         <?php if (AuthUser::hasPermission('catalog_category_delete')): ?>
-          <img class="remove" src="<?php echo URI_PUBLIC;?>wolf/icons/delete-disabled-16.png" align="middle" alt="<?php echo __('remove icon disabled'); ?>" title="<?php echo __('Remove unavailable'); ?>"/>
+          <img class="remove" src="<?php echo CATALOG_IMAGES;?>action-delete-disabled-16.png" align="middle" alt="<?php echo __('remove icon disabled'); ?>" title="<?php echo __('Remove unavailable'); ?>"/>
         <?php endif; ?>
       </div>
 
