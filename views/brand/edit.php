@@ -41,7 +41,7 @@ if (!defined('IN_CMS')) { exit(); }
                     
                     <?php if (isset($brand->logo)): ?>
                         <br /><br />
-                        <?php echo $brand->logo->html(120,120,'thumbnail'); ?>
+                        <?php echo $brand->logo->html_img('thumbnail', 120); ?>
                     <?php endif; ?>
                 </td>
             </tr>

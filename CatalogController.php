@@ -106,33 +106,31 @@ class CatalogController extends PluginController {
                 $uploaded_file = new UploadedFile($_FILES['logo']);
 
                 if ($uploaded_file->error > 0) {
-                    if ($uploaded_file->error == 4) {
-
-                    }
-                    else {
+                    if ($uploaded_file->error != 4) {
                         $errors[] = $uploaded_file->errorMessage();
                     }
-                }
-                else {
-                    if (isset($obj->logo)) {
-                        $image = $obj->logo;
-                    }
-                    else {
-                        $image = new Image();
-                    }
-                    $image->title = $obj->name;
-                    $image->save();
-                    
-                    $image->deleteFiles();
-            
-                    $image->createSlug();
-
+                } else {
+                    $filename = pathinfo($uploaded_file->name, PATHINFO_FILENAME);
                     $extension = pathinfo($uploaded_file->name, PATHINFO_EXTENSION);
-                    $to = CMS_ROOT . DS . 'public' . DS . 'images' . DS . $image->slug . '.' . strtolower($extension);
 
-                    $uploaded_file->moveTo($to);
+                    $data = array(
+                        'title' => $obj->name,
+                        'filename' => Node::toSlug($obj->name) . '.' . $extension,
+                        'mime_type' => $uploaded_file->type
+                    );
+
+                    $attachment = new Attachment($data);
+
+                    $to = CMS_ROOT . DS . 'public' . DS . 'media_uploads' . DS . $attachment->filename;
+
+                    if ($uploaded_file->moveTo($to)) {
+                        if (!$attachment->save()) {
+                            print_r($attachment);
+                            die;
+                        }
+                    }
                     
-                    $obj->logo_id = $image->id;
+                    $obj->logo_attachment_id = $attachment->id;
                 }
             }
         }

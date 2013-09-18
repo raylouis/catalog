@@ -29,14 +29,20 @@ $PDO->exec("CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_brand` (
   `slug` VARCHAR(255) NOT NULL ,
   `description` TEXT NULL DEFAULT NULL ,
   `website` VARCHAR(255) NULL DEFAULT NULL ,
-  `logo_id` INT UNSIGNED NULL DEFAULT NULL ,
+  `logo_attachment_id` INT UNSIGNED NULL DEFAULT NULL ,
   `created_on` DATETIME NOT NULL ,
   `updated_on` DATETIME NOT NULL ,
   `created_by_id` INT UNSIGNED NOT NULL ,
   `updated_by_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
-  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) )
+  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) ,
+  INDEX `fk_brand_logo_attachment` (`logo_attachment_id` ASC) ,
+  CONSTRAINT `fk_brand_media_attachment`
+    FOREIGN KEY (`logo_attachment_id` )
+    REFERENCES `" . TABLE_PREFIX . "media_attachment` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB");
 
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_category` (

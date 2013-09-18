@@ -27,8 +27,8 @@ class Brand extends ActiveRecord {
     );
     static $belongs_to = array(
         'logo' => array(
-            'class_name' => 'Image',
-            'foreign_key' => 'logo_id'
+            'class_name' => 'Attachment',
+            'foreign_key' => 'logo_attachment_id'
         )
     );
     
@@ -99,7 +99,7 @@ class Brand extends ActiveRecord {
     
     public function getColumns() {
         return array(
-            'id', 'name', 'slug', 'description', 'website', 'logo_id',
+            'id', 'name', 'slug', 'description', 'website', 'logo_attachment_id',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
