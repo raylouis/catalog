@@ -103,9 +103,25 @@ class Brand extends ActiveRecord {
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
+
+    public function hasLogo()
+    {
+        return (boolean) $this->logo();
+    }
     
     public function keywords() {
         return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
+    }
+
+    public function logo()
+    {
+        if (!isset($this->logo)) {
+            if (!$this->logo = Attachment::findById($this->logo_attachment_id)) {
+                $this->logo = false;
+            }
+        }
+
+        return $this->logo;
     }
     
     public function url() {
