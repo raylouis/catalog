@@ -105,31 +105,7 @@ class CatalogController extends PluginController {
             if (isset($_FILES['logo'])) {
                 $uploaded_file = new UploadedFile($_FILES['logo']);
 
-                if ($uploaded_file->error > 0) {
-                    if ($uploaded_file->error != 4) {
-                        $errors[] = $uploaded_file->errorMessage();
-                    }
-                } else {
-                    $filename = pathinfo($uploaded_file->name, PATHINFO_FILENAME);
-                    $extension = pathinfo($uploaded_file->name, PATHINFO_EXTENSION);
-
-                    $data = array(
-                        'title' => $obj->name,
-                        'filename' => Node::toSlug($obj->name) . '.' . $extension,
-                        'mime_type' => $uploaded_file->type
-                    );
-
-                    $attachment = new Attachment($data);
-
-                    $to = CMS_ROOT . DS . 'public' . DS . 'media_uploads' . DS . $attachment->filename;
-
-                    if ($uploaded_file->moveTo($to)) {
-                        if (!$attachment->save()) {
-                            print_r($attachment);
-                            die;
-                        }
-                    }
-                    
+                if ($attachment = $uploaded_file->save($obj->name)) {
                     $obj->logo_attachment_id = $attachment->id;
                 }
             }
@@ -252,6 +228,32 @@ class CatalogController extends PluginController {
             $url = 'plugin/catalog/' . $model . '/';
             $url .= ( $action == 'edit') ? 'edit/' . $id : 'add/';
             redirect(get_url($url));
+        }
+
+        if ($model == 'product' && isset($_FILES['file'])) {
+            $uploaded_files = array();
+            $errors = false;
+
+            foreach ($_FILES['file']['name'] as $key => $name) {
+                $file = array(
+                    'name'      => $_FILES['file']['name'][$key],
+                    'type'      => $_FILES['file']['type'][$key],
+                    'tmp_name'  => $_FILES['file']['tmp_name'][$key],
+                    'error'     => $_FILES['file']['error'][$key],
+                    'size'      => $_FILES['file']['size'][$key]
+                );
+
+                $uploaded_file = new UploadedFile($file);
+                if ($attachment = $uploaded_file->save($obj->name())) {
+                    $data = array(
+                        'product_id' => $obj->id,
+                        'attachment_id' => $attachment->id
+                    );
+                    $product_image = new ProductImage($data);
+                    $product_image->save();
+                }
+            }
+
         }
         
         if ($action == 'add') {

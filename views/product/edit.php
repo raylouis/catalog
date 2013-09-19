@@ -18,7 +18,7 @@ if (!defined('IN_CMS')) { exit(); }
 
 <h1><?php echo __(ucfirst($action).' product'); ?></h1>
 
-<form method="post" action="<?php if ($action == 'add') echo get_url('plugin/catalog/product/add'); else echo get_url('plugin/catalog/product/edit/'.$product->id); ?>">
+<form method="post" action="<?php if ($action == 'add') echo get_url('plugin/catalog/product/add'); else echo get_url('plugin/catalog/product/edit/'.$product->id); ?>" enctype="multipart/form-data">
     <h3><?php echo __('General product info'); ?></h3>
     
     <table border="0" cellspacing="0" cellpadding="0">
