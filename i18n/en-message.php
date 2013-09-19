@@ -62,6 +62,7 @@ return array(
     'Point' => 'Point',
     'Price' => 'Price',
     'Product' => 'Product',
+    'Product images' => 'Product images',
     'Product properties' => 'Product properties',
     'Products' => 'Products',
     'Search' => 'Search',

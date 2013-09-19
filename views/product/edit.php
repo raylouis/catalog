@@ -180,7 +180,13 @@ if (!defined('IN_CMS')) { exit(); }
 
     <p><a class="add-variant" href="#"><?php echo __('Add a new variant'); ?> <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-add-16.png" alt="Add"></a></p>
 
-    
+    <h3><?php echo __('Product images'); ?></h3>
+
+    <p><input type="file" id="product_image_upload" name="file[]" multiple="multiple" class="textbox"></p>
+
+    <?php foreach ($product->images as $image): ?>
+    <?php echo $image->html_img('thumbnail', 160); ?>
+    <?php endforeach; ?>
     
     <p class="buttons">
         <input class="button" name="commit" type="submit" accesskey="s" value="<?php echo __('Save and Close'); ?>" />

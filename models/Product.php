@@ -33,6 +33,10 @@ class Product extends ActiveRecord {
         'variants' => array(
             'class_name' => 'ProductVariant',
             'foreign_key' => 'product_id'
+        ),
+        'images' => array(
+            'class_name' => 'ProductImage',
+            'foreign_key' => 'product_id'
         )
     );
     
@@ -169,8 +173,9 @@ class Product extends ActiveRecord {
             'where' => array('category_id = ? AND slug = ?', $category_id, $slug),
             'limit' => 1,
             'include' => array(
-                'brand',
+                'brand' => array('logo'),
                 'category',
+                'images' => array('file'),
                 //'product_attributes' => array('attribute'),
                 //'product_variable_attributes' => array('attribute', 'options'),
                 'variants' => array('vat'),
@@ -189,7 +194,7 @@ class Product extends ActiveRecord {
             'include' => array(
                 'brand',
                 'category',
-                'photos',
+                'images' => array('file'),
                 'colors'
             )
         ));
@@ -203,7 +208,7 @@ class Product extends ActiveRecord {
                 'brand',
                 'category',
                 'colors',
-                'photos'
+                'images' => array('file')
             )
         ));
     }
@@ -214,7 +219,8 @@ class Product extends ActiveRecord {
             'limit' => 1,
             'include' => array(
                 'category',
-                'variants'
+                'variants',
+                'images' => array('file')
             )
         ));
     }
