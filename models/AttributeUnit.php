@@ -72,7 +72,7 @@ class AttributeUnit extends ActiveRecord {
     public static function findById($id)
     {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1
         ));
     }

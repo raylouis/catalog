@@ -168,7 +168,7 @@ class Product extends ActiveRecord
     public static function findByCategoryId($category_id)
     {
         return self::find(array(
-            'where' => array('category_id = ?', $category_id),
+            'where' => array('category_id = :category_id', ':category_id' => $category_id),
             'order' => 'slug ASC',
             'include' => array('brand')
         ));
@@ -177,7 +177,11 @@ class Product extends ActiveRecord
     public static function findByCategoryIdAndSlug($category_id, $slug)
     {
         return self::find(array(
-            'where' => array('category_id = ? AND slug = ?', $category_id, $slug),
+            'where' => array(
+                'category_id = :category_id AND slug = :slug',
+                ':category_id' => $category_id,
+                ':slug' => $slug
+            ),
             'limit' => 1,
             'include' => array(
                 'brand' => array('logo'),
@@ -211,7 +215,7 @@ class Product extends ActiveRecord
     public static function findByBrandId($brand_id)
     {
         return self::find(array(
-            'where' => array('brand_id = ?', $brand_id),
+            'where' => array('brand_id = :brand_id', ':brand_id' => $brand_id),
             'order' => 'name ASC',
             'include' => array(
                 'brand',
@@ -225,7 +229,7 @@ class Product extends ActiveRecord
     public static function findById($id)
     {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1,
             'include' => array(
                 'category',
@@ -238,7 +242,7 @@ class Product extends ActiveRecord
     public static function findBySlug($slug)
     {
         return self::find(array(
-            'where' => array('slug = ?', $slug),
+            'where' => array('slug = :slug', ':slug' => $slug),
             'limit' => 1
         ));
     }
@@ -334,11 +338,11 @@ class Product extends ActiveRecord
                                 INNER JOIN catalog_product_variant_value AS product_variant_value ON product_variant_value.attribute_id = attribute.id
                                 INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id
                                 INNER JOIN catalog_product AS product ON product.id = product_variant.product_id
-                                WHERE product_id = ?
+                                WHERE product_id = :product_id
                                 GROUP BY attribute.id
                                 HAVING COUNT(DISTINCT flat_value) > 1
                             )
-                            AND category_attribute.category_id IN (' . implode(',', $category_ids) . ')', $this->id),
+                            AND category_attribute.category_id IN (' . implode(',', $category_ids) . ')', ':product_id' => $this->id),
                 'group' => 'attribute.id',
                 'include' => array('type' => array('units'))
             ));
@@ -353,11 +357,11 @@ class Product extends ActiveRecord
                                 INNER JOIN catalog_product_variant_value AS product_variant_value ON product_variant_value.attribute_id = attribute.id
                                 INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id
                                 INNER JOIN catalog_product AS product ON product.id = product_variant.product_id
-                                WHERE product_id = ?
+                                WHERE product_id = :product_id
                                 GROUP BY attribute.id
                                 HAVING COUNT(DISTINCT flat_value) > 1
                             )
-                            AND category_attribute.category_id IN (' . implode(',', $category_ids) . ')', $this->id),
+                            AND category_attribute.category_id IN (' . implode(',', $category_ids) . ')', ':product_id' => $this->id),
                 'include' => array('type' => array('units'))
             ));
         }
@@ -371,7 +375,7 @@ class Product extends ActiveRecord
             'joins' => 'INNER JOIN catalog_product_variant_value AS product_variant_value ON product_variant_value.attribute_id = attribute.id
                         INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id
                         INNER JOIN catalog_product AS product ON product.id = product_variant.product_id',
-            'where' => array('product_id = ?', $this->id),
+            'where' => array('product_id = :product_id', ':product_id' => $this->id),
             'group' => 'attribute.id',
             'having' => 'COUNT(DISTINCT flat_value) > 1',
             'include' => array('type' => array('units'))

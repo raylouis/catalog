@@ -144,15 +144,15 @@ class ProductVariant extends ActiveRecord
     public static function findById($id)
     {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1
         ));
     }
     
-    public static function findByProductId($id)
+    public static function findByProductId($product_id)
     {
         return self::find(array(
-            'where' => array('product_id = ?', $id)
+            'where' => array('product_id = :product_id', ':product_id' => $product_id)
         ));
     }
     

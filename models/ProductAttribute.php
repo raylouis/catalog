@@ -57,10 +57,10 @@ class ProductAttribute extends ActiveRecord
         return true;
     }
     
-    public static function findByProductId($id)
+    public static function findByProductId($product_id)
     {
         return self::find(array(
-            'where' => array('product_id = ?', $id)
+            'where' => array('product_id = :product_id', ':product_id' => $product_id)
         ));
     }
 }

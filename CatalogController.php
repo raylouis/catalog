@@ -264,7 +264,7 @@ class CatalogController extends PluginController
     {
         if ($action == 'attribute_type_units') {
             if ($attribute_type = AttributeType::find(array(
-                'where' => array('id = ?', $id),
+                'where' => array('id = :id', ':id' => $id),
                 'limit' => 1,
                 'include' => array('units')
             ))) {
@@ -276,7 +276,7 @@ class CatalogController extends PluginController
             }
         } elseif ($action == 'product_attribute_selector') {
             if ($category = Category::find(array(
-                'where' => array('id = ?', $id),
+                'where' => array('id = :id', ':id' => $id),
                 'limit' => 1,
                 'include' => array('attributes')
             ))) {
@@ -465,7 +465,7 @@ class CatalogController extends PluginController
             
             $brands = Brand::find(array(
                 'select' => 'catalog_brand.*',
-                'where' => array('name LIKE ?', $search_string),
+                'where' => array('name LIKE :search_string', ':search_string' => $search_string),
                 'order' => $order_sql . ' ' . strtoupper($order_direction)
             ));
         } else {
@@ -826,12 +826,12 @@ class CatalogController extends PluginController
                     LEFT JOIN catalog_brand AS brand ON brand.id = product.brand_id
                     LEFT JOIN catalog_product_variant AS variant ON variant.product_id = product.id
                     ',
-                'where' => array('product.name LIKE ?
-                        OR product.description LIKE ?
-                        OR category.title LIKE ?
-                        OR brand.name LIKE ?
-                        OR variant.sku LIKE ?
-                        OR variant.name LIKE ?', $q, $q, $q, $q, $q, $q),
+                'where' => array('product.name LIKE :search_string
+                        OR product.description LIKE :search_string
+                        OR category.title LIKE :search_string
+                        OR brand.name LIKE :search_string
+                        OR variant.sku LIKE :search_string
+                        OR variant.name LIKE :search_string', ':search_string' => $q),
                 'group' => 'product.id',
                 'order' => $order_sql . ' ' . strtoupper($order_direction),
                 'include' => array(

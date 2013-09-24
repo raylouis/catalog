@@ -59,7 +59,7 @@ class Attribute extends ActiveRecord
     public static function findById($id)
     {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1,
             'include' => array('type' => array('units'))
         ));
@@ -68,7 +68,11 @@ class Attribute extends ActiveRecord
     public function findValuesByProductVariantId($product_variant_id)
     {
         return ProductVariantValue::find(array(
-            'where' => array('attribute_id = ? AND product_variant_id = ?', $this->id, $product_variant_id),
+            'where' => array(
+                'attribute_id = :attribute_id AND product_variant_id = :product_variant_id',
+                ':attribute_id' => $this->id,
+                ':product_variant_id' => $product_variant_id
+            ),
             'include' => array('unit')
         ));
     }
@@ -79,7 +83,11 @@ class Attribute extends ActiveRecord
             'select' => 'product_variant_value.*',
             'from' => 'catalog_product_variant_value AS product_variant_value',
             'joins' => 'INNER JOIN catalog_product_variant AS product_variant ON product_variant.id = product_variant_value.product_variant_id',
-            'where' => array('attribute_id = ? AND product_variant.product_id = ?', $this->id, $product_id),
+            'where' => array(
+                'attribute_id = :attribute_id AND product_variant.product_id = :product_id',
+                ':attribute_id' => $this->id,
+                ':product_id' => $product_id
+            ),
             'include' => array('unit')
         ));
     }

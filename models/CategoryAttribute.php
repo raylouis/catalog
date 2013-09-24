@@ -36,17 +36,21 @@ class CategoryAttribute extends ActiveRecord
     public $attribute_id;
     public $position;
     
-    public static function findByCategoryId($id)
+    public static function findByCategoryId($category_id)
     {
         return self::find(array(
-            'where' => array('category_id = ?', $id)
+            'where' => array('category_id = :category_id', ':category_id' => $category_id)
         ));
     }
     
     public static function findByCategoryIdAndAttributeId($category_id, $attribute_id)
     {
         return self::find(array(
-            'where' => array('category_id = ? AND attribute_id = ?', $category_id, $attribute_id),
+            'where' => array(
+                'category_id = :category_id AND attribute_id = :attribute_id',
+                ':category_id' => $category_id,
+                ':attribute_id' => $attribute_id
+            ),
             'limit' => 1
         ));
     }

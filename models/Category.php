@@ -158,8 +158,6 @@ class Category extends ActiveRecord
         ));
     }
     
-    
-    
     public function children()
     {
         return self::childrenOf($this->id);
@@ -190,7 +188,7 @@ class Category extends ActiveRecord
     public static function findById($id)
     {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1,
             'include' => array('attributes')
         ));
@@ -199,7 +197,7 @@ class Category extends ActiveRecord
     public static function findByParentId($parent_id)
     {
         return self::find(array(
-            'where' => array('parent_id = ?', $parent_id),
+            'where' => array('parent_id = :parent_id', ':parent_id' => $parent_id),
             'order' => 'position ASC'
         ));
     }
@@ -209,7 +207,7 @@ class Category extends ActiveRecord
         $parent_id = $parent ? $parent->id : 1;
         
         return self::find(array(
-            'where' => array('slug = ? AND parent_id = ?', $slug, $parent_id),
+            'where' => array('slug = :slug AND parent_id = :parent_id', ':slug' => $slug, ':parent_id' => $parent_id),
             'limit' => 1,
             'include' => array(
                 'filters' => array('filter_options'),
@@ -252,7 +250,7 @@ class Category extends ActiveRecord
     
     public static function hasChildren($id) 
     {
-        return (boolean) self::countFrom('Category', 'parent_id = ?', array($id));
+        return (boolean) self::countFrom('Category', 'parent_id = :parent_id', array(':parent_id' => $id));
     }
     
     public function keywords()
@@ -286,8 +284,6 @@ class Category extends ActiveRecord
         
         return $array;
     }
-    
-    
     
     public static function subcategoryIdsOf($category_id)
     {

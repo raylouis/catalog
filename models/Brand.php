@@ -89,7 +89,7 @@ class Brand extends ActiveRecord
     public static function findById($id)
     {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1,
             'include' => array('logo')
         ));
@@ -98,7 +98,7 @@ class Brand extends ActiveRecord
     public static function findBySlug($slug)
     {
         return self::find(array(
-            'where' => array('slug = ?', $slug),
+            'where' => array('slug = :slug', ':slug' => $slug),
             'limit' => 1,
             'include' => array('products' => array('brand', 'category'), 'logo')
         ));

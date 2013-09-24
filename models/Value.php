@@ -56,10 +56,10 @@ class Value extends ActiveRecord
         }
     }
     
-    public static function findByProductVariantValueId($id)
+    public static function findByProductVariantValueId($product_variant_value_id)
     {
         return self::find(array(
-            'where' => array('product_variant_value_id = ?', $id),
+            'where' => array('product_variant_value_id = :product_variant_value_id', ':product_variant_value_id' => $product_variant_value_id),
             'limit' => 1,
             'include' => array('product_variant_value')
         ));
