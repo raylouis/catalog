@@ -16,7 +16,7 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class ValueDatetime extends Value {
+class ValueDatetime extends Value
+{
     const TABLE_NAME = 'catalog_value_datetime';
-    
 }

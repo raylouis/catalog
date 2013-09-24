@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class CategoryAttribute extends ActiveRecord {
+class CategoryAttribute extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_category_attribute';
     
     static $belongs_to = array(
@@ -35,13 +36,15 @@ class CategoryAttribute extends ActiveRecord {
     public $attribute_id;
     public $position;
     
-    public static function findByCategoryId($id) {
+    public static function findByCategoryId($id)
+    {
         return self::find(array(
             'where' => array('category_id = ?', $id)
         ));
     }
     
-    public static function findByCategoryIdAndAttributeId($category_id, $attribute_id) {
+    public static function findByCategoryIdAndAttributeId($category_id, $attribute_id)
+    {
         return self::find(array(
             'where' => array('category_id = ? AND attribute_id = ?', $category_id, $attribute_id),
             'limit' => 1

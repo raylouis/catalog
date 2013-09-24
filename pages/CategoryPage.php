@@ -14,8 +14,10 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-class CategoryPage extends CatalogPage {
-    public function __construct($category) {
+class CategoryPage extends CatalogPage
+{
+    public function __construct($category)
+    {
         $this->category = $category;
         
         $this->title = $category->title;
@@ -27,8 +29,7 @@ class CategoryPage extends CatalogPage {
         if ($category->parent_id > 1) {
             $category->parent = Category::findById($category->parent_id);
             $this->parent = new CategoryPage($category->parent);
-        }
-        else {
+        } else {
             $this->parent = Page::find('/');
         }
         
@@ -37,11 +38,11 @@ class CategoryPage extends CatalogPage {
         }
     }
     
-    public function content($part = 'body', $inherit = false) {
+    public function content($part = 'body', $inherit = false)
+    {
         if ($part == 'body') {
             $this->includeSnippet('category');
-        }
-        elseif ($part == 'sidebar') {
+        } elseif ($part == 'sidebar') {
             $this->includeSnippet('category_filters');
         }
     }

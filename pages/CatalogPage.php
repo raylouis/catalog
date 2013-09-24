@@ -14,8 +14,10 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-class CatalogPage extends Page {
-    public function execute() {
+class CatalogPage extends Page
+{
+    public function execute()
+    {
         $this->_executeLayout();
     }
 }

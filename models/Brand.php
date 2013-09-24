@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class Brand extends ActiveRecord {
+class Brand extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_brand';
     
     static $has_many = array(
@@ -45,18 +46,21 @@ class Brand extends ActiveRecord {
     
     public $url = '';
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->setUrl();
     }
     
-    public function beforeInsert() {
+    public function beforeInsert()
+    {
         $this->created_on       = date('Y-m-d H:i:s');
         $this->created_by_id    = AuthUser::getRecord()->id;
 
         return true;
     }
     
-    public function beforeSave() {
+    public function beforeSave()
+    {
         $this->slug             = Node::toSlug($this->name);
         
         $this->updated_on       = date('Y-m-d H:i:s');
@@ -65,23 +69,25 @@ class Brand extends ActiveRecord {
         return true;
     }
     
-    public function date($format='%a, %e %b %Y', $which_one='created') {
+    public function date($format='%a, %e %b %Y', $which_one='created')
+    {
         if ($which_one == 'update' || $which_one == 'updated') {
             return strftime($format, strtotime($this->updated_on));
-        }
-        else {
+        } else {
             return strftime($format, strtotime($this->created_on));
         }
     }
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'order' => 'name ASC',
             'include' => array('logo')
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
             'where' => array('id = ?', $id),
             'limit' => 1,
@@ -89,7 +95,8 @@ class Brand extends ActiveRecord {
         ));
     }
     
-    public static function findBySlug($slug) {
+    public static function findBySlug($slug)
+    {
         return self::find(array(
             'where' => array('slug = ?', $slug),
             'limit' => 1,
@@ -97,7 +104,8 @@ class Brand extends ActiveRecord {
         ));
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'name', 'slug', 'description', 'website', 'logo_attachment_id',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
@@ -109,7 +117,8 @@ class Brand extends ActiveRecord {
         return (boolean) $this->logo();
     }
     
-    public function keywords() {
+    public function keywords()
+    {
         return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
     }
 
@@ -124,11 +133,13 @@ class Brand extends ActiveRecord {
         return $this->logo;
     }
     
-    public function url() {
+    public function url()
+    {
         return URL_PUBLIC . $this->url . ($this->url != '' ? URL_SUFFIX: '');
     }
     
-    public function setUrl() {
+    public function setUrl()
+    {
         $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
         $this->url = trim($brands_slug . '/' . $this->slug, '/');
     }

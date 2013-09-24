@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class Attribute extends ActiveRecord {
+class Attribute extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_attribute';
     
     static $belongs_to = array(
@@ -47,14 +48,16 @@ class Attribute extends ActiveRecord {
     public $attribute_type_id;
     public $default_unit_id;
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'order' => 'id ASC',
             'include' => array('type' => array('units'), 'default_unit')
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
             'where' => array('id = ?', $id),
             'limit' => 1,
@@ -62,14 +65,16 @@ class Attribute extends ActiveRecord {
         ));
     }
     
-    public function findValuesByProductVariantId($product_variant_id) {
+    public function findValuesByProductVariantId($product_variant_id)
+    {
         return ProductVariantValue::find(array(
             'where' => array('attribute_id = ? AND product_variant_id = ?', $this->id, $product_variant_id),
             'include' => array('unit')
         ));
     }
 
-    public function findValuesByProductId($product_id) {
+    public function findValuesByProductId($product_id)
+    {
         return ProductVariantValue::find(array(
             'select' => 'product_variant_value.*',
             'from' => 'catalog_product_variant_value AS product_variant_value',
@@ -79,7 +84,8 @@ class Attribute extends ActiveRecord {
         ));
     }
     
-//    public function findOptionsByCategory($category_id) {
+//    public function findOptionsByCategory($category_id)
+//    {
 //        $category_ids = Category::subcategoryIdsOf($category_id);
 //        
 //        $placeholders = array();
@@ -96,7 +102,8 @@ class Attribute extends ActiveRecord {
 //        ));
 //    }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'name', 'description', 'attribute_type_id', 'default_unit_id'
         );

@@ -14,8 +14,10 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-class ProductPage extends CatalogPage {
-    public function __construct($product) {
+class ProductPage extends CatalogPage
+{
+    public function __construct($product)
+    {
         $this->product = $product;
         
         $this->title = $product->name();
@@ -28,8 +30,7 @@ class ProductPage extends CatalogPage {
         if ($product->category_id > 0) {
             $product->category = Category::findById($product->category_id);
             $this->parent = new CategoryPage($product->category);
-        }
-        else {
+        } else {
             $this->parent = Page::find('/');
         }
         
@@ -38,7 +39,8 @@ class ProductPage extends CatalogPage {
         }
     }
     
-    public function content($part = 'body', $inherit = false) {
+    public function content($part = 'body', $inherit = false)
+    {
         if ($part == 'body') {
             $this->includeSnippet('product');
         }

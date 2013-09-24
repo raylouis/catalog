@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class AttributeType extends ActiveRecord {
+class AttributeType extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_attribute_type';
     
     static $has_many = array(
@@ -30,20 +31,23 @@ class AttributeType extends ActiveRecord {
     public $name = '';
     public $data_type = '';
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'order' => 'id ASC'
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
             'where' => array('id = ?', $id),
             'limit' => 1
         ));
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'name', 'data_type'
         );

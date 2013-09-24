@@ -38,7 +38,8 @@ class AttributeUnit extends ActiveRecord {
     public $attribute_unit_system_id;
     public $attribute_type_id;
     
-    public static function convert($value, $from_id, $to_id) {
+    public static function convert($value, $from_id, $to_id)
+    {
         if (!$from = self::findById($from_id)) return false;
         if (!$to   = self::findById($to_id)) return false;
         
@@ -61,37 +62,41 @@ class AttributeUnit extends ActiveRecord {
         return $value * $multiplier;
     }
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'order' => 'id ASC'
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
             'where' => array('id = ?', $id),
             'limit' => 1
         ));
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'name', 'abbreviation', 'multiplier', 'parent_id', 'attribute_unit_system_id', 'attribute_type_id'
         );
     }
     
-    public function compareParent() {
+    public function compareParent()
+    {
         $this->setParent();
         
         if (isset($this->parent)) {
             return '1 ' . $this->abbreviation . ' = ' . $this->multiplier . ' ' . $this->parent->abbreviation;
-        }
-        else {
+        } else {
             return false;
         }
     }
     
-    public function setParent() {
+    public function setParent()
+    {
         if (!isset($this->parent)) {
             $this->parent = AttributeUnit::findById($this->parent_id);
         }

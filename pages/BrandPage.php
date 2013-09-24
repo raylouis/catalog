@@ -14,8 +14,10 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-class BrandPage extends CatalogPage {
-    public function __construct($brand) {
+class BrandPage extends CatalogPage
+{
+    public function __construct($brand)
+    {
         $this->brand = $brand;
         
         $this->title = $brand->name;
@@ -32,7 +34,8 @@ class BrandPage extends CatalogPage {
         }
     }
     
-    public function content($part = 'body', $inherit = false) {
+    public function content($part = 'body', $inherit = false)
+    {
         if ($part == 'body') {
             $this->includeSnippet('brand');
         }

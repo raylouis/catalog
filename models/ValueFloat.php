@@ -16,7 +16,7 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class ValueFloat extends Value {
+class ValueFloat extends Value
+{
     const TABLE_NAME = 'catalog_value_float';
-    
 }

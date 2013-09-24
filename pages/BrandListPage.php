@@ -14,8 +14,10 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-class BrandListPage extends CatalogPage {
-    public function __construct($brands) {
+class BrandListPage extends CatalogPage
+{
+    public function __construct($brands)
+    {
         $this->brands = $brands;
         
         $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
@@ -35,7 +37,8 @@ class BrandListPage extends CatalogPage {
         }
     }
     
-    public function content($part = 'body', $inherit = false) {
+    public function content($part = 'body', $inherit = false)
+    {
         if ($part == 'body') {
             $this->includeSnippet('brand_list');
         }

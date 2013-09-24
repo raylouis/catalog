@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class Value extends ActiveRecord {
+class Value extends ActiveRecord
+{
     
     static $belongs_to = array(
         'value' => array(
@@ -29,13 +30,15 @@ class Value extends ActiveRecord {
     public $value;
     public $product_variant_value_id;
     
-    public function beforeSave() {
+    public function beforeSave()
+    {
         if ($this->convert()) {
             return true;
         }
     }
     
-    public function convert() {
+    public function convert()
+    {
         $this->setProductVariantValue();
         
         if (!is_null($this->product_variant_value->attribute->default_unit_id)) {
@@ -48,13 +51,13 @@ class Value extends ActiveRecord {
             }
 
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
     
-    public static function findByProductVariantValueId($id) {
+    public static function findByProductVariantValueId($id)
+    {
         return self::find(array(
             'where' => array('product_variant_value_id = ?', $id),
             'limit' => 1,
@@ -62,13 +65,15 @@ class Value extends ActiveRecord {
         ));
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'value', 'product_variant_value_id'
         );
     }
     
-    public function setProductVariantValue() {
+    public function setProductVariantValue()
+    {
         if (!isset($this->product_variant_value)) {
             $this->product_variant_value = ProductVariantValue::findById($this->product_variant_value_id);
         }

@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class Product extends ActiveRecord {
+class Product extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_product';
     
     static $belongs_to = array(
@@ -59,11 +60,13 @@ class Product extends ActiveRecord {
    
     public $url = '';
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->setUrl();
     }
     
-    public function afterSave() {
+    public function afterSave()
+    {
         $old_variants = $this->variants;
         
         foreach ($old_variants as $old_variant) {
@@ -76,8 +79,7 @@ class Product extends ActiveRecord {
 
                         if (isset($_POST['product']['attributes']) && isset($variant['attributes'])) {
                             $variant['attributes'] = $variant['attributes'] + $_POST['product']['attributes'];
-                        }
-                        elseif (isset($_POST['product']['attributes'])) {
+                        } elseif (isset($_POST['product']['attributes'])) {
                             $variant['attributes'] = $_POST['product']['attributes'];
                         }
 
@@ -103,8 +105,7 @@ class Product extends ActiveRecord {
         foreach ($_POST['variants'] as $variant) {
             if (isset($_POST['product']['attributes']) && isset($variant['attributes'])) {
                 $variant['attributes'] = $variant['attributes'] + $_POST['product']['attributes'];
-            }
-            elseif (isset($_POST['product']['attributes'])) {
+            } elseif (isset($_POST['product']['attributes'])) {
                 $variant['attributes'] = $_POST['product']['attributes'];
             }
 
@@ -119,7 +120,8 @@ class Product extends ActiveRecord {
         return true;
     }
     
-    public function beforeDelete() {
+    public function beforeDelete()
+    {
         if (!ProductVariant::deleteByProductId($this->id)) {
             return false;
         }
@@ -127,14 +129,16 @@ class Product extends ActiveRecord {
         return false;
     }
     
-    public function beforeInsert() {
+    public function beforeInsert()
+    {
         $this->created_on       = date('Y-m-d H:i:s');
         $this->created_by_id    = AuthUser::getRecord()->id;
 
         return true;
     }
     
-    public function beforeSave() {
+    public function beforeSave()
+    {
         $this->brand            = Brand::findById($this->brand_id);
         $this->slug             = Node::toSlug($this->brand->name . ' ' . $this->name);
         
@@ -144,23 +148,25 @@ class Product extends ActiveRecord {
         return true;
     }
     
-    public function date($format='%a, %e %b %Y', $which_one='created') {
+    public function date($format='%a, %e %b %Y', $which_one='created')
+    {
         if ($which_one == 'update' || $which_one == 'updated') {
             return strftime($format, strtotime($this->updated_on));
-        }
-        else {
+        } else {
             return strftime($format, strtotime($this->created_on));
         }
     }
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'order' => 'id ASC',
             'include' => array('brand', 'category', 'variants')
         ));
     }
     
-    public static function findByCategoryId($category_id) {
+    public static function findByCategoryId($category_id)
+    {
         return self::find(array(
             'where' => array('category_id = ?', $category_id),
             'order' => 'slug ASC',
@@ -168,7 +174,8 @@ class Product extends ActiveRecord {
         ));
     }
     
-    public static function findByCategoryIdAndSlug($category_id, $slug) {
+    public static function findByCategoryIdAndSlug($category_id, $slug)
+    {
         return self::find(array(
             'where' => array('category_id = ? AND slug = ?', $category_id, $slug),
             'limit' => 1,
@@ -184,7 +191,8 @@ class Product extends ActiveRecord {
         ));
     }
     
-    public static function findBySubcategories($category_id) {
+    public static function findBySubcategories($category_id)
+    {
         $category_ids = CatalogCategory::subcategories($category_id);
         $category_ids = implode(',', $category_ids);
         
@@ -200,7 +208,8 @@ class Product extends ActiveRecord {
         ));
     }
     
-    public static function findByBrandId($brand_id) {
+    public static function findByBrandId($brand_id)
+    {
         return self::find(array(
             'where' => array('brand_id = ?', $brand_id),
             'order' => 'name ASC',
@@ -213,7 +222,8 @@ class Product extends ActiveRecord {
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
             'where' => array('id = ?', $id),
             'limit' => 1,
@@ -225,14 +235,16 @@ class Product extends ActiveRecord {
         ));
     }
     
-    public static function findBySlug($slug) {
+    public static function findBySlug($slug)
+    {
         return self::find(array(
             'where' => array('slug = ?', $slug),
             'limit' => 1
         ));
     }
     
-    public static function findByUri($slugs) {
+    public static function findByUri($slugs)
+    {
         $slug = end($slugs);
         $category_slugs = array_pop($slugs);
         
@@ -241,31 +253,43 @@ class Product extends ActiveRecord {
         return self::findByCategoryIdAndSlug($category->id, $slug);
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
-            'id', 'name', 'slug', 'description', 'category_id', 'brand_id',
-            'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
+            'id',
+            'name',
+            'slug',
+            'description',
+            'category_id',
+            'brand_id',
+            'created_on',
+            'updated_on',
+            'created_by_id',
+            'updated_by_id'
         );
     }
     
-    public function keywords() {
+    public function keywords()
+    {
         return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
     }
     
-    public function name() {
+    public function name()
+    {
         if (isset($this->brand)) {
             return $this->brand->name . ' ' . $this->name;
-        }
-        else {
+        } else {
             return $this->name;
         }
     }
     
-    public function url() {
+    public function url()
+    {
         return URL_PUBLIC . $this->url . ($this->url != '' ? URL_SUFFIX: '');
     }
     
-    public function price() {
+    public function price()
+    {
         if (count($this->variant_prices) > 0) {
             return $this->variant_prices[0]->price;
         }
@@ -273,13 +297,15 @@ class Product extends ActiveRecord {
         return false;
     }
     
-    public function setUrl() {
+    public function setUrl()
+    {
         if (isset($this->category)) {
             $this->url = trim($this->category->url . '/' . $this->slug, '/');
         }
     }
     
-    public function stock() {
+    public function stock()
+    {
         $stock = NULL;
         
         foreach ($this->variants as $variant) {
@@ -291,7 +317,8 @@ class Product extends ActiveRecord {
         return $stock;
     }
 
-    public function productAttributes($with_value_only = false) {
+    public function productAttributes($with_value_only = false)
+    {
         $category_ids = $this->category->parentIds();
 
         if ($with_value_only) {
@@ -315,8 +342,7 @@ class Product extends ActiveRecord {
                 'group' => 'attribute.id',
                 'include' => array('type' => array('units'))
             ));
-        }
-        else {
+        } else {
             return Attribute::find(array(
                 'select' => 'attribute.*',
                 'from' => 'catalog_attribute AS attribute',
@@ -337,7 +363,8 @@ class Product extends ActiveRecord {
         }
     }
 
-    public function variantAttributes() {
+    public function variantAttributes()
+    {
         return Attribute::find(array(
             'select' => 'attribute.*',
             'from' => 'catalog_attribute AS attribute',

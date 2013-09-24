@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class ProductVariableOption extends ActiveRecord {
+class ProductVariableOption extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_product_variable_option';
     
     static $belongs_to = array(
@@ -29,6 +30,4 @@ class ProductVariableOption extends ActiveRecord {
     public $id;
     public $variable_id;
     public $value;
-    
-    
 }

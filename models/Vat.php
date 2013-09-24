@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class Vat extends ActiveRecord {
+class Vat extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_vat';
     
     static $has_many = array(
@@ -30,20 +31,23 @@ class Vat extends ActiveRecord {
     public $name = '';
     public $percentage;
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'order' => 'percentage DESC'
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
             'where' => array('id = ?', $id),
             'limit' => 1
         ));
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'name', 'percentage'
         );

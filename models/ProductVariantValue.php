@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class ProductVariantValue extends ActiveRecord {
+class ProductVariantValue extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_product_variant_value';
     
     static $belongs_to = array(
@@ -40,7 +41,8 @@ class ProductVariantValue extends ActiveRecord {
     public $attribute_unit_id;
     public $flat_value = '';
     
-    public function beforeDelete() {
+    public function beforeDelete()
+    {
         $casted_value_class = 'Value' . ucfirst(strtolower(Attribute::findById($this->attribute_id)->type->data_type));
         
         if ($value = $casted_value_class::findByProductVariantValueId($this->id)) {
@@ -52,14 +54,16 @@ class ProductVariantValue extends ActiveRecord {
         return false;
     }
     
-    public function beforeSave() {
+    public function beforeSave()
+    {
         $this->attribute_unit_id = (isset($this->unit)) ? $this->unit : null;
         $this->flat_value = (isset($this->value)) ? $this->value : null;
         
         return true;
     }
     
-    public function afterSave() {
+    public function afterSave()
+    {
         $casted_value_class = 'Value' . ucfirst(strtolower(Attribute::findById($this->attribute_id)->type->data_type));
 
         if (!$value = $casted_value_class::findByProductVariantValueId($this->id)) {
@@ -77,7 +81,8 @@ class ProductVariantValue extends ActiveRecord {
         return true;
     }
 
-    public static function deleteByProductVariantId($product_variant_id) {
+    public static function deleteByProductVariantId($product_variant_id)
+    {
         $product_variant_id = (int) $product_variant_id;
         
         $values = self::findByProductVariantId($product_variant_id);
@@ -88,8 +93,7 @@ class ProductVariantValue extends ActiveRecord {
                     return false;
                 }
             }
-        }
-        elseif ($values instanceof ProductVariantValue) {
+        } elseif ($values instanceof ProductVariantValue) {
             if (!$values->delete()) {
                 return false;
             }
@@ -98,13 +102,15 @@ class ProductVariantValue extends ActiveRecord {
         return true;
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'product_variant_id', 'attribute_id', 'attribute_unit_id', 'flat_value'
         );
     }
     
-    public static function findByProductVariantId($id) {
+    public static function findByProductVariantId($id)
+    {
         return self::find(array(
             'where' => array('product_variant_id = ?', $id) 
         ));
