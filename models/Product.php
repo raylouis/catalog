@@ -14,9 +14,7 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-use_helper('ActiveRecord');
-
-class Product extends ActiveRecord
+class Product extends CatalogNode
 {
     const TABLE_NAME = 'catalog_product';
     
@@ -59,12 +57,54 @@ class Product extends ActiveRecord
     public $variable_attributes = array();
 
     public $images = array();
-   
-    public $url = '';
-    
-    public function __construct()
+
+    public function breadcrumb()
     {
-        $this->setUrl();
+        return $this->name();
+    }
+
+    public function children()
+    {
+        return array();
+    }
+
+    public function content($part = 'body', $inherit = false)
+    {
+        if ($part == 'body') {
+            $this->includeSnippet('product');
+        }
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    public function hasContent($part, $inherit = false)
+    {
+        if ($part == 'body') {
+            return true;
+        }
+    }
+    
+    public function keywords()
+    {
+        return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
+    }
+
+    public function parent($level = null)
+    {
+        return $this->category;
+    }
+
+    public function slug()
+    {
+        return $this->slug;
+    }
+
+    public function title()
+    {
+        return $this->name();
     }
 
     public function brand()
@@ -301,11 +341,6 @@ class Product extends ActiveRecord
         );
     }
     
-    public function keywords()
-    {
-        return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
-    }
-    
     public function name()
     {
         if (isset($this->brand)) {
@@ -315,11 +350,6 @@ class Product extends ActiveRecord
         }
     }
     
-    public function url()
-    {
-        return URL_PUBLIC . $this->url . ($this->url != '' ? URL_SUFFIX: '');
-    }
-    
     public function price()
     {
         if (count($this->variant_prices) > 0) {
@@ -327,13 +357,6 @@ class Product extends ActiveRecord
         }
         
         return false;
-    }
-    
-    public function setUrl()
-    {
-        if (isset($this->category)) {
-            $this->url = trim($this->category->url . '/' . $this->slug, '/');
-        }
     }
     
     public function stock()

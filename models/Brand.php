@@ -14,9 +14,7 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-use_helper('ActiveRecord');
-
-class Brand extends ActiveRecord
+class Brand extends CatalogNode
 {
     const TABLE_NAME = 'catalog_brand';
     
@@ -45,10 +43,54 @@ class Brand extends ActiveRecord
     public $updated_by_id;
     
     public $url = '';
-    
-    public function __construct()
+
+    public function breadcrumb()
     {
-        $this->setUrl();
+        return $this->name;
+    }
+
+    public function children()
+    {
+        return array();
+    }
+
+    public function content($part = 'body', $inherit = false)
+    {
+        if ($part == 'body') {
+            $this->includeSnippet('brand');
+        }
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    public function hasContent($part, $inherit = false)
+    {
+        if ($part == 'body') {
+            return true;
+        }
+    }
+    
+    public function keywords()
+    {
+        return $this->name;
+    }
+
+    public function parent($level = null)
+    {
+        return new BrandListPage(Brand::findAll());
+    }
+
+    public function slug()
+    {
+        return $this->slug;
+    }
+
+    public function title()
+    {
+        return $this->name;
     }
     
     public function beforeInsert()
@@ -116,11 +158,6 @@ class Brand extends ActiveRecord
     {
         return (boolean) $this->logo();
     }
-    
-    public function keywords()
-    {
-        return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
-    }
 
     public function logo()
     {
@@ -131,16 +168,5 @@ class Brand extends ActiveRecord
         }
 
         return $this->logo;
-    }
-    
-    public function url()
-    {
-        return URL_PUBLIC . $this->url . ($this->url != '' ? URL_SUFFIX: '');
-    }
-    
-    public function setUrl()
-    {
-        $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
-        $this->url = trim($brands_slug . '/' . $this->slug, '/');
     }
 }

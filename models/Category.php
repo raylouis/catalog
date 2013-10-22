@@ -14,9 +14,7 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-use_helper('ActiveRecord');
-
-class Category extends ActiveRecord
+class Category extends CatalogNode
 {
     const TABLE_NAME = 'catalog_category';
     
@@ -60,16 +58,66 @@ class Category extends ActiveRecord
     public $updated_on;
     public $created_by_id;
     public $updated_by_id;
-    
-    public $url = '';
-    
-    public function __construct()
+
+    public function breadcrumb()
     {
-        if ($this->parent_id > 0) {
-            $this->parent = self::findById($this->parent_id);
+        return $this->title;
+    }
+    
+    public function children()
+    {
+        return self::childrenOf($this->id);
+    }
+
+    public function content($part = 'body', $inherit = false)
+    {
+        if ($part == 'body') {
+            $this->includeSnippet('category');
+        } elseif ($part == 'sidebar') {
+            $this->includeSnippet('category_filters');
         }
-        
-        $this->setUrl();
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    public function hasContent($part, $inherit = false)
+    {
+        if ($part == 'body') {
+            return true;
+        } elseif ($part == 'sidebar') {
+            return true;
+        }
+    }
+    
+    public function keywords()
+    {
+        return strtolower(implode(', ', array($this->title)));
+    }
+
+    public function parent($level = null)
+    {
+        if (!isset($this->parent)) {
+            if ($this->parent_id > 1) {
+                return self::findById($this->parent_id);
+            } else {
+                return false;
+            }
+        }
+
+        return $this->parent;
+    }
+
+    public function slug()
+    {
+        return $this->slug;
+    }
+
+    public function title()
+    {
+        return $this->title;
     }
     
     /**
@@ -156,11 +204,6 @@ class Category extends ActiveRecord
         return self::find(array(
             
         ));
-    }
-    
-    public function children()
-    {
-        return self::childrenOf($this->id);
     }
     
     public static function childrenOf($parent_id)
@@ -253,29 +296,10 @@ class Category extends ActiveRecord
         return (boolean) self::countFrom('Category', 'parent_id = :parent_id', array(':parent_id' => $id));
     }
     
-    public function keywords()
-    {
-        return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
-    }
-    
-    public function url()
-    {
-        return URL_PUBLIC . $this->url . ($this->url != '' ? URL_SUFFIX: '');
-    }
-    
-    protected function setUrl()
-    {
-        if ($this->parent_id > 1) {
-            $this->url = trim($this->parent->url .'/'. $this->slug, '/');
-        } else {
-            $this->url = trim($this->slug, '/');
-        }
-    }
-    
     public function parentIds()
     {
-        if ($this->parent_id > 0) {
-            $parents = $this->parent->parentIds();
+        if ($this->parent_id > 1) {
+            $parents = $this->parent()->parentIds();
         } else {
             $parents = array();
         }
