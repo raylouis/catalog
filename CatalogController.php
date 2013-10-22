@@ -667,37 +667,28 @@ class CatalogController extends PluginController
     public function frontend()
     {
         $uri = func_get_args();
-        
+
         if ($category = Category::findByUri($uri)) {
-            $page = new CategoryPage($category);
+            $category->_executeLayout();
         } elseif ($product = Product::findByUri($uri)) {
-            $page = new ProductPage($product);
+            $product->_executeLayout();
         } else {
             page_not_found();
         }
-        
-        $page->_executeLayout();
     }
     
     public function frontendBrand($slug)
     {
         if ($brand = Brand::findBySlug($slug)) {
-            $page = new BrandPage($brand);
+            $brand->_executeLayout();
         } else {
             page_not_found();
         }
-        
-        $page->_executeLayout();
     }
     
     public function frontendBrandList()
     {
-        if ($brands = Brand::findAll()) {
-            $page = new BrandListPage($brands);
-        } else {
-            page_not_found();
-        }
-        
+        $page = new BrandListPage();
         $page->_executeLayout();
     }
     
