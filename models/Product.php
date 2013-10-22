@@ -57,6 +57,8 @@ class Product extends ActiveRecord
     public $category;
     public $variants = array();
     public $variable_attributes = array();
+
+    public $images = array();
    
     public $url = '';
     
@@ -323,7 +325,11 @@ class Product extends ActiveRecord
 
     public function productAttributes($with_value_only = false)
     {
-        $category_ids = $this->category->parentIds();
+        if ($this->category instanceOf Category) {
+            $category_ids = $this->category->parentIds();
+        } else {
+            return array();
+        }
 
         if ($with_value_only) {
             return Attribute::find(array(
