@@ -14,33 +14,65 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.1.5
  */
 
-class BrandListPage extends CatalogPage
+class BrandListPage extends CatalogNode
 {
-    public function __construct($brands)
+    public function __construct()
     {
-        $this->brands = $brands;
-        
-        $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
-        $brands_title = Plugin::getSetting('brands_title', 'catalog');
-        
-        $this->title = $brands_title;
-        $this->breadcrumb = $brands_title;
-        $this->slug = $brands_slug;
-        $this->keywords = $brands_title;
-        $this->description = '';
-        $this->layout_id = Plugin::getSetting('layout_id', 'catalog');
-        
-        $this->parent = Page::find('/');
-        
-        if ($this->parent) {
-            $this->setUrl();
-        }
+        $this->title = Plugin::getSetting('brands_title', 'catalog');
+        $this->slug = Plugin::getSetting('brands_slug', 'catalog');
     }
-    
+
+    public function breadcrumb()
+    {
+        return $this->title;
+    }
+
+    public function children()
+    {
+        return Brand::findAll();
+    }
+
     public function content($part = 'body', $inherit = false)
     {
         if ($part == 'body') {
             $this->includeSnippet('brand_list');
         }
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    public function hasContent($part, $inherit = false)
+    {
+        if ($part == 'body') {
+            return true;
+        }
+    }
+    
+    public function keywords()
+    {
+        return $this->title;
+    }
+
+    public function parent($level = null)
+    {
+        return Page::findByUri('/');
+    }
+
+    public function path()
+    {
+        return $this->slug();
+    }
+
+    public function slug()
+    {
+        return $this->slug;
+    }
+
+    public function title()
+    {
+        return $this->title;
     }
 }
