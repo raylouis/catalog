@@ -208,7 +208,7 @@ class Product extends CatalogNode
     public function beforeSave()
     {
         $this->brand            = Brand::findById($this->brand_id);
-        $this->slug             = Node::toSlug($this->brand->name . ' ' . $this->name);
+        $this->slug             = Node::toSlug($this->name());
         
         $this->updated_on       = date('Y-m-d H:i:s');
         $this->updated_by_id    = AuthUser::getRecord()->id;
@@ -343,8 +343,8 @@ class Product extends CatalogNode
     
     public function name()
     {
-        if (isset($this->brand)) {
-            return $this->brand->name . ' ' . $this->name;
+        if ($this->brand() && $this->brand()->name != $this->name) {
+            return $this->brand()->name . ' ' . $this->name;
         } else {
             return $this->name;
         }
