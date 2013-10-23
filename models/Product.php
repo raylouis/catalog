@@ -66,6 +66,32 @@ class Product extends ActiveRecord
     {
         $this->setUrl();
     }
+
+    public function brand()
+    {
+        if (!isset($this->brand) && $this->brand_id > 0) {
+            $this->brand = Brand::findById($this->brand_id);
+        }
+
+        if ($this->brand instanceOf Brand) {
+            return $this->brand;
+        } else {
+            return false;
+        }
+    }
+
+    public function category()
+    {
+        if (!isset($this->category) && $this->category_id > 1) {
+            $this->category = Category::findById($this->category_id);
+        }
+
+        if ($this->category instanceOf Category) {
+            return $this->category;
+        } else {
+            return false;
+        }
+    }
     
     public function afterSave()
     {
