@@ -48,7 +48,7 @@ if ($categories = Category::findByParentId(1)) {
     foreach ($categories as $category) {
         Dispatcher::addRoute(array(
             '/' . $category->slug              => '/plugin/catalog/frontend/' . $category->slug,
-            '/' . $category->slug . '/:any'    => '/plugin/catalog/frontend/' . $category->slug . '/$1'
+            '/' . $category->slug . '/:all'    => '/plugin/catalog/frontend/' . $category->slug . '/$1'
         ));
     }
 }
