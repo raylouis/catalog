@@ -94,7 +94,7 @@ class Product extends CatalogNode
 
     public function parent($level = null)
     {
-        return $this->category;
+        return $this->category();
     }
 
     public function slug()
