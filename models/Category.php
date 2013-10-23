@@ -106,7 +106,7 @@ class Category extends CatalogNode
             if ($this->parent_id > 1) {
                 return self::findById($this->parent_id);
             } else {
-                return false;
+                return Page::find('/');
             }
         }
 
