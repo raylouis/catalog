@@ -309,7 +309,7 @@ class Category extends CatalogNode
         if ($this->parent_id > 1) {
             $parents = $this->parent()->parentIds();
         } else {
-            $parents = array();
+            $parents = array(1);
         }
         
         $array = array_merge(array($this->id), $parents);
