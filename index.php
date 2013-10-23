@@ -29,7 +29,7 @@ Plugin::setInfos(array(
     'author'                =>    'Nic Wortel',
     'version'               =>    '0.1.5',
     'website'               =>    'http://www.wolfcms.org/',
-    'require_wolf_version'  =>    '0.7.4'
+    'require_wolf_version'  =>    '0.7.6'
 ));
 
 Plugin::addController('catalog', __('Catalog'), 'catalog_view', true);
