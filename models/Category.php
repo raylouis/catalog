@@ -66,7 +66,10 @@ class Category extends CatalogNode
     
     public function children()
     {
-        return self::childrenOf($this->id);
+        $subcategories = self::childrenOf($this->id);
+        $products = Product::findByCategoryId($this->id);
+        
+        return array_merge($subcategories, $products);
     }
 
     public function content($part = 'body', $inherit = false)
