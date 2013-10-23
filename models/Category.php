@@ -122,6 +122,11 @@ class Category extends CatalogNode
     {
         return $this->title;
     }
+
+    public function subcategories()
+    {
+        return self::childrenOf($this->id); 
+    }
     
     /**
      * Dirty solution
