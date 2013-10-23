@@ -189,13 +189,18 @@ abstract class CatalogNode extends ActiveRecord
     public function path() {
         if ($this->path === false) {
             if ($this->parent() !== false) {
-                $this->path = trim($this->parent()->path() . '/' . $this->slug(), '/');
+                $this->path = trim($this->parent()->uri() . '/' . $this->slug(), '/');
             } else {
                 $this->path = trim($this->slug(), '/');
             }
         }
 
         return $this->path;
+    }
+
+    public function uri()
+    {
+        return $this->path();
     }
 
 
