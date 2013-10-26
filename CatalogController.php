@@ -104,9 +104,27 @@ class CatalogController extends PluginController
             }
             
             if (isset($_FILES['logo'])) {
-                $uploaded_file = new UploadedFile($_FILES['logo']);
+                try {
+                    $uploaded_file = new UploadedFile($_FILES['logo']);
+                } catch (UploadException $e) {
+                    switch($e->getCode()) {
+                        case UPLOAD_ERR_INI_SIZE:
+                            $errors[] = __('The uploaded file exceeds the maximum file size.');
+                            break;
+                        case UPLOAD_ERR_INI_SIZE:
+                            $errors[] = __('The uploaded file exceeds the maximum file size.');
+                            break;
+                        case UPLOAD_ERR_NO_FILE:
+                            break;
+                        default:
+                            $errors[] = __('File upload failed.');
+                            break;
+                    }
+                } catch (Exception $e) {
+                    $errors[] = __('File upload failed.');
+                }
 
-                if ($attachment = $uploaded_file->save($obj->name)) {
+                if ($attachment = Attachment::create($uploaded_file, $obj->name)) {
                     $obj->logo_attachment_id = $attachment->id;
                 }
             }
