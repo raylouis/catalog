@@ -37,6 +37,18 @@ Plugin::addController('catalog', __('Catalog'), 'catalog_view', true);
 AutoLoader::addFolder(CATALOG.'/models');
 AutoLoader::addFolder(CATALOG.'/pages');
 
+Observer::observe('media_attachment_before_delete', 'catalog_on_attachment_delete');
+
+function catalog_on_attachment_delete(&$attachment)
+{
+    $brands = Brand::findByLogoAttachmentId($attachment->id);
+    
+    foreach ($brands as $brand) {
+        $brand->unsetLogo();
+        $brand->save();
+    }
+}
+
 $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
 
 Dispatcher::addRoute(array(

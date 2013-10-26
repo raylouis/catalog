@@ -36,6 +36,8 @@ class Brand extends CatalogNode
     public $slug = '';
     public $description = '';
     public $website = '';
+
+    public $logo_attachment_id;
     
     public $created_on;
     public $updated_on;
@@ -43,6 +45,12 @@ class Brand extends CatalogNode
     public $updated_by_id;
     
     public $url = '';
+
+    public function unsetLogo()
+    {
+        $this->logo_attachment_id = '';
+        unset($this->logo);
+    }
 
     public function breadcrumb()
     {
@@ -134,6 +142,16 @@ class Brand extends CatalogNode
             'where' => array('id = :id', ':id' => $id),
             'limit' => 1,
             'include' => array('logo')
+        ));
+    }
+
+    public static function findByLogoAttachmentId($attachment_id)
+    {
+        return self::find(array(
+            'where' => array(
+                'logo_attachment_id = :attachment_id',
+                ':attachment_id' => $attachment_id
+            )
         ));
     }
     
