@@ -864,7 +864,6 @@ class CatalogController extends PluginController
         if ($d == 'general') {
             if (isset($_POST['save']) && $_POST['save'] == __('Save Settings')) {
                 $settings = $_POST['setting'];
-                $settings['brands_slug'] = Node::toSlug($settings['brands_title']);
 
                 Plugin::setAllSettings($settings, self::PLUGIN_NAME);
                 Flash::setNow('success', __('Settings have been saved!'));

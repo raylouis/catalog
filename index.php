@@ -53,8 +53,6 @@ function catalog_on_attachment_delete(&$attachment)
     }
 }
 
-$brands_slug = Plugin::getSetting('brands_slug', 'catalog');
-
 if ($categories = Category::findByParentId(1)) {
     foreach ($categories as $category) {
         Dispatcher::addRoute(array(
