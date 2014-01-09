@@ -34,6 +34,8 @@ Plugin::setInfos(array(
 
 Plugin::addController('catalog', __('Catalog'), 'catalog_view', true);
 
+Plugin::addJavascript('catalog', 'vendor/tablesorter/jquery.tablesorter.min.js');
+
 AutoLoader::addFolder(CATALOG.'/models');
 AutoLoader::addFolder(CATALOG.'/pages');
 
