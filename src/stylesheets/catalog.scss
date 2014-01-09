@@ -61,13 +61,13 @@ body#body_plugin_catalog
             background-position: right center;
             background-repeat: no-repeat;
             cursor: pointer;
-            padding: 4px 18px 4px 4px;
+            padding: 2px 18px 2px 4px;
             white-space: normal;
 
             &.sorter-false
             {
                 background-image: none;
-                padding: 4px;
+                padding: 2px 4px;
             }
         }
         th.tablesorter-headerAsc {
