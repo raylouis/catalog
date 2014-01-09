@@ -11,12 +11,13 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 use_helper('ActiveRecord');
 
-class ProductAttribute extends ActiveRecord {
+class ProductAttribute extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_product_attribute';
     
     static $belongs_to = array(
@@ -35,7 +36,8 @@ class ProductAttribute extends ActiveRecord {
     public $product_id;
     public $value;
     
-    public static function deleteByProductId($product_id) {
+    public static function deleteByProductId($product_id)
+    {
         $product_id = (int) $product_id;
         
         $product_attributes = self::findByProductId($product_id);
@@ -46,8 +48,7 @@ class ProductAttribute extends ActiveRecord {
                     return false;
                 }
             }
-        }
-        elseif ($product_attributes instanceof CatalogProductColor) {
+        } elseif ($product_attributes instanceof CatalogProductColor) {
             if (!$product_attributes->delete()) {
                 return false;
             }
@@ -56,9 +57,10 @@ class ProductAttribute extends ActiveRecord {
         return true;
     }
     
-    public static function findByProductId($id) {
+    public static function findByProductId($product_id)
+    {
         return self::find(array(
-            'where' => array('product_id = ?', $id)
+            'where' => array('product_id = :product_id', ':product_id' => $product_id)
         ));
     }
 }

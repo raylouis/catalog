@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 Plugin::setAllSettings(array(
@@ -29,14 +29,20 @@ $PDO->exec("CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_brand` (
   `slug` VARCHAR(255) NOT NULL ,
   `description` TEXT NULL DEFAULT NULL ,
   `website` VARCHAR(255) NULL DEFAULT NULL ,
-  `logo_id` INT UNSIGNED NULL DEFAULT NULL ,
+  `logo_attachment_id` INT UNSIGNED NULL DEFAULT NULL ,
   `created_on` DATETIME NOT NULL ,
   `updated_on` DATETIME NOT NULL ,
   `created_by_id` INT UNSIGNED NOT NULL ,
   `updated_by_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
-  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) )
+  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) ,
+  INDEX `fk_brand_logo_attachment` (`logo_attachment_id` ASC) ,
+  CONSTRAINT `fk_brand_media_attachment`
+    FOREIGN KEY (`logo_attachment_id` )
+    REFERENCES `" . TABLE_PREFIX . "media_attachment` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB");
 
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_category` (
@@ -97,8 +103,29 @@ $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_vat` (
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
 ENGINE = InnoDB");
 
+$PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product_image` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `product_id` INT UNSIGNED NOT NULL ,
+  `media_attachment_id` INT UNSIGNED NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `position` INT UNSIGNED NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_product_image_product` (`product_id` ASC) ,
+  INDEX `fk_product_image_media_attachment` (`media_attachment_id` ASC) ,
+  CONSTRAINT `fk_product_image_product`
+    FOREIGN KEY (`product_id` )
+    REFERENCES `" . TABLE_PREFIX . "catalog_product` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_image_media_attachment`
+    FOREIGN KEY (`media_attachment_id` )
+    REFERENCES `" . TABLE_PREFIX . "media_attachment` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB");
+
 $PDO->exec("CREATE  TABLE IF NOT EXISTS `" . TABLE_PREFIX . "catalog_product_variant` (
-  `id` INT NOT NULL ,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `sku` VARCHAR(50) NULL DEFAULT NULL ,
   `name` VARCHAR(255) NULL DEFAULT NULL ,
   `weight` FLOAT UNSIGNED NULL DEFAULT NULL ,

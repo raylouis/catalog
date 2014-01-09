@@ -11,12 +11,12 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 use_helper('ActiveRecord');
 
-class ValueDate extends Value {
+class ValueDate extends Value
+{
     const TABLE_NAME = 'catalog_value_date';
-    
 }

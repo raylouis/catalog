@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 ?>
@@ -41,7 +41,7 @@ if (!defined('IN_CMS')) { exit(); }
                     
                     <?php if (isset($brand->logo)): ?>
                         <br /><br />
-                        <?php echo $brand->logo->html(120,120,'thumbnail'); ?>
+                        <?php echo $brand->logo->html_img('thumbnail', 120); ?>
                     <?php endif; ?>
                 </td>
             </tr>

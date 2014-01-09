@@ -11,21 +11,24 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 /**
  * Class CatalogController
  */
-class CatalogController extends PluginController {
+class CatalogController extends PluginController
+{
     const PLUGIN_NAME = 'catalog';
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->setLayout('backend');
         $this->assignToLayout('sidebar', new View('../../plugins/catalog/views/sidebar'));
     }
     
-    private function _store($model, $action, $id = FALSE) {
+    private function _store($model, $action, $id = FALSE)
+    {
         $models = array(
             'product' => 'products',
             'category' => 'categories',
@@ -39,8 +42,9 @@ class CatalogController extends PluginController {
             return false;
         }
         
-        if ($action == 'edit' && !$id)
+        if ($action == 'edit' && !$id) {
             throw new Exception('Trying to edit ' . $model . ' when $id is false.');
+        }
         
         // Add pre-save checks here
         $errors = false;
@@ -62,13 +66,11 @@ class CatalogController extends PluginController {
             if ($action == 'add') {
                 $obj = new Product($data);
                 $obj->setFromData($data);
-            }
-            else {
+            } else {
                 $obj = Product::findById($id);
                 $obj->setFromData($data);
             }
-        }
-        elseif ($model == 'category') {
+        } elseif ($model == 'category') {
             $data['title'] = trim($data['title']);
             if (empty($data['title'])) {
                 $errors[] = __('You have to specify a title!');
@@ -82,8 +84,7 @@ class CatalogController extends PluginController {
                 $obj = Category::findById($id);
                 $obj->setFromData($data);
             }
-        }
-        elseif ($model == 'brand') {
+        } elseif ($model == 'brand') {
             $data['name'] = trim($data['name']);
             $data['website'] = trim($data['website']);
             if (empty($data['name'])) {
@@ -103,40 +104,31 @@ class CatalogController extends PluginController {
             }
             
             if (isset($_FILES['logo'])) {
-                $uploaded_file = new UploadedFile($_FILES['logo']);
-
-                if ($uploaded_file->error > 0) {
-                    if ($uploaded_file->error == 4) {
-
-                    }
-                    else {
-                        $errors[] = $uploaded_file->errorMessage();
-                    }
-                }
-                else {
-                    if (isset($obj->logo)) {
-                        $image = $obj->logo;
-                    }
-                    else {
-                        $image = new Image();
-                    }
-                    $image->title = $obj->name;
-                    $image->save();
+                try {
+                    $uploaded_file = new UploadedFile($_FILES['logo']);
                     
-                    $image->deleteFiles();
-            
-                    $image->createSlug();
-
-                    $extension = pathinfo($uploaded_file->name, PATHINFO_EXTENSION);
-                    $to = CMS_ROOT . DS . 'public' . DS . 'images' . DS . $image->slug . '.' . strtolower($extension);
-
-                    $uploaded_file->moveTo($to);
-                    
-                    $obj->logo_id = $image->id;
+                    if ($attachment = Attachment::create($uploaded_file, $obj->name)) {
+                        $obj->logo_attachment_id = $attachment->id;
+                    }
+                } catch (UploadException $e) {
+                    switch($e->getCode()) {
+                        case UPLOAD_ERR_INI_SIZE:
+                            $errors[] = __('The uploaded file exceeds the maximum file size.');
+                            break;
+                        case UPLOAD_ERR_INI_SIZE:
+                            $errors[] = __('The uploaded file exceeds the maximum file size.');
+                            break;
+                        case UPLOAD_ERR_NO_FILE:
+                            break;
+                        default:
+                            $errors[] = __('File upload failed.');
+                            break;
+                    }
+                } catch (Exception $e) {
+                    $errors[] = __('File upload failed.');
                 }
             }
-        }
-        elseif ($model == 'attribute') {
+        } elseif ($model == 'attribute') {
             $data['name'] = trim($data['name']);
             $data['attribute_type_id'] = (int) $data['attribute_type_id'];
             if (empty($data['name'])) {
@@ -156,8 +148,7 @@ class CatalogController extends PluginController {
                 $obj = Attribute::findById($id);
                 $obj->setFromData($data);
             }
-        }
-        elseif ($model == 'vat') {
+        } elseif ($model == 'vat') {
             $data['name'] = trim($data['name']);
             $data['percentage'] = (float) $data['percentage'];
             if (empty($data['name'])) {
@@ -172,8 +163,7 @@ class CatalogController extends PluginController {
                 $obj = Vat::findById($id);
                 $obj->setFromData($data);
             }
-        }
-        elseif ($model == 'unit') {
+        } elseif ($model == 'unit') {
             $data['name'] = trim($data['name']);
             $data['abbreviation'] = trim($data['abbreviation']);
             $data['attribute_type_id'] = (int) $data['attribute_type_id'];
@@ -203,33 +193,28 @@ class CatalogController extends PluginController {
                     'product' => $obj,
                     'categories' => Category::findAll()
                 ));
-            }
-            elseif ($model == 'category') {
+            } elseif ($model == 'category') {
                 $this->display('catalog/views/category/edit', array(
                     'action' => $action,
                     'category' => $obj
                 ));
-            }
-            elseif ($model == 'brand') {
+            } elseif ($model == 'brand') {
                 $this->display('catalog/views/brand/edit', array(
                     'action' => $action,
                     'brand' => $obj
                 ));
-            }
-            elseif ($model == 'attribute') {
+            } elseif ($model == 'attribute') {
                 $this->display('catalog/views/attribute/edit', array(
                     'action' => $action,
                     'attribute' => $obj,
                     'attribute_types' => AttributeType::findAll()
                 ));
-            }
-            elseif ($model == 'vat') {
+            } elseif ($model == 'vat') {
                 $this->display('catalog/views/vat/edit', array(
                     'action' => $action,
                     'vat' => $obj
                 ));
-            }
-            elseif ($model == 'unit') {
+            } elseif ($model == 'unit') {
                 $this->display('catalog/views/unit/edit', array(
                     'action' => $action,
                     'unit' => $obj,
@@ -240,41 +225,83 @@ class CatalogController extends PluginController {
         
         if ($action == 'add') {
             Observer::notify($model . '_add_before_save', $obj);
-        }
-        else {
+        } else {
             Observer::notify($model . '_edit_before_save', $obj);
         }
         
         if ($obj->save()) {
             Flash::set('success', __(ucfirst($model) . ' has been saved!'));
-        }
-        else {
+        } else {
             Flash::set('error', __(ucfirst($model) . ' has not been saved!'));
             
             $url = 'plugin/catalog/' . $model . '/';
             $url .= ( $action == 'edit') ? 'edit/' . $id : 'add/';
             redirect(get_url($url));
         }
+
+        if ($model == 'product' && isset($_FILES['file'])) {
+            $uploaded_files = array();
+            $errors = false;
+
+            foreach ($_FILES['file']['name'] as $key => $name) {
+                $file = array(
+                    'name'      => $_FILES['file']['name'][$key],
+                    'type'      => $_FILES['file']['type'][$key],
+                    'tmp_name'  => $_FILES['file']['tmp_name'][$key],
+                    'error'     => $_FILES['file']['error'][$key],
+                    'size'      => $_FILES['file']['size'][$key]
+                );
+
+                try {
+                    $uploaded_file = new UploadedFile($file);
+                } catch (UploadException $e) {
+                    switch($e->getCode()) {
+                        case UPLOAD_ERR_INI_SIZE:
+                            $errors[] = __('The uploaded file exceeds the maximum file size.');
+                            break;
+                        case UPLOAD_ERR_INI_SIZE:
+                            $errors[] = __('The uploaded file exceeds the maximum file size.');
+                            break;
+                        case UPLOAD_ERR_NO_FILE:
+                            break;
+                        default:
+                            $errors[] = __('File upload failed.');
+                            break;
+                    }
+                } catch (Exception $e) {
+                    $errors[] = __('File upload failed.');
+                }
+
+                if ($attachment = Attachment::create($uploaded_file, $obj->name())) {
+                    $data = array(
+                        'product_id' => $obj->id,
+                        'attachment_id' => $attachment->id
+                    );
+                    $product_image = new ProductImage($data);
+                    $product_image->save();
+                }
+            }
+
+        }
         
         if ($action == 'add') {
             Observer::notify($model . '_add_after_save', $obj);
-        }
-        else {
+        } else {
             Observer::notify($model . '_edit_after_save', $obj);
         }
         
         if (isset($_POST['commit'])) {
             redirect(get_url('plugin/catalog/' . $models[$model]));
-        }
-        else {
+        } else {
             redirect(get_url('plugin/catalog/' . $model . '/edit/' . $obj->id));
         }
     }
     
-    public function ajax($action, $id) {
+    public function ajax($action, $id)
+    {
         if ($action == 'attribute_type_units') {
             if ($attribute_type = AttributeType::find(array(
-                'where' => array('id = ?', $id),
+                'where' => array('id = :id', ':id' => $id),
                 'limit' => 1,
                 'include' => array('units')
             ))) {
@@ -284,10 +311,9 @@ class CatalogController extends PluginController {
                 ));
                 
             }
-        }
-        elseif ($action == 'product_attribute_selector') {
+        } elseif ($action == 'product_attribute_selector') {
             if ($category = Category::find(array(
-                'where' => array('id = ?', $id),
+                'where' => array('id = :id', ':id' => $id),
                 'limit' => 1,
                 'include' => array('attributes')
             ))) {
@@ -300,7 +326,8 @@ class CatalogController extends PluginController {
         }
     }
     
-    public function attribute($action, $id = NULL) {
+    public function attribute($action, $id = NULL)
+    {
         if ($action == 'add') {
             if (get_request_method() == 'POST') {
                 return $this->_store('attribute', 'add', $id);
@@ -308,7 +335,9 @@ class CatalogController extends PluginController {
             
             $data = Flash::get('post_data');
             $attribute = new Attribute();
-            if (!is_null($data)) $attribute->setFromData($data);
+            if (!is_null($data)) {
+                $attribute->setFromData($data);
+            }
             $attribute->type = new AttributeType();
             $attribute->type->units = array();
             
@@ -318,8 +347,7 @@ class CatalogController extends PluginController {
                 'attribute_types' => AttributeType::findAll()
             ));
             
-        }
-        elseif ($action == 'delete') {
+        } elseif ($action == 'delete') {
             if (!is_numeric($id)) {
                 Flash::set('error', __('The attribute could not be found!'));
                 redirect(get_url('plugin/catalog/attributes'));
@@ -329,18 +357,15 @@ class CatalogController extends PluginController {
                 if ($attribute->delete()) {
                     Observer::notify('attribute_delete', $product);
                     Flash::set('success', __("Attribute ':name' has been deleted!", array(':name' => $attribute->name)));
-                }
-                else {
+                } else {
                     Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $attribute->name)));
                 }
-            }
-            else {
+            } else {
                 Flash::set('error', __('The attribute could not be found!'));
             }
 
             redirect(get_url('plugin/catalog/attributes'));
-        }
-        elseif ($action == 'edit') {
+        } elseif ($action == 'edit') {
             if (is_numeric($id)) {
                 if (get_request_method() == 'POST') {
                     return $this->_store('attribute', 'edit', $id);
@@ -352,24 +377,21 @@ class CatalogController extends PluginController {
                         'attribute' => $attribute,
                         'attribute_types' => AttributeType::findAll()
                     ));
-                }
-                else {
+                } else {
                     Flash::set('error', __('The attribute could not be found!'));
                     redirect(get_url('plugin/catalog/attributes'));
                 }
-                
-            }
-            else {
+            } else {
                 Flash::set('error', __('The attribute could not be found!'));
                 redirect(get_url('plugin/catalog/attributes'));
             }
-        }
-        else {
+        } else {
             $this->attributes();
         }
     }
     
-    public function attributes($order_by = NULL, $order_direction = 'asc', $page = 1) {
+    public function attributes($order_by = NULL, $order_direction = 'asc', $page = 1)
+    {
         $allowed_columns = array(
             'id' => 'id',
             'name' => 'name'
@@ -397,7 +419,8 @@ class CatalogController extends PluginController {
         ));
     }
     
-    public function brand($action, $id = NULL) {
+    public function brand($action, $id = NULL)
+    {
         if ($action == 'add') {
             if (get_request_method() == 'POST') {
                 return $this->_store('brand', 'add', $id);
@@ -405,15 +428,15 @@ class CatalogController extends PluginController {
             
             $data = Flash::get('post_data');
             $brand = new Brand();
-            if (!is_null($data)) $brand->setFromData($data);
+            if (!is_null($data)) {
+                $brand->setFromData($data);
+            }
 
             $this->display('catalog/views/brand/edit', array(
                 'action' => 'add',
                 'brand' => $brand
             ));
-            
-        }
-        elseif ($action == 'delete') {
+        } elseif ($action == 'delete') {
             if (!is_numeric($id)) {
                 Flash::set('error', __('The brand could not be found!'));
                 redirect(get_url('plugin/catalog/brands'));
@@ -423,18 +446,15 @@ class CatalogController extends PluginController {
                 if ($brand->delete()) {
                     Observer::notify('brand_delete', $product);
                     Flash::set('success', __("Brand ':name' has been deleted!", array(':name' => $brand->name)));
-                }
-                else {
+                } else {
                     Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $brand->name)));
                 }
-            }
-            else {
+            } else {
                 Flash::set('error', __('The brand could not be found!'));
             }
 
             redirect(get_url('plugin/catalog/brands'));
-        }
-        elseif ($action == 'edit') {
+        } elseif ($action == 'edit') {
             if (is_numeric($id)) {
                 if (get_request_method() == 'POST') {
                     return $this->_store('brand', 'edit', $id);
@@ -445,24 +465,21 @@ class CatalogController extends PluginController {
                         'action' => 'edit',
                         'brand' => $brand
                     ));
-                }
-                else {
+                } else {
                     Flash::set('error', __('The brand could not be found!'));
                     redirect(get_url('plugin/catalog/brands'));
                 }
-                
-            }
-            else {
+            } else {
                 Flash::set('error', __('The brand could not be found!'));
                 redirect(get_url('plugin/catalog/brands'));
             }
-        }
-        else {
+        } else {
             $this->brands();
         }
     }
     
-    public function brands($order_by = NULL, $order_direction = 'asc', $page = 1) {
+    public function brands($order_by = NULL, $order_direction = 'asc', $page = 1)
+    {
         $allowed_columns = array(
             'id' => 'id',
             'name' => 'name',
@@ -485,11 +502,10 @@ class CatalogController extends PluginController {
             
             $brands = Brand::find(array(
                 'select' => 'catalog_brand.*',
-                'where' => array('name LIKE ?', $search_string),
+                'where' => array('name LIKE :search_string', ':search_string' => $search_string),
                 'order' => $order_sql . ' ' . strtoupper($order_direction)
             ));
-        }
-        else {
+        } else {
             $brands = Brand::find(array(
                 'select' => 'catalog_brand.*',
                 'order' => $order_sql . ' ' . strtoupper($order_direction)
@@ -503,7 +519,8 @@ class CatalogController extends PluginController {
         ));
     }
     
-    public function categories() {
+    public function categories()
+    {
         $root = Category::find(array(
             'where' => 'parent_id IS NULL',
             'order' => 'id ASC',    
@@ -516,7 +533,8 @@ class CatalogController extends PluginController {
         ));
     }
     
-    public function category($action, $id = NULL) {
+    public function category($action, $id = NULL)
+    {
         if ($action == 'add') {
             if (get_request_method() == 'POST') {
                 return $this->_store('category', 'add', $id);
@@ -529,7 +547,10 @@ class CatalogController extends PluginController {
             $data = Flash::get('post_data');
             $category = new Category();
             $category->attributes = array();
-            if (!is_null($data)) $category->setFromData($data);
+
+            if (!is_null($data)) {
+                $category->setFromData($data);
+            }
             
             $category->parent_id = (int) $id;
             $category->parent = Category::findById($category->parent_id);
@@ -539,9 +560,7 @@ class CatalogController extends PluginController {
                 'category' => $category,
                 'attributes' => Attribute::findAll()
             ));
-            
-        }
-        elseif ($action == 'delete') {
+        } elseif ($action == 'delete') {
             if (!is_numeric($id)) {
                 Flash::set('error', __('The category could not be found!'));
                 redirect(get_url('plugin/catalog/categories'));
@@ -551,18 +570,15 @@ class CatalogController extends PluginController {
                 if ($category->delete()) {
                     Observer::notify('category_delete', $product);
                     Flash::set('success', __("Category ':title' has been deleted!", array(':title' => $category->title)));
-                }
-                else {
+                } else {
                     Flash::set('error', __("An error has occured, therefore ':title' could not be deleted!", array(':title' => $category->title)));
                 }
-            }
-            else {
+            } else {
                 Flash::set('error', __('The category could not be found!'));
             }
 
             redirect(get_url('plugin/catalog/categories'));
-        }
-        elseif ($action == 'edit') {
+        } elseif ($action == 'edit') {
             if (is_numeric($id)) {
                 if (get_request_method() == 'POST') {
                     return $this->_store('category', 'edit', $id);
@@ -574,24 +590,21 @@ class CatalogController extends PluginController {
                         'category' => $category,
                         'attributes' => Attribute::findAll()
                     ));
-                }
-                else {
+                } else {
                     Flash::set('error', __('The category could not be found!'));
                     redirect(get_url('plugin/catalog/categories'));
                 }
-                
-            }
-            else {
+            } else {
                 Flash::set('error', __('The category could not be found!'));
                 redirect(get_url('plugin/catalog/categories'));
             }
-        }
-        else {
+        } else {
             $this->categories();
         }
     }
     
-    public function categoryChildren($parent_id, $level, $return=false) {
+    public function categoryChildren($parent_id, $level, $return=false)
+    {
         $expanded_rows = isset($_COOKIE['catalog_category_expanded_rows']) ? explode(',', $_COOKIE['catalog_category_expanded_rows']) : array();
 
         // get all children of the page (parent_id)
@@ -614,24 +627,26 @@ class CatalogController extends PluginController {
 
         if ($return) {
             return $content;
-        }
-        else {
+        } else {
             echo $content;
         }
     }
     
-    public function documentation() {
+    public function documentation()
+    {
         $locale = strtolower(i18n::getLocale());
         $local_doc = $locale . '-documentation';
         $path = PLUGINS_ROOT . '/catalog/views/documentation/';
 
-        if (!file_exists( $path . $local_doc . '.php' ))
+        if (!file_exists( $path . $local_doc . '.php' )) {
             $local_doc = 'en-documentation';
+        }
 
         $this->display('catalog/views/documentation/' . $local_doc );
     }
     
-    public function export($model = null, $format = null) {
+    public function export($model = null, $format = null)
+    {
         if (!is_null($model)) {
             $data = array();
             
@@ -656,8 +671,7 @@ class CatalogController extends PluginController {
                 foreach ($products as $product) {
                     if (is_object($product->brand)) {
                         $brand_name = $product->brand->name;
-                    }
-                    else {
+                    } else {
                         $brand_name = '';
                     }
                     
@@ -677,57 +691,46 @@ class CatalogController extends PluginController {
                     'model' => $model,
                     'data' => $data
                 ));
-            }
-            else {
+            } else {
                 $this->display('catalog/views/export/index', array(
                     'model' => $model
                 ));
             }
-        }
-        else {
+        } else {
             redirect(get_url('plugin/catalog'));
         }
     }
     
-    public function frontend() {
+    public function frontend()
+    {
         $uri = func_get_args();
-        
+
         if ($category = Category::findByUri($uri)) {
-            $page = new CategoryPage($category);
-        }
-        elseif($product = Product::findByUri($uri)) {
-            $page = new ProductPage($product);
-        }
-        else {
+            $category->_executeLayout();
+        } elseif ($product = Product::findByUri($uri)) {
+            $product->_executeLayout();
+        } else {
             page_not_found();
         }
-        
-        $page->_executeLayout();
     }
     
-    public function frontendBrand($slug) {
+    public function frontendBrand($slug)
+    {
         if ($brand = Brand::findBySlug($slug)) {
-            $page = new BrandPage($brand);
-        }
-        else {
+            $brand->_executeLayout();
+        } else {
             page_not_found();
         }
-        
+    }
+    
+    public function frontendBrandList()
+    {
+        $page = new BrandListPage();
         $page->_executeLayout();
     }
     
-    public function frontendBrandList() {
-        if ($brands = Brand::findAll()) {
-            $page = new BrandListPage($brands);
-        }
-        else {
-            page_not_found();
-        }
-        
-        $page->_executeLayout();
-    }
-    
-    public function index() {
+    public function index()
+    {
         $this->products();
     }
     
@@ -737,7 +740,8 @@ class CatalogController extends PluginController {
      * @param string $action The action (add/delete/edit)
      * @param int $id The id of the product
      */
-    public function product($action, $id = NULL) {
+    public function product($action, $id = NULL)
+    {
         if ($action == 'add') {
             if (get_request_method() == 'POST') {
                 return $this->_store('product', 'add', $id);
@@ -745,7 +749,10 @@ class CatalogController extends PluginController {
             
             $data = Flash::get('post_data');
             $product = new Product();
-            if (!is_null($data)) $product->setFromData($data);
+
+            if (!is_null($data)) {
+                $product->setFromData($data);
+            }
 
             $this->display('catalog/views/product/edit', array(
                 'action' => 'add',
@@ -755,8 +762,7 @@ class CatalogController extends PluginController {
                 'vats' => Vat::findAll()
             ));
             
-        }
-        elseif ($action == 'delete') {
+        } elseif ($action == 'delete') {
             if (!is_numeric($id)) {
                 Flash::set('error', __('The product could not be found!'));
                 redirect(get_url('plugin/catalog/products'));
@@ -766,18 +772,15 @@ class CatalogController extends PluginController {
                 if ($product->delete()) {
                     Observer::notify('product_delete', $product);
                     Flash::set('success', __("The product ':name' has been deleted!", array(':name' => $product->name)));
-                }
-                else {
+                } else {
                     Flash::set('error', __("An error has occured, therefore product ':name' could not be deleted!", array(':name' => $product->name)));
                 }
-            }
-            else {
+            } else {
                 Flash::set('error', __('The product could not be found!'));
             }
 
             redirect(get_url('plugin/catalog/products'));
-        }
-        elseif ($action == 'edit') {
+        } elseif ($action == 'edit') {
             if (is_numeric($id)) {
                 if (get_request_method() == 'POST') {
                     return $this->_store('product', 'edit', $id);
@@ -792,19 +795,15 @@ class CatalogController extends PluginController {
                         'variant' => new ProductVariant(),
                         'vats' => Vat::findAll()
                     ));
-                }
-                else {
+                } else {
                     Flash::set('error', __('The product could not be found!'));
                     redirect(get_url('plugin/catalog/products'));
                 }
-                
-            }
-            else {
+            } else {
                 Flash::set('error', __('The product could not be found!'));
                 redirect(get_url('plugin/catalog/products'));
             }
-        }
-        else {
+        } else {
             $this->products();
         }
     }
@@ -817,7 +816,8 @@ class CatalogController extends PluginController {
      * @param int $page
      * @return View
      */
-    public function products($order_by = NULL, $order_direction = 'asc', $page = 1) {
+    public function products($order_by = NULL, $order_direction = 'asc', $page = 1)
+    {
         $allowed_columns = array(
             'id' => 'product.id',
             'name' => 'product.name',
@@ -854,12 +854,12 @@ class CatalogController extends PluginController {
                     LEFT JOIN catalog_brand AS brand ON brand.id = product.brand_id
                     LEFT JOIN catalog_product_variant AS variant ON variant.product_id = product.id
                     ',
-                'where' => array('product.name LIKE ?
-                        OR product.description LIKE ?
-                        OR category.title LIKE ?
-                        OR brand.name LIKE ?
-                        OR variant.sku LIKE ?
-                        OR variant.name LIKE ?', $q, $q, $q, $q, $q, $q),
+                'where' => array('product.name LIKE :search_string
+                        OR product.description LIKE :search_string
+                        OR category.title LIKE :search_string
+                        OR brand.name LIKE :search_string
+                        OR variant.sku LIKE :search_string
+                        OR variant.name LIKE :search_string', ':search_string' => $q),
                 'group' => 'product.id',
                 'order' => $order_sql . ' ' . strtoupper($order_direction),
                 'include' => array(
@@ -868,8 +868,7 @@ class CatalogController extends PluginController {
                     'variants'
                 )
             ));
-        }
-        else {
+        } else {
             
             $products = Product::find(array(
                 'select' => '
@@ -901,7 +900,8 @@ class CatalogController extends PluginController {
         ));
     }
     
-    public function reorder($model = NULL) {
+    public function reorder($model = NULL)
+    {
         if ($model == 'category') {
             if ($categories = $_POST['page']) {
                 $i = 1;
@@ -916,7 +916,8 @@ class CatalogController extends PluginController {
         }
     }
     
-    public function settings($d = '') {
+    public function settings($d = '')
+    {
         if ($d == 'general') {
             if (isset($_POST['save']) && $_POST['save'] == __('Save Settings')) {
                 $settings = $_POST['setting'];
@@ -930,13 +931,13 @@ class CatalogController extends PluginController {
                 'settings' => Plugin::getAllSettings(self::PLUGIN_NAME),
                 'layouts'  => Layout::findAll(array())
             ));
-        }
-        else {
+        } else {
             $this->display('catalog/views/settings/index');
         }
     }
     
-    public function unit($action, $id = NULL) {
+    public function unit($action, $id = NULL)
+    {
         if ($action == 'add') {
             if (get_request_method() == 'POST') {
                 return $this->_store('unit', 'add', $id);
@@ -944,16 +945,16 @@ class CatalogController extends PluginController {
             
             $data = Flash::get('post_data');
             $unit = new AttributeUnit();
-            if (!is_null($data)) $unit->setFromData($data);
+            if (!is_null($data)) {
+                $unit->setFromData($data);
+            }
 
             $this->display('catalog/views/unit/edit', array(
                 'action' => 'add',
                 'unit' => $unit,
                 'types' => AttributeType::findAll()
             ));
-            
-        }
-        elseif ($action == 'delete') {
+        } elseif ($action == 'delete') {
             if (!is_numeric($id)) {
                 Flash::set('error', __('The unit could not be found!'));
                 redirect(get_url('plugin/catalog/units'));
@@ -963,18 +964,15 @@ class CatalogController extends PluginController {
                 if ($unit->delete()) {
                     Observer::notify('unit_delete', $product);
                     Flash::set('success', __("Unit ':name' has been deleted!", array(':name' => $unit->name)));
-                }
-                else {
+                } else {
                     Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $unit->name)));
                 }
-            }
-            else {
+            } else {
                 Flash::set('error', __('The unit could not be found!'));
             }
 
             redirect(get_url('plugin/catalog/units'));
-        }
-        elseif ($action == 'edit') {
+        } elseif ($action == 'edit') {
             if (is_numeric($id)) {
                 if (get_request_method() == 'POST') {
                     return $this->_store('unit', 'edit', $id);
@@ -986,24 +984,21 @@ class CatalogController extends PluginController {
                         'unit' => $unit,
                         'types' => AttributeType::findAll()
                     ));
-                }
-                else {
+                } else {
                     Flash::set('error', __('The unit could not be found!'));
                     redirect(get_url('plugin/catalog/units'));
                 }
-                
-            }
-            else {
+            } else {
                 Flash::set('error', __('The unit could not be found!'));
                 redirect(get_url('plugin/catalog/units'));
             }
-        }
-        else {
+        } else {
             $this->units();
         }
     }
     
-    public function units() {
+    public function units()
+    {
         $units = AttributeUnit::find(array(
             'order' => 'attribute_type_id ASC, multiplier ASC',
             'include' => array('type', 'parent')
@@ -1014,7 +1009,8 @@ class CatalogController extends PluginController {
         ));
     }
     
-    public function vat($action, $id = NULL) {
+    public function vat($action, $id = NULL)
+    {
         if ($action == 'add') {
             if (get_request_method() == 'POST') {
                 return $this->_store('vat', 'add', $id);
@@ -1022,15 +1018,15 @@ class CatalogController extends PluginController {
             
             $data = Flash::get('post_data');
             $vat = new Vat();
-            if (!is_null($data)) $vat->setFromData($data);
+            if (!is_null($data)) {
+                $vat->setFromData($data);
+            }
 
             $this->display('catalog/views/vat/edit', array(
                 'action' => 'add',
                 'vat' => $vat
             ));
-            
-        }
-        elseif ($action == 'delete') {
+        } elseif ($action == 'delete') {
             if (!is_numeric($id)) {
                 Flash::set('error', __('The VAT rate could not be found!'));
                 redirect(get_url('plugin/catalog/vat_rates'));
@@ -1040,18 +1036,15 @@ class CatalogController extends PluginController {
                 if ($vat->delete()) {
                     Observer::notify('vat_delete', $vat);
                     Flash::set('success', __("VAT rate ':name' has been deleted!", array(':name' => $vat->name)));
-                }
-                else {
+                } else {
                     Flash::set('error', __("An error has occured, therefore ':name' could not be deleted!", array(':name' => $vat->name)));
                 }
-            }
-            else {
+            } else {
                 Flash::set('error', __('The VAT rate could not be found!'));
             }
 
             redirect(get_url('plugin/catalog/vat_rates'));
-        }
-        elseif ($action == 'edit') {
+        } elseif ($action == 'edit') {
             if (is_numeric($id)) {
                 if (get_request_method() == 'POST') {
                     return $this->_store('vat', 'edit', $id);
@@ -1062,25 +1055,21 @@ class CatalogController extends PluginController {
                         'action' => 'edit',
                         'vat' => $vat
                     ));
-                }
-                else {
+                } else {
                     Flash::set('error', __('The VAT rate could not be found!'));
                     redirect(get_url('plugin/catalog/vat_rates'));
                 }
-                
-            }
-            else {
+            } else {
                 Flash::set('error', __('The VAT rate could not be found!'));
                 redirect(get_url('plugin/catalog/vat_rates'));
             }
-        }
-        else {
+        } else {
             $this->vat_rates();
         }
     }
     
-    public function vat_rates() {
-        
+    public function vat_rates()
+    {
         $vat_rates = Vat::find(array(
             'order' => 'percentage DESC'
         ));

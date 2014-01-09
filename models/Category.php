@@ -11,12 +11,11 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
-use_helper('ActiveRecord');
-
-class Category extends ActiveRecord {
+class Category extends CatalogNode
+{
     const TABLE_NAME = 'catalog_category';
     
     static $belongs_to = array(
@@ -59,15 +58,74 @@ class Category extends ActiveRecord {
     public $updated_on;
     public $created_by_id;
     public $updated_by_id;
+
+    public function breadcrumb()
+    {
+        return $this->title;
+    }
     
-    public $url = '';
-    
-    public function __construct() {
-        if ($this->parent_id > 0) {
-            $this->parent = self::findById($this->parent_id);
-        }
+    public function children()
+    {
+        $subcategories = self::childrenOf($this->id);
+        $products = Product::findByCategoryId($this->id);
         
-        $this->setUrl();
+        return array_merge($subcategories, $products);
+    }
+
+    public function content($part = 'body', $inherit = false)
+    {
+        if ($part == 'body') {
+            $this->includeSnippet('category');
+        } elseif ($part == 'sidebar') {
+            $this->includeSnippet('category_filters');
+        }
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    public function hasContent($part, $inherit = false)
+    {
+        if ($part == 'body') {
+            return true;
+        } elseif ($part == 'sidebar') {
+            return true;
+        }
+    }
+    
+    public function keywords()
+    {
+        return strtolower(implode(', ', array($this->title)));
+    }
+
+    public function parent($level = null)
+    {
+        if (!isset($this->parent)) {
+            if ($this->parent_id > 1) {
+                return self::findById($this->parent_id);
+            } else {
+                return Page::find('/');
+            }
+        }
+
+        return $this->parent;
+    }
+
+    public function slug()
+    {
+        return $this->slug;
+    }
+
+    public function title()
+    {
+        return $this->title;
+    }
+
+    public function subcategories()
+    {
+        return self::childrenOf($this->id); 
     }
     
     /**
@@ -75,7 +133,8 @@ class Category extends ActiveRecord {
      * 
      * @todo improve
      */
-    public function afterSave() {
+    public function afterSave()
+    {
         if (isset($_POST['attribute_ids'])) {
             $old_attributes = CategoryAttribute::findByCategoryId($this->id);
             $old_ids = array();
@@ -102,10 +161,12 @@ class Category extends ActiveRecord {
                 $category_attribute->save();
             }
         }
+
         return true;
     }
     
-    public function beforeDelete() {
+    public function beforeDelete()
+    {
         $children = $this->children();
         
         foreach ($children as $child) {
@@ -128,14 +189,16 @@ class Category extends ActiveRecord {
         return true;
     }
     
-    public function beforeInsert() {
+    public function beforeInsert()
+    {
         $this->created_on       = date('Y-m-d H:i:s');
         $this->created_by_id    = AuthUser::getRecord()->id;
 
         return true;
     }
     
-    public function beforeSave() {
+    public function beforeSave()
+    {
         $this->slug             = Node::toSlug($this->title);
         
         $this->updated_on       = date('Y-m-d H:i:s');
@@ -144,58 +207,58 @@ class Category extends ActiveRecord {
         return true;
     }
     
-    public static function unlimitedChildren() {
+    public static function unlimitedChildren()
+    {
         return self::find(array(
             
         ));
     }
     
-    
-    
-    public function children() {
-        return self::childrenOf($this->id);
-    }
-    
-    public static function childrenOf($parent_id) {
+    public static function childrenOf($parent_id)
+    {
         return self::findByParentId($parent_id);
     }
     
-    public function date($format='%a, %e %b %Y', $which_one='created') {
+    public function date($format='%a, %e %b %Y', $which_one='created')
+    {
         if ($which_one == 'update' || $which_one == 'updated') {
             return strftime($format, strtotime($this->updated_on));
-        }
-        else {
+        } else {
             return strftime($format, strtotime($this->created_on));
         }
     }
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'where' => 'id > 1',
             'order' => 'title ASC'
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1,
             'include' => array('attributes')
         ));
     }
     
-    public static function findByParentId($parent_id) {
+    public static function findByParentId($parent_id)
+    {
         return self::find(array(
-            'where' => array('parent_id = ?', $parent_id),
+            'where' => array('parent_id = :parent_id', ':parent_id' => $parent_id),
             'order' => 'position ASC'
         ));
     }
     
-    public static function findBySlug($slug, &$parent = FALSE) {
+    public static function findBySlug($slug, &$parent = FALSE)
+    {
         $parent_id = $parent ? $parent->id : 1;
         
         return self::find(array(
-            'where' => array('slug = ? AND parent_id = ?', $slug, $parent_id),
+            'where' => array('slug = :slug AND parent_id = :parent_id', ':slug' => $slug, ':parent_id' => $parent_id),
             'limit' => 1,
             'include' => array(
                 'filters' => array('filter_options'),
@@ -205,7 +268,8 @@ class Category extends ActiveRecord {
         ));
     }
     
-    public static function findByUri($slugs) {
+    public static function findByUri($slugs)
+    {
         $url = '';
         
         foreach($slugs as $slug) {
@@ -213,8 +277,7 @@ class Category extends ActiveRecord {
             
             if ($category = self::findBySlug($slug, $parent)) {
                 
-            }
-            else {
+            } else {
                 break;
             }
             
@@ -223,48 +286,30 @@ class Category extends ActiveRecord {
         
         if (isset($category)) {
             return $category;
-        }
-        else {
+        } else {
             return false;
         }
-        
-        //die;
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'title', 'slug', 'description', 'parent_id', 'position',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
     
-    public static function hasChildren($id) {
-        return (boolean) self::countFrom('Category', 'parent_id = ?', array($id));
+    public static function hasChildren($id) 
+    {
+        return (boolean) self::countFrom('Category', 'parent_id = :parent_id', array(':parent_id' => $id));
     }
     
-    public function keywords() {
-        return strtolower(implode(', ', explode(' ', $this->name . ' ' . $this->brand->name . ' ' . $this->category->title)));
-    }
-    
-    public function url() {
-        return URL_PUBLIC . $this->url . ($this->url != '' ? URL_SUFFIX: '');
-    }
-    
-    protected function setUrl() {
+    public function parentIds()
+    {
         if ($this->parent_id > 1) {
-            $this->url = trim($this->parent->url .'/'. $this->slug, '/');
-        }
-        else {
-            $this->url = trim($this->slug, '/');
-        }
-    }
-    
-    public function parentIds() {
-        if ($this->parent_id > 0) {
-            $parents = $this->parent->parentIds();
-        }
-        else {
-            $parents = array();
+            $parents = $this->parent()->parentIds();
+        } else {
+            $parents = array(1);
         }
         
         $array = array_merge(array($this->id), $parents);
@@ -272,9 +317,8 @@ class Category extends ActiveRecord {
         return $array;
     }
     
-    
-    
-    public static function subcategoryIdsOf($category_id) {
+    public static function subcategoryIdsOf($category_id)
+    {
         $array = array();
         $array[$category_id] = $category_id;
         
@@ -287,7 +331,8 @@ class Category extends ActiveRecord {
         return $array;
     }
     
-    public function unlimitedAttributes() {
+    public function unlimitedAttributes()
+    {
         $category_ids = $this->parentIds();
         
         return Attribute::find(array(
@@ -299,7 +344,8 @@ class Category extends ActiveRecord {
         ));
     }
     
-    public function unlimitedFilters() {
+    public function unlimitedFilters()
+    {
         $category_ids = $this->parentIds();
         
         return Attribute::find(array(
@@ -311,7 +357,8 @@ class Category extends ActiveRecord {
         ));
     }
     
-    public function unlimitedBrands() {
+    public function unlimitedBrands()
+    {
         $category_ids = self::subcategoryIdsOf($this->id);
         
         return Brand::find(array(
@@ -324,7 +371,8 @@ class Category extends ActiveRecord {
         ));
     }
     
-    public function unlimitedProducts() {
+    public function unlimitedProducts()
+    {
         $category_ids = self::subcategoryIdsOf($this->id);
         
         return Product::find(array(

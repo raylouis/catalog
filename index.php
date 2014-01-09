@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 if (!defined('CATALOG')) {
@@ -27,15 +27,27 @@ Plugin::setInfos(array(
     'description'           =>    __('The catalog plugin adds a catalog or webshop to Wolf CMS.'),
     'type'                  =>    'both',
     'author'                =>    'Nic Wortel',
-    'version'               =>    '0.1.5',
+    'version'               =>    '0.2.0',
     'website'               =>    'http://www.wolfcms.org/',
-    'require_wolf_version'  =>    '0.7.4'
+    'require_wolf_version'  =>    '0.7.6'
 ));
 
 Plugin::addController('catalog', __('Catalog'), 'catalog_view', true);
 
 AutoLoader::addFolder(CATALOG.'/models');
 AutoLoader::addFolder(CATALOG.'/pages');
+
+Observer::observe('media_attachment_before_delete', 'catalog_on_attachment_delete');
+
+function catalog_on_attachment_delete(&$attachment)
+{
+    $brands = Brand::findByLogoAttachmentId($attachment->id);
+    
+    foreach ($brands as $brand) {
+        $brand->unsetLogo();
+        $brand->save();
+    }
+}
 
 $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
 
@@ -48,7 +60,7 @@ if ($categories = Category::findByParentId(1)) {
     foreach ($categories as $category) {
         Dispatcher::addRoute(array(
             '/' . $category->slug              => '/plugin/catalog/frontend/' . $category->slug,
-            '/' . $category->slug . '/:any'    => '/plugin/catalog/frontend/' . $category->slug . '/$1'
+            '/' . $category->slug . '/:all'    => '/plugin/catalog/frontend/' . $category->slug . '/$1'
         ));
     }
 }

@@ -11,14 +11,14 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 ?>
 
 <h1><?php echo __(ucfirst($action).' product'); ?></h1>
 
-<form method="post" action="<?php if ($action == 'add') echo get_url('plugin/catalog/product/add'); else echo get_url('plugin/catalog/product/edit/'.$product->id); ?>">
+<form method="post" action="<?php if ($action == 'add') echo get_url('plugin/catalog/product/add'); else echo get_url('plugin/catalog/product/edit/'.$product->id); ?>" enctype="multipart/form-data">
     <h3><?php echo __('General product info'); ?></h3>
     
     <table border="0" cellspacing="0" cellpadding="0">
@@ -180,7 +180,13 @@ if (!defined('IN_CMS')) { exit(); }
 
     <p><a class="add-variant" href="#"><?php echo __('Add a new variant'); ?> <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-add-16.png" alt="Add"></a></p>
 
-    
+    <h3><?php echo __('Product images'); ?></h3>
+
+    <p><input type="file" id="product_image_upload" name="file[]" multiple="multiple" class="textbox"></p>
+
+    <?php foreach ($product->images as $image): ?>
+    <?php echo $image->html_img('thumbnail', 160); ?>
+    <?php endforeach; ?>
     
     <p class="buttons">
         <input class="button" name="commit" type="submit" accesskey="s" value="<?php echo __('Save and Close'); ?>" />

@@ -11,12 +11,13 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 use_helper('ActiveRecord');
 
-class ProductVariant extends ActiveRecord {
+class ProductVariant extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_product_variant';
     
     static $belongs_to = array(
@@ -45,7 +46,8 @@ class ProductVariant extends ActiveRecord {
     public $created_by_id;
     public $updated_by_id;
     
-    public function afterSave() {
+    public function afterSave()
+    {
         $old_values = ProductVariantValue::findByProductVariantId($this->id);
 
         foreach ($old_values as $old_value) {
@@ -84,7 +86,8 @@ class ProductVariant extends ActiveRecord {
         return true;
     }
 
-    public function beforeDelete() {
+    public function beforeDelete()
+    {
         if (!ProductVariantValue::deleteByProductVariantId($this->id)) {
             return false;
         }
@@ -92,14 +95,16 @@ class ProductVariant extends ActiveRecord {
         return true;
     }
     
-    public function beforeInsert() {
+    public function beforeInsert()
+    {
         $this->created_on       = date('Y-m-d H:i:s');
         $this->created_by_id    = AuthUser::getRecord()->id;
 
         return true;
     }
     
-    public function beforeSave() {
+    public function beforeSave()
+    {
         $this->updated_on       = date('Y-m-d H:i:s');
         $this->updated_by_id    = AuthUser::getRecord()->id;
         
@@ -108,7 +113,8 @@ class ProductVariant extends ActiveRecord {
         return true;
     }
     
-    public static function deleteByProductId($product_id) {
+    public static function deleteByProductId($product_id)
+    {
         $product_id = (int) $product_id;
         
         $variants = self::findByProductId($product_id);
@@ -119,8 +125,7 @@ class ProductVariant extends ActiveRecord {
                     return false;
                 }
             }
-        }
-        elseif ($variants instanceof ProductVariant) {
+        } elseif ($variants instanceof ProductVariant) {
             if (!$variants->delete()) {
                 return false;
             }
@@ -129,44 +134,47 @@ class ProductVariant extends ActiveRecord {
         return true;
     }
     
-    public static function findAll() {
+    public static function findAll()
+    {
         return self::find(array(
             'order' => 'sku ASC'
         ));
     }
     
-    public static function findById($id) {
+    public static function findById($id)
+    {
         return self::find(array(
-            'where' => array('id = ?', $id),
+            'where' => array('id = :id', ':id' => $id),
             'limit' => 1
         ));
     }
     
-    public static function findByProductId($id) {
+    public static function findByProductId($product_id)
+    {
         return self::find(array(
-            'where' => array('product_id = ?', $id)
+            'where' => array('product_id = :product_id', ':product_id' => $product_id)
         ));
     }
     
-    public function getColumns() {
+    public function getColumns()
+    {
         return array(
             'id', 'sku', 'name', 'weight', 'price', 'vat_id', 'stock', 'product_id',
             'created_on', 'updated_on', 'created_by_id', 'updated_by_id'
         );
     }
     
-    public function price($include_vat = false, $format = false) {
+    public function price($include_vat = false, $format = false)
+    {
         if ($include_vat) {
             $price_incl_tax = $this->price * ($this->vat->percentage / 100 + 1);
-        }
-        else {
+        } else {
             $price_incl_tax = $this->price;
         }
         
         if (Plugin::getSetting('decimal_seperator', 'catalog') == 'comma') {
             return number_format($price_incl_tax, 2, ',', '');
-        }
-        else {
+        } else {
             return number_format($price_incl_tax, 2, '.', '');
         }
     }

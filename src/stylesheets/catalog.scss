@@ -1,0 +1,134 @@
+/**
+ * Catalog
+ * 
+ * The catalog plugin adds a catalog or webshop to Wolf CMS.
+ * 
+ * @package     Plugins
+ * @subpackage  catalog
+ * 
+ * @author      Nic Wortel <nic.wortel@nth-root.nl>
+ * @copyright   Nic Wortel, 2012
+ * @version     0.2.0
+ */
+
+body#body_plugin_catalog
+{
+    div.form-area {
+        margin: -20px;
+    }
+
+    div#content
+    {
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        th {
+            background-color: #e6e6e6;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+
+        th,
+        td {
+            padding: 2px 4px;
+            text-align: left;
+        }
+
+        td.label {
+            width: 180px;
+        }
+
+
+        /*th.sorted.ascending:after {
+            content: url("images/sort_up.png");
+        }
+        th.sorted.descending:after {
+            content: url("images/sort_down.png");
+        }*/
+
+        th a {
+            padding-right: 11px;
+        }
+        th.sorted.ascending a {
+            background-image:url('images/sort_up.png');
+            background-repeat:no-repeat;
+            background-position: right center;
+        }
+        th.sorted.descending a {
+            background-image:url('images/sort_down.png');
+            background-repeat:no-repeat;
+            background-position: right center;
+        }
+
+        th.number,
+        td.number {
+            width: 50px;
+            text-align: right;
+        }
+
+        th.number.long,
+        td.number.long {
+            width: 70px;
+            text-align: right;
+        }
+
+        th.price,
+        td.price {
+            width: 80px;
+            text-align: right;
+        }
+
+        th.icon,
+        td.icon {
+            width: 60px;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        td.label {
+            text-align: right;
+        }
+
+        td .not-applicable {
+            color: #bbb;
+        }
+
+        input.number {
+            text-align: right;
+        }
+
+        table#variants input {
+            width: 120px;
+        }
+        table#variants input.number {
+            width: 60px;
+        }
+
+        textarea {
+            width: 100% !important;
+            min-height: 200px;
+        }
+
+        label[for] {
+            cursor: pointer;
+        }
+
+    }
+}

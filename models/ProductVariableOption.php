@@ -11,12 +11,13 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.1.5
+ * @version     0.2.0
  */
 
 use_helper('ActiveRecord');
 
-class ProductVariableOption extends ActiveRecord {
+class ProductVariableOption extends ActiveRecord
+{
     const TABLE_NAME = 'catalog_product_variable_option';
     
     static $belongs_to = array(
@@ -29,6 +30,4 @@ class ProductVariableOption extends ActiveRecord {
     public $id;
     public $variable_id;
     public $value;
-    
-    
 }
