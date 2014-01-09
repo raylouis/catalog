@@ -23,7 +23,7 @@ if (!defined('IN_CMS')) { exit(); }
 
 <p><a href="<?php echo get_url('plugin/catalog/brand/add'); ?>"><?php echo __('Add brand'); ?></a></p>
 
-<table class="brand list">
+<table class="brand list data-sortable">
     <thead>
         <tr>
             <th class="number">
@@ -35,8 +35,8 @@ if (!defined('IN_CMS')) { exit(); }
             <th class="fill">
                 <?php echo __('Website'); ?>
             </th>
-            <th class="icon"><?php echo __('View'); ?></th>
-            <th class="icon"><?php echo __('Delete'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('View'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('Delete'); ?></th>
         </tr>
     </thead>
     <tbody>
