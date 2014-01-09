@@ -389,32 +389,15 @@ class CatalogController extends PluginController
         }
     }
     
-    public function attributes($order_by = NULL, $order_direction = 'asc', $page = 1)
+    public function attributes()
     {
-        $allowed_columns = array(
-            'id' => 'id',
-            'name' => 'name'
-        );
-        
-        if (!isset($allowed_columns[$order_by])) {
-            $order_by = 'id';
-        }
-        
-        $order_sql = $allowed_columns[$order_by];
-        
-        if ($order_direction != 'desc') {
-            $order_direction = 'asc';
-        }
-        
         $attributes = Attribute::find(array(
-            'order' => $order_sql . ' ' . strtoupper($order_direction),
+            'order' => 'id ASC',
             'include' => array('type', 'default_unit')
         ));
         
         $this->display('catalog/views/attribute/index', array(
-            'attributes' => $attributes,
-            'order_by' => $order_by,
-            'order_direction' => $order_direction
+            'attributes' => $attributes
         ));
     }
     
@@ -477,24 +460,8 @@ class CatalogController extends PluginController
         }
     }
     
-    public function brands($order_by = NULL, $order_direction = 'asc', $page = 1)
+    public function brands()
     {
-        $allowed_columns = array(
-            'id' => 'id',
-            'name' => 'name',
-            'website' => 'CASE WHEN website IS NULL THEN 1 ELSE 0 END, website'
-        );
-        
-        if (!isset($allowed_columns[$order_by])) {
-            $order_by = 'name';
-        }
-        
-        $order_sql = $allowed_columns[$order_by];
-        
-        if ($order_direction != 'desc') {
-            $order_direction = 'asc';
-        }
-        
         if (isset($_POST['search'])) {
             $search_string = $_POST['search'];
             $search_string = '%' . $search_string . '%';
@@ -502,19 +469,17 @@ class CatalogController extends PluginController
             $brands = Brand::find(array(
                 'select' => 'catalog_brand.*',
                 'where' => array('name LIKE :search_string', ':search_string' => $search_string),
-                'order' => $order_sql . ' ' . strtoupper($order_direction)
+                'order' => 'id ASC'
             ));
         } else {
             $brands = Brand::find(array(
                 'select' => 'catalog_brand.*',
-                'order' => $order_sql . ' ' . strtoupper($order_direction)
+                'order' => 'id ASC'
             ));
         }
         
         $this->display('catalog/views/brand/index', array(
-            'brands' => $brands,
-            'order_by' => $order_by,
-            'order_direction' => $order_direction
+            'brands' => $brands
         ));
     }
     
@@ -815,28 +780,8 @@ class CatalogController extends PluginController
      * @param int $page
      * @return View
      */
-    public function products($order_by = NULL, $order_direction = 'asc', $page = 1)
+    public function products()
     {
-        $allowed_columns = array(
-            'id' => 'product.id',
-            'name' => 'product.name',
-            'brand' => 'CASE WHEN brand.id IS NULL THEN 1 ELSE 0 END, brand.name',
-            'category' => 'category.title',
-            'variants' => 'variant_count',
-            'price' => 'CASE WHEN variant.id IS NULL THEN 1 ELSE 0 END, min_price',
-            'stock' => 'CASE WHEN variant.id IS NULL THEN 1 ELSE 0 END, total_stock'
-        );
-        
-        if (!isset($allowed_columns[$order_by])) {
-            $order_by = 'id';
-        }
-        
-        $order_sql = $allowed_columns[$order_by];
-        
-        if ($order_direction != 'desc') {
-            $order_direction = 'asc';
-        }
-        
         if (isset($_POST['search'])) {
             $q = $_POST['search'];
             $q = '%' . $q . '%';
@@ -860,7 +805,6 @@ class CatalogController extends PluginController
                         OR variant.sku LIKE :search_string
                         OR variant.name LIKE :search_string', ':search_string' => $q),
                 'group' => 'product.id',
-                'order' => $order_sql . ' ' . strtoupper($order_direction),
                 'include' => array(
                     'brand',
                     'category',
@@ -882,7 +826,7 @@ class CatalogController extends PluginController
                     LEFT JOIN catalog_product_variant AS variant ON variant.product_id = product.id
                     ',
                 'group' => 'product.id',
-                'order' => $order_sql . ' ' . strtoupper($order_direction),
+                'order' => 'id ASC',
                 'include' => array(
                     'brand',
                     'category',
@@ -893,9 +837,7 @@ class CatalogController extends PluginController
         }
         
         $this->display('catalog/views/product/index', array(
-            'products' => $products,
-            'order_by' => $order_by,
-            'order_direction' => $order_direction
+            'products' => $products
         ));
     }
     

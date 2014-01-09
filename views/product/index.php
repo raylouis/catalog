@@ -14,22 +14,6 @@ if (!defined('IN_CMS')) { exit(); }
  * @version     0.2.0
  */
 
-function get_direction($column, $order, $direction) {
-    if ($column == $order && $direction == 'asc') {
-        return 'desc';
-    }
-    else {
-        return 'asc';
-    }
-}
-
-function get_sorted($column, $order, $direction) {
-    if ($column == $order) {
-        return ' sorted ' . $direction . 'ending';
-    }
-    return '';
-}
-
 ?>
 <h1><?php echo __('Products'); ?></h1>
 
@@ -45,23 +29,23 @@ function get_sorted($column, $order, $direction) {
 <table class="product list">
     <thead>
         <tr>
-            <th class="fill<?php echo get_sorted('name', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/name', get_direction('name', $order_by, $order_direction)); ?>"><?php echo __('Name'); ?></a>
+            <th class="fill">
+                <?php echo __('Name'); ?>
             </th>
-            <th class="fill<?php echo get_sorted('brand', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/brand', get_direction('brand', $order_by, $order_direction)); ?>"><?php echo __('Brand'); ?></a>
+            <th class="fill">
+                <?php echo __('Brand'); ?>
             </th>
-            <th class="fill<?php echo get_sorted('category', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/category', get_direction('category', $order_by, $order_direction)); ?>"><?php echo __('Category'); ?></a>
+            <th class="fill">
+                <?php echo __('Category'); ?>
             </th>
-            <th class="number<?php echo get_sorted('variants', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/variants', get_direction('variants', $order_by, $order_direction)); ?>"><?php echo __('Variants'); ?></a>
+            <th class="number">
+                <?php echo __('Variants'); ?>
             </th>
-            <th class="price<?php echo get_sorted('price', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/price', get_direction('price', $order_by, $order_direction)); ?>"><?php echo __('Price'); ?></a>
+            <th class="price">
+                <?php echo __('Price'); ?>
             </th>
-            <th class="number<?php echo get_sorted('stock', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/stock', get_direction('stock', $order_by, $order_direction)); ?>"><?php echo __('Stock'); ?></a>
+            <th class="number">
+                <?php echo __('Stock'); ?>
             </th>
             <th class="icon"><?php echo __('View'); ?></th>
             <th class="icon"><?php echo __('Delete'); ?></th>
