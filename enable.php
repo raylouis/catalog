@@ -16,9 +16,7 @@ if (!defined('IN_CMS')) { exit(); }
 
 Plugin::setAllSettings(array(
     'layout_id' => 0,
-    'decimal_seperator' => 'point',
-    'brands_title' => 'Brands',
-    'brands_slug' => 'brands'
+    'decimal_seperator' => 'point'
 ), 'catalog');
 
 $PDO = Record::getConnection();

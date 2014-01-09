@@ -47,12 +47,6 @@ if (!defined('IN_CMS')) { exit(); }
             </td>
         </tr>
         <tr>
-            <td class="label"><strong><label for="brands_title"><?php echo __('Brands title'); ?></label></strong></td>
-            <td class="field">
-                <input type="text" name="setting[brands_title]" id="brands_title" value="<?php echo $settings['brands_title']; ?>" />
-            </td>
-        </tr>
-        <tr>
             <td colspan="2">
                 <br />
                 <input type="submit" name="save" value="<?php echo __('Save Settings'); ?>" />
