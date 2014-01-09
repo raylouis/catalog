@@ -14,7 +14,9 @@
 window.onload = (function() {
     try {
         $(function() {
-            $("table.data-sortable").tablesorter();
+            $("table.data-sortable").tablesorter({
+                sortReset   : true
+            });
         });
     }
     catch(e) { alert(e) }
