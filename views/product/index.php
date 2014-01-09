@@ -26,7 +26,7 @@ if (!defined('IN_CMS')) { exit(); }
     <a href="<?php echo get_url('plugin/catalog/export/product'); ?>"><?php echo __('Export'); ?></a>
 </p>
 
-<table class="product list">
+<table class="product list data-sortable">
     <thead>
         <tr>
             <th class="fill">
@@ -38,17 +38,17 @@ if (!defined('IN_CMS')) { exit(); }
             <th class="fill">
                 <?php echo __('Category'); ?>
             </th>
-            <th class="number">
+            <th class="number" data-sortinitialorder="desc">
                 <?php echo __('Variants'); ?>
             </th>
-            <th class="price">
+            <th class="price empty-bottom">
                 <?php echo __('Price'); ?>
             </th>
-            <th class="number">
+            <th class="number empty-bottom">
                 <?php echo __('Stock'); ?>
             </th>
-            <th class="icon"><?php echo __('View'); ?></th>
-            <th class="icon"><?php echo __('Delete'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('View'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('Delete'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -62,8 +62,6 @@ if (!defined('IN_CMS')) { exit(); }
             <td class="fill">
                 <?php if (isset($product->brand)): ?>
                 <?php echo $product->brand->name; ?>
-                <?php else: ?>
-                -
                 <?php endif; ?>
             </td>
             <td class="fill">
@@ -79,16 +77,12 @@ if (!defined('IN_CMS')) { exit(); }
                 <?php else: ?>
                 € <?php echo number_format($product->min_price, 2, '.', ','); ?>
                 <?php endif; ?>
-                <?php else: ?>
-                <span class="not-applicable"><?php echo __('N/A'); ?></span>
                 <?php endif; ?>
             </td>
             <td class="number">
                 <?php $product->stock = $product->total_stock; ?>
                 <?php if (!is_null($product->stock)): ?>
                 <?php echo $product->stock; ?>
-                <?php else: ?>
-                <span class="not-applicable"><?php echo __('N/A'); ?></span>
                 <?php endif; ?>
             </td>
             <td class="icon">
