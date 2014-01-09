@@ -15,7 +15,7 @@ if (!defined('IN_CMS')) { exit(); }
  */
 
 ?>
-<h1><?php echo __('Export ' . $model . 's'); ?></h1>
+<h1><?php echo __('Export :models', array(':models' => __(ucfirst($plural)))); ?></h1>
 
 <p><a href="<?php echo get_url('plugin/catalog/export/' . $model . '/csv'); ?>"><?php echo __('CSV'); ?></a></p>
 

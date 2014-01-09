@@ -90,7 +90,7 @@ if (!defined('IN_CMS')) { exit(); }
             </td>
             <td class="icon">
                 <?php if (AuthUser::hasPermission('catalog_product_delete')): ?>
-                    <a href="<?php echo get_url('plugin/catalog/product/delete', $product->id); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete :name and all its variants, prices, stock info etc.?', array(':name' => $product->name())); ?>');">
+                    <a href="<?php echo get_url('plugin/catalog/product/delete', $product->id); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete :name, including all associated info such as variants, prices, stock, etc.?', array(':name' => $product->name())); ?>');">
                         <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
                     </a>
                 <?php endif; ?>

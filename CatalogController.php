@@ -615,6 +615,7 @@ class CatalogController extends PluginController
             $data = array();
             
             if ($model == 'product') {
+                $model_plural = 'products';
                 $data[] = array(
                     __('SKU'),
                     __('Price'),
@@ -657,7 +658,8 @@ class CatalogController extends PluginController
                 ));
             } else {
                 $this->display('catalog/views/export/index', array(
-                    'model' => $model
+                    'model' => $model,
+                    'plural' => $model_plural
                 ));
             }
         } else {
