@@ -106,6 +106,10 @@ class CatalogController extends PluginController
             if (isset($_FILES['logo'])) {
                 try {
                     $uploaded_file = new UploadedFile($_FILES['logo']);
+                    
+                    if ($attachment = Attachment::create($uploaded_file, $obj->name)) {
+                        $obj->logo_attachment_id = $attachment->id;
+                    }
                 } catch (UploadException $e) {
                     switch($e->getCode()) {
                         case UPLOAD_ERR_INI_SIZE:
@@ -122,10 +126,6 @@ class CatalogController extends PluginController
                     }
                 } catch (Exception $e) {
                     $errors[] = __('File upload failed.');
-                }
-
-                if ($attachment = Attachment::create($uploaded_file, $obj->name)) {
-                    $obj->logo_attachment_id = $attachment->id;
                 }
             }
         } elseif ($model == 'attribute') {
