@@ -300,14 +300,13 @@ class CatalogController extends PluginController
     public function ajax($action, $id)
     {
         if ($action == 'attribute_type_units') {
-            if ($attribute_type = AttributeType::find(array(
-                'where' => array('id = :id', ':id' => $id),
-                'limit' => 1,
-                'include' => array('units')
+            if ($units = AttributeUnit::find(array(
+                'where' => array('attribute_type_id = :id', ':id' => $id),
+                'order' => 'multiplier ASC'
             ))) {
             
                 echo new View('../../plugins/catalog/views/ajax/attribute_type_units', array(
-                    'attribute_type' => $attribute_type
+                    'units' => $units
                 ));
                 
             }
