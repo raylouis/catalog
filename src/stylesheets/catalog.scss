@@ -55,26 +55,26 @@ body#body_plugin_catalog
             width: 180px;
         }
 
-
-        /*th.sorted.ascending:after {
-            content: url("images/sort_up.png");
-        }
-        th.sorted.descending:after {
-            content: url("images/sort_down.png");
-        }*/
-
-        th a {
-            padding-right: 11px;
-        }
-        th.sorted.ascending a {
-            background-image:url('images/sort_up.png');
-            background-repeat:no-repeat;
+        th.tablesorter-header
+        {
+            background-image: url("data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==");
             background-position: right center;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            padding: 4px 18px 4px 4px;
+            white-space: normal;
+
+            &.sorter-false
+            {
+                background-image: none;
+                padding: 4px;
+            }
         }
-        th.sorted.descending a {
-            background-image:url('images/sort_down.png');
-            background-repeat:no-repeat;
-            background-position: right center;
+        th.tablesorter-headerAsc {
+            background-image: url("data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7");
+        }
+        th.tablesorter-headerDesc {
+            background-image: url("data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7");
         }
 
         th.number,
