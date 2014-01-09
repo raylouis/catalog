@@ -230,9 +230,9 @@ class CatalogController extends PluginController
         }
         
         if ($obj->save()) {
-            Flash::set('success', __(ucfirst($model) . ' has been saved!'));
+            Flash::set('success', __(':model has been saved!', array(':model' => ucfirst($model))));
         } else {
-            Flash::set('error', __(ucfirst($model) . ' has not been saved!'));
+            Flash::set('error', __(':model could not be saved!', array(':model' => ucfirst($model))));
             
             $url = 'plugin/catalog/' . $model . '/';
             $url .= ( $action == 'edit') ? 'edit/' . $id : 'add/';
