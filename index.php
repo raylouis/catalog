@@ -39,6 +39,8 @@ Plugin::addJavascript('catalog', 'vendor/tablesorter/jquery.tablesorter.min.js')
 AutoLoader::addFolder(CATALOG.'/models');
 AutoLoader::addFolder(CATALOG.'/pages');
 
+Behavior::add('brand_list', 'catalog/behaviors/BrandList.php');
+
 Observer::observe('media_attachment_before_delete', 'catalog_on_attachment_delete');
 
 function catalog_on_attachment_delete(&$attachment)
@@ -52,11 +54,6 @@ function catalog_on_attachment_delete(&$attachment)
 }
 
 $brands_slug = Plugin::getSetting('brands_slug', 'catalog');
-
-Dispatcher::addRoute(array(
-    '/' . $brands_slug => '/plugin/catalog/frontendBrandList',
-    '/' . $brands_slug . '/:any' => '/plugin/catalog/frontendBrand/$1'
-));
 
 if ($categories = Category::findByParentId(1)) {
     foreach ($categories as $category) {

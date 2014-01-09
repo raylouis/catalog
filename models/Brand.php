@@ -52,6 +52,11 @@ class Brand extends CatalogNode
         unset($this->logo);
     }
 
+    public function ancestors()
+    {
+        return array(Page::find('/'), $this->parent());
+    }
+
     public function breadcrumb()
     {
         return $this->name;
@@ -88,7 +93,10 @@ class Brand extends CatalogNode
 
     public function parent($level = null)
     {
-        return new BrandListPage(Brand::findAll());
+        return Page::find(array(
+            'where' => "behavior_id = 'brand_list'",
+            'limit' => 1
+        ));
     }
 
     public function slug()
