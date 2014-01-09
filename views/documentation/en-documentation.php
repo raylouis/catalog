@@ -19,5 +19,5 @@ if (!defined('IN_CMS')) { exit(); }
 
 <h3><?php echo __('Product variants'); ?></h3>
 <p>
-    A <strong>product variant</strong> is a unique version of a certain product. One product can have multiple variants based on a certain attribute. So when you sell t-shirts, you can have the same t-shirt (product) in multiple sizes and colors. In this example, each combination of     size and color is a product variant and has it's own stock and SKU.
+    <?php echo __('A :product-variant is a unique version of a certain product. One product can have multiple variants based on a certain attribute. For instance, when you sell t-shirts, you can have the same t-shirt (product) in multiple sizes and colors. In this example, all combinations of size and color (medium-sized red t-shirt, large blue t-shirt, etc.) are unique product variants, having their own stock and SKU.', array(':product-variant' => '<strong>' . __('product variant') . '</strong>')); ?>    
 </p>

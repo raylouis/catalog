@@ -15,6 +15,7 @@ if (!defined('IN_CMS')) { exit(); }
  */
 
 return array(
+    'A :product-variant is a unique version of a certain product. One product can have multiple variants based on a certain attribute. For instance, when you sell t-shirts, you can have the same t-shirt (product) in multiple sizes and colors. In this example, all combinations of size and color (medium-sized red t-shirt, large blue t-shirt, etc.) are unique product variants, having their own stock and SKU.' => 'A :product-variant is a unique version of a certain product. One product can have multiple variants based on a certain attribute. For instance, when you sell t-shirts, you can have the same t-shirt (product) in multiple sizes and colors. In this example, all combinations of size and color (medium-sized red t-shirt, large blue t-shirt, etc.) are unique product variants, having their own stock and SKU.',
     'Abbreviation' => 'Abbreviation',
     'Add a new variant' => 'Add a new variant',
     'Add attribute' => 'Add attribute',
@@ -67,6 +68,7 @@ return array(
     'Product' => 'Product',
     'Product images' => 'Product images',
     'Product properties' => 'Product properties',
+    'product variant' => 'product variant',
     'Product variants' => 'Product variants',
     'Products' => 'Products',
     'Search' => 'Search',
