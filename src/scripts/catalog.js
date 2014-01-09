@@ -13,6 +13,14 @@
 
 window.onload = (function() {
     try {
+        $(function() {
+            $("table.data-sortable").tablesorter();
+        });
+    }
+    catch(e) { alert(e) }
+
+
+    try {
         $('.move-to-variants').live('click', function() {
 
             var label = $(this).parent().children('label').html();
