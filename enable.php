@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
 
 Plugin::setAllSettings(array(
