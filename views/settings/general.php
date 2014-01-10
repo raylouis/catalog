@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
 
 ?>
@@ -44,12 +44,6 @@ if (!defined('IN_CMS')) { exit(); }
                     <input type="radio" name="setting[decimal_seperator]" id="decimal_comma" value="comma" <?php echo ($settings['decimal_seperator'] == 'comma') ? ' checked="checked"' : null; ?>/>
                     <?php echo __('Comma'); ?>
                 </label>
-            </td>
-        </tr>
-        <tr>
-            <td class="label"><strong><label for="brands_title"><?php echo __('Brands title'); ?></label></strong></td>
-            <td class="field">
-                <input type="text" name="setting[brands_title]" id="brands_title" value="<?php echo $settings['brands_title']; ?>" />
             </td>
         </tr>
         <tr>

@@ -8,10 +8,20 @@
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
 
 window.onload = (function() {
+    try {
+        $(function() {
+            $("table.data-sortable").tablesorter({
+                sortReset   : true
+            });
+        });
+    }
+    catch(e) { alert(e) }
+
+
     try {
         $('.move-to-variants').live('click', function() {
 

@@ -11,10 +11,11 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
 
 return array(
+    'A :product-variant is a unique version of a certain product. One product can have multiple variants based on a certain attribute. For instance, when you sell t-shirts, you can have the same t-shirt (product) in multiple sizes and colors. In this example, all combinations of size and color (medium-sized red t-shirt, large blue t-shirt, etc.) are unique product variants, having their own stock and SKU.' => 'Een :product-variant is een unieke variant van een bepaald product. Een product kan meerdere varianten hebben, gebaseerd op bepaalde attributen. Een t-shirt winkel kan bijvoorbeeld een bepaald t-shirt (product) verkopen in verschillende maten en kleuren. In dit voorbeeld zijn alle combinaties van maat en kleur (bijvoorbeeld een medium rood t-shirt of een large blauw t-shirt) unieke productvarianten, met elk hun eigen voorraad en artikelnummer.',
     'Abbreviation' => 'Afkorting',
     'Add a new variant' => 'Voeg een nieuwe variant toe',
     'Add attribute' => 'Attribuut toevoegen',
@@ -24,6 +25,7 @@ return array(
     'Add unit' => 'Eenheid toevoegen',
     'Add VAT rate' => 'Btw-tarief toevoegen',
     'Are you sure you wish to delete :name?' => 'Weet u zeker dat u :name wilt verwijderen?',
+    'Are you sure you wish to delete :name, including all associated info such as variants, prices, stock, etc.?' => 'Weet u zeker dat u :name wilt verwijderen, inclusief alle bijbehorende informatie zoals productvarianten, prijzen, voorraad etc.?',
     'Attributes' => 'Attributen',
     'Brand' => 'Merk',
     'Brands' => 'Merken',
@@ -35,6 +37,7 @@ return array(
     'Color' => 'Kleur',
     'Comma' => 'Komma',
     'Comparison' => 'Vergelijking',
+    'CSV' => 'CSV',
     'Decimal seperator' => 'Decimaal scheidingsteken',
     'Default unit' => 'Standaardeenheid',
     'Description' => 'Omschrijving',
@@ -48,6 +51,7 @@ return array(
     'Edit unit' => 'Eenheid bewerken',
     'Edit VAT rate' => 'Btw-tarief bewerken',
     'Export' => 'Exporteren',
+    'Export :models' => 'Exporteer :models',
     'General product info' => 'Algemene productinformatie',
     'General settings' => 'Algemene instellingen',
     'ID' => 'ID',
@@ -62,7 +66,10 @@ return array(
     'Point' => 'Punt',
     'Price' => 'Prijs',
     'Product' => 'Product',
+    'Product images' => 'Productafbeeldingen',
     'Product properties' => 'Producteigenschappen',
+    'product variant' => 'productvariant',
+    'Product variants' => 'Productvarianten',
     'Products' => 'Producten',
     'Search' => 'Zoeken',
     'Save Settings' => 'Instellingen opslaan',

@@ -11,24 +11,8 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
-
-function get_direction($column, $order, $direction) {
-    if ($column == $order && $direction == 'asc') {
-        return 'desc';
-    }
-    else {
-        return 'asc';
-    }
-}
-
-function get_sorted($column, $order, $direction) {
-    if ($column == $order) {
-        return ' sorted ' . $direction . 'ending';
-    }
-    return '';
-}
 
 ?>
 <h1><?php echo __('Brands'); ?></h1>
@@ -39,22 +23,20 @@ function get_sorted($column, $order, $direction) {
 
 <p><a href="<?php echo get_url('plugin/catalog/brand/add'); ?>"><?php echo __('Add brand'); ?></a></p>
 
-
-
-<table class="brand list">
+<table class="brand list data-sortable">
     <thead>
         <tr>
-            <th class="number <?php echo get_sorted('id', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/brands/id', get_direction('id', $order_by, $order_direction)); ?>"><?php echo __('ID'); ?></a>
+            <th class="number">
+                <?php echo __('ID'); ?>
             </th>
-            <th class="fill <?php echo get_sorted('name', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/brands/name', get_direction('name', $order_by, $order_direction)); ?>"><?php echo __('Name'); ?></a>
+            <th class="fill">
+                <?php echo __('Name'); ?>
             </th>
-            <th class="fill <?php echo get_sorted('website', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/brands/website', get_direction('website', $order_by, $order_direction)); ?>"><?php echo __('Website'); ?></a>
+            <th class="fill">
+                <?php echo __('Website'); ?>
             </th>
-            <th class="icon"><?php echo __('View'); ?></th>
-            <th class="icon"><?php echo __('Delete'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('View'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('Delete'); ?></th>
         </tr>
     </thead>
     <tbody>

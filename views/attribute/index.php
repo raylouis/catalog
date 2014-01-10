@@ -11,24 +11,8 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
-
-function get_direction($column, $order, $direction) {
-    if ($column == $order && $direction == 'asc') {
-        return 'desc';
-    }
-    else {
-        return 'asc';
-    }
-}
-
-function get_sorted($column, $order, $direction) {
-    if ($column == $order) {
-        return ' sorted ' . $direction . 'ending';
-    }
-    return '';
-}
 
 ?>
 <h1><?php echo __('Attributes'); ?></h1>
@@ -41,17 +25,17 @@ function get_sorted($column, $order, $direction) {
 <table class="attribute list">
     <thead>
         <tr>
-            <th class="number <?php echo get_sorted('id', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/attributes/id', get_direction('id', $order_by, $order_direction)); ?>"><?php echo __('ID'); ?></a>
+            <th class="number">
+                <?php echo __('ID'); ?>
             </th>
-            <th class="fill <?php echo get_sorted('name', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/attributes/name', get_direction('name', $order_by, $order_direction)); ?>"><?php echo __('Name'); ?></a>
+            <th class="fill">
+                <?php echo __('Name'); ?>
             </th>
-            <th class="fill <?php echo get_sorted('type', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/attributes/type', get_direction('type', $order_by, $order_direction)); ?>"><?php echo __('Type'); ?></a>
+            <th class="fill">
+                <?php echo __('Type'); ?>
             </th>
-            <th class="fill <?php echo get_sorted('unit', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/attributes/unit', get_direction('unit', $order_by, $order_direction)); ?>"><?php echo __('Default unit'); ?></a>
+            <th class="fill">
+                <?php echo __('Default unit'); ?>
             </th>
             <th class="icon"><?php echo __('Delete'); ?></th>
         </tr>

@@ -11,13 +11,13 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
 
 ?>
-<?php if (count($attribute_type->units) > 0): ?>
+<?php if (count($units) > 0): ?>
 <select name="attribute[default_unit_id]" id="attribute_default_unit_id">
-    <?php foreach ($attribute_type->units as $unit): ?>
+    <?php foreach ($units as $unit): ?>
     <option value="<?php echo $unit->id; ?>"><?php echo strtolower($unit->name); ?></option>
     <?php endforeach; ?>
 </select>

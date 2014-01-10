@@ -11,7 +11,7 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
 
 if (!defined('CATALOG')) {
@@ -27,15 +27,19 @@ Plugin::setInfos(array(
     'description'           =>    __('The catalog plugin adds a catalog or webshop to Wolf CMS.'),
     'type'                  =>    'both',
     'author'                =>    'Nic Wortel',
-    'version'               =>    '0.2.0',
+    'version'               =>    '0.2.1',
     'website'               =>    'http://www.wolfcms.org/',
     'require_wolf_version'  =>    '0.7.6'
 ));
 
 Plugin::addController('catalog', __('Catalog'), 'catalog_view', true);
 
+Plugin::addJavascript('catalog', 'vendor/tablesorter/jquery.tablesorter.min.js');
+
 AutoLoader::addFolder(CATALOG.'/models');
 AutoLoader::addFolder(CATALOG.'/pages');
+
+Behavior::add('brand_list', 'catalog/behaviors/BrandList.php');
 
 Observer::observe('media_attachment_before_delete', 'catalog_on_attachment_delete');
 
@@ -48,13 +52,6 @@ function catalog_on_attachment_delete(&$attachment)
         $brand->save();
     }
 }
-
-$brands_slug = Plugin::getSetting('brands_slug', 'catalog');
-
-Dispatcher::addRoute(array(
-    '/' . $brands_slug => '/plugin/catalog/frontendBrandList',
-    '/' . $brands_slug . '/:any' => '/plugin/catalog/frontendBrand/$1'
-));
 
 if ($categories = Category::findByParentId(1)) {
     foreach ($categories as $category) {

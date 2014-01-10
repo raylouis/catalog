@@ -11,24 +11,8 @@ if (!defined('IN_CMS')) { exit(); }
  * 
  * @author      Nic Wortel <nic.wortel@nth-root.nl>
  * @copyright   Nic Wortel, 2012
- * @version     0.2.0
+ * @version     0.2.1
  */
-
-function get_direction($column, $order, $direction) {
-    if ($column == $order && $direction == 'asc') {
-        return 'desc';
-    }
-    else {
-        return 'asc';
-    }
-}
-
-function get_sorted($column, $order, $direction) {
-    if ($column == $order) {
-        return ' sorted ' . $direction . 'ending';
-    }
-    return '';
-}
 
 ?>
 <h1><?php echo __('Products'); ?></h1>
@@ -42,29 +26,29 @@ function get_sorted($column, $order, $direction) {
     <a href="<?php echo get_url('plugin/catalog/export/product'); ?>"><?php echo __('Export'); ?></a>
 </p>
 
-<table class="product list">
+<table class="product list data-sortable">
     <thead>
         <tr>
-            <th class="fill<?php echo get_sorted('name', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/name', get_direction('name', $order_by, $order_direction)); ?>"><?php echo __('Name'); ?></a>
+            <th class="fill">
+                <?php echo __('Name'); ?>
             </th>
-            <th class="fill<?php echo get_sorted('brand', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/brand', get_direction('brand', $order_by, $order_direction)); ?>"><?php echo __('Brand'); ?></a>
+            <th class="fill">
+                <?php echo __('Brand'); ?>
             </th>
-            <th class="fill<?php echo get_sorted('category', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/category', get_direction('category', $order_by, $order_direction)); ?>"><?php echo __('Category'); ?></a>
+            <th class="fill">
+                <?php echo __('Category'); ?>
             </th>
-            <th class="number<?php echo get_sorted('variants', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/variants', get_direction('variants', $order_by, $order_direction)); ?>"><?php echo __('Variants'); ?></a>
+            <th class="number" data-sortinitialorder="desc">
+                <?php echo __('Variants'); ?>
             </th>
-            <th class="price<?php echo get_sorted('price', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/price', get_direction('price', $order_by, $order_direction)); ?>"><?php echo __('Price'); ?></a>
+            <th class="price empty-bottom">
+                <?php echo __('Price'); ?>
             </th>
-            <th class="number<?php echo get_sorted('stock', $order_by, $order_direction); ?>">
-                <a href="<?php echo get_url('plugin/catalog/products/stock', get_direction('stock', $order_by, $order_direction)); ?>"><?php echo __('Stock'); ?></a>
+            <th class="number empty-bottom">
+                <?php echo __('Stock'); ?>
             </th>
-            <th class="icon"><?php echo __('View'); ?></th>
-            <th class="icon"><?php echo __('Delete'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('View'); ?></th>
+            <th class="icon" data-sorter="false"><?php echo __('Delete'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -78,8 +62,6 @@ function get_sorted($column, $order, $direction) {
             <td class="fill">
                 <?php if (isset($product->brand)): ?>
                 <?php echo $product->brand->name; ?>
-                <?php else: ?>
-                -
                 <?php endif; ?>
             </td>
             <td class="fill">
@@ -95,16 +77,12 @@ function get_sorted($column, $order, $direction) {
                 <?php else: ?>
                 € <?php echo number_format($product->min_price, 2, '.', ','); ?>
                 <?php endif; ?>
-                <?php else: ?>
-                <span class="not-applicable"><?php echo __('N/A'); ?></span>
                 <?php endif; ?>
             </td>
             <td class="number">
                 <?php $product->stock = $product->total_stock; ?>
                 <?php if (!is_null($product->stock)): ?>
                 <?php echo $product->stock; ?>
-                <?php else: ?>
-                <span class="not-applicable"><?php echo __('N/A'); ?></span>
                 <?php endif; ?>
             </td>
             <td class="icon">
@@ -112,7 +90,7 @@ function get_sorted($column, $order, $direction) {
             </td>
             <td class="icon">
                 <?php if (AuthUser::hasPermission('catalog_product_delete')): ?>
-                    <a href="<?php echo get_url('plugin/catalog/product/delete', $product->id); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete :name and all its variants, prices, stock info etc.?', array(':name' => $product->name())); ?>');">
+                    <a href="<?php echo get_url('plugin/catalog/product/delete', $product->id); ?>" onclick="return confirm('<?php echo __('Are you sure you wish to delete :name, including all associated info such as variants, prices, stock, etc.?', array(':name' => $product->name())); ?>');">
                         <img width="16" height="16" src="<?php echo CATALOG_IMAGES; ?>action-delete-16.png" alt="<?php echo __('Delete'); ?>" title="<?php echo __('Delete'); ?>" />
                     </a>
                 <?php endif; ?>
