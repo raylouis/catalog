@@ -689,12 +689,6 @@ class CatalogController extends PluginController
         }
     }
     
-    public function frontendBrandList()
-    {
-        $page = new BrandListPage();
-        $page->_executeLayout();
-    }
-    
     public function index()
     {
         $this->products();
